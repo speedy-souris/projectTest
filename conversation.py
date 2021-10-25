@@ -22,26 +22,22 @@ class Conversation:
         self.is_user_incomprehension = redis_utilities.string_to_boolean_conversion(
             redis_utilities.read_access_conversation_data('incomprehension', self.db_number)
         )
-        self.number_of_incivility = int(
-            redis_utilities.read_access_conversation_data(
-                'number_of_incivility', self.db_number
+        self.number_of_incivility = int(redis_utilities.read_access_conversation_data(
+            'number_of_incivility', self.db_number
             )
         )
-        self.number_of_indecency = int(
-            redis_utilities.read_access_conversation_data(
-                'number_of_indecency', self.db_number
+        self.number_of_indecency = int(redis_utilities.read_access_conversation_data(
+            'number_of_indecency', self.db_number
             )
         )
-        self.number_of_incomprehension = int(
-            redis_utilities.read_access_conversation_data(
-                'number_of_incomprehension', self.db_number
+        self.number_of_incomprehension = int(redis_utilities.read_access_conversation_data(
+            'number_of_incomprehension', self.db_number
             )
         )
-        self.number_of_user_entries = int(
-            redis_utilities.read_access_conversation_data(
-                'number_of_user_entries', self.db_number
-            )
-        )
+        self.number_of_user_entries = int(redis_utilities.read_access_conversation_data(
+            'number_of_user_entries', self.db_number
+             )
+       )
 
     def do_this_from_attribut(self) -> list:
         """management of the user_entry attribute"""
