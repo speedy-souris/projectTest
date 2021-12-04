@@ -34,6 +34,12 @@ def get_settings_for_placeid_api(address):
     parameters = {'input': f'{address}', 'inputtype': 'textquery', 'key': f'{key}'}
     return parameters
 
+def get_settings_for_address_api(placeid):
+    """determining the localized address for the found placeid"""
+    key = google_api_keys()[0]
+    parameters = {'placeid': f'{placeid}', 'fields': 'formatted_address,geometry', 'key': f'{key}'}
+    return parameters
+
 
 def get_placeid_from_address(address):
     """Google map API place_id search function
@@ -52,3 +58,21 @@ def get_placeid_from_address(address):
     return placeid_value
 
 
+def get_address_api_from_placeid(placeid) -> object:
+    """Google map API address search with place_id function
+    Result OK with place_id 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'
+        {
+            'html_attributions': [],
+                'result': {
+                    'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
+                    'geometry': {
+                        'location': {'lat': 48.8975156, 'lng': 2.3833993},
+                        'viewport': {
+                            'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
+                            'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
+                'status': 'OK'
+        }"""
+    url_api = 'https://maps.googleapis.com/maps/api/place/details/json'
+    parameter_data = get_settings_for_address_api(placeid)
+    address_api_value = get_url_from_json(url_api, parameter_data)
+    return address_api_value
