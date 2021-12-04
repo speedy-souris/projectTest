@@ -41,6 +41,18 @@ def get_settings_for_address_api(placeid):
     return parameters
 
 
+def get_settings_for_map_static_api(address, localization):
+    """determination of the static map for the address found"""
+    key = google_api_keys()[1]
+    markers_data = f"color:red|label:A|{localization['lat']},{localization['lng']}"
+    parameters = {
+        'center': f'{address}', 'zoom': '18.5',
+        'size': '600x300', 'maptype': 'roadmap',
+        'markers': f'{markers_data}', 'key': f'{key}'
+    }
+    return parameters
+
+
 def get_placeid_from_address(address):
     """Google map API place_id search function
     Result ok with address to 'openClassrooms'
@@ -76,3 +88,11 @@ def get_address_api_from_placeid(placeid) -> object:
     parameter_data = get_settings_for_address_api(placeid)
     address_api_value = get_url_from_json(url_api, parameter_data)
     return address_api_value
+
+
+def get_static_map_from_address_api(address, localization):
+    """Display of the static map at the user's request"""
+    url_api = 'https://maps.googleapis.com/maps/api/staticmap'
+    parameter_data = get_settings_for_map_static_api(address, localization)
+    map_static_api = requests.get(url=url_api, params=parameter_data)
+    return map_static_api
