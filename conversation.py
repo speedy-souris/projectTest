@@ -6,6 +6,7 @@ import redis_utilities
 
 class Conversation:
     """conversation setting class"""
+
     def __init__(self, user_entry, db_number=0):
         self.user_entry = user_entry
         self.db_number = db_number
@@ -23,20 +24,20 @@ class Conversation:
         )
         self.number_of_incivility = int(redis_utilities.read_access_conversation_data(
             'number_of_incivility', self.db_number
-            )
+        )
         )
         self.number_of_indecency = int(redis_utilities.read_access_conversation_data(
             'number_of_indecency', self.db_number
-            )
+        )
         )
         self.number_of_incomprehension = int(redis_utilities.read_access_conversation_data(
             'number_of_incomprehension', self.db_number
-            )
+        )
         )
         self.number_of_user_entries = int(redis_utilities.read_access_conversation_data(
             'number_of_user_entries', self.db_number
-             )
-       )
+        )
+        )
 
     def do_this_from_attribut(self) -> list:
         """management of the user_entry attribute"""
@@ -51,7 +52,7 @@ class Conversation:
         # Data for check decency
         cls.indecency_set_data = set(
             [
-                'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
+               'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
                 'senille', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'senille',
                 'gateux', 'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr',
                 'bsr', 'slt'
@@ -73,7 +74,8 @@ class Conversation:
                 'celles-ci', 'celles-là', 'celui', 'celui-ci', 'celui-là', 'cent',
                 'centenaire senille', 'cependant', 'certain', 'certaine', 'certaines', 'certains',
                 'certes', 'ces', 'cet', 'cette', 'ceux', 'ceux-ci', 'ceux-là', 'chacun', 'chacune',
-                'chaque', 'cher', 'chers', 'chez', 'chiche', 'chut', 'chère', 'chères', 'ci','cinq',
+                'chaque', 'cher', 'chers', 'chez', 'chiche', 'chut', 'chère', 'chères', 'ci',
+                'cinq',
                 'cinquantaine', 'cinquante', 'cinquantième', 'cinquième', 'clac', 'clic', 'combien',
                 'comme', 'comment', 'comment allez vous, grandpy', 'comparable', 'comparables',
                 'compris', 'concernant', 'contre', 'couic', 'crac', 'd', 'da', 'dans', 'de',
@@ -139,7 +141,7 @@ class Conversation:
                 'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'
             ]
         )
-        return (cls.civility_set_data, cls.indecency_set_data, cls.unnecessary_set_data)
+        return cls.civility_set_data, cls.indecency_set_data, cls.unnecessary_set_data
 
     @staticmethod
     def get_grandpy_status(status_value: str) -> str:
@@ -167,7 +169,7 @@ class Conversation:
         """
         user_behavior = ['user_incivility', 'user_indecency', 'user_incomprehension', 'quotas']
         behavioral_data_counting = [
-            'number_of_incivility','number_of_indecency',
+            'number_of_incivility', 'number_of_indecency',
             'number_of_incomprehension', 'number_of_user_entries'
         ]
         for behavior in user_behavior:
@@ -175,9 +177,7 @@ class Conversation:
                 behavior, 'False', db_number
             )
         for counting in behavioral_data_counting:
-            redis_utilities.write_access_conversation_data(
-                counting, 0, db_number
-            )
+            redis_utilities.write_access_conversation_data(counting, 0, db_number)
 
     def update_database(self) -> None:
         """after all data processing update redis database with local attributes
@@ -208,7 +208,7 @@ class Conversation:
         self.is_user_incivility = civility_set_data.isdisjoint(user_entry_lowercase)
         if self.is_user_incivility:
             self.number_of_incivility += 1
-        return (self.is_user_incivility, self.number_of_incivility)
+        return self.is_user_incivility, self.number_of_incivility
 
     def calculate_the_indecency(self) -> tuple:
         """update the attributes is_user_indecency and number_of_indecencies
@@ -221,7 +221,7 @@ class Conversation:
         self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
         if self.is_user_indecency:
             self.number_of_indecency += 1
-        return (self.is_user_indecency, self.number_of_indecency)
+        return self.is_user_indecency, self.number_of_indecency
 
     def calculate_the_incomprehension(self) -> tuple:
         """update the attributes is_user_incomprehension and number_of_incomprehension
@@ -233,13 +233,13 @@ class Conversation:
             compare[0], compare[1], compare[2]
         ]
         if not civility_set_data.isdisjoint(user_entry_lowercase) and \
-            indecency_set_data.isdisjoint(user_entry_lowercase) and \
-            unnecessary_set_data.isdisjoint(user_entry_lowercase):
+                indecency_set_data.isdisjoint(user_entry_lowercase) and \
+                unnecessary_set_data.isdisjoint(user_entry_lowercase):
             self.is_user_incomprehension = True
             self.number_of_incomprehension += 1
         else:
             self.is_user_incomprehension = False
-        return (self.is_user_incomprehension, self.number_of_incomprehension)
+        return self.is_user_incomprehension, self.number_of_incomprehension
 
     def calculate_the_user_entries(self) -> int:
         """update the attribute number_of_user_entries
@@ -251,8 +251,8 @@ class Conversation:
             compare[0], compare[1], compare[2]
         ]
         if civility_set_data.isdisjoint(user_entry_lowercase) and \
-            not indecency_set_data.isdisjoint(user_entry_lowercase) and \
-            not unnecessary_set_data.isdisjoint(user_entry_lowercase):
+                not indecency_set_data.isdisjoint(user_entry_lowercase) and \
+                not unnecessary_set_data.isdisjoint(user_entry_lowercase):
             if self.number_of_user_entries >= 10:
                 self.number_of_user_entries = 10
             else:
