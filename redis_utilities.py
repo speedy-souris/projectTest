@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+"""conversation data management menu"""
 import redis
 
 
@@ -18,19 +18,21 @@ def get_access_database(db_number: int = 0) -> object:
 def boolean_to_string_conversion(boolean_value: bool) -> str:
     """conversion from boolean to string"""
     if boolean_value:
-        return 'True'
+        value = 'True'
     else:
-        return 'False'
+        value = 'False'
+    return value
 
 
 def string_to_boolean_conversion(string_value: str) -> bool:
     """conversion from string to boolean"""
     if string_value == b'False':
-        return False
+        value = False
     elif string_value == b'True':
-        return True
+        value = True
     else:
-        return False
+        value = False
+    return value
 
 
 def string_to_int_conversion(string_value: str) -> int:
