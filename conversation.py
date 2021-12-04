@@ -1,9 +1,8 @@
-#!/usr/bin/python env
+#!/usr/bin/env python
 """conversation management module between grandpyRobot and a user"""
-
-
 from frozendict import frozendict
 import redis_utilities
+
 
 class Conversation:
     """conversation setting class"""
@@ -160,7 +159,8 @@ class Conversation:
         })
         return grandpy_response[status_value]
 
-    def database_init(self) -> None:
+    @classmethod
+    def database_init(cls, db_number) -> None:
         """initialization of redis database
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', self.db_number)
@@ -172,11 +172,11 @@ class Conversation:
         ]
         for behavior in user_behavior:
             redis_utilities.write_access_conversation_data(
-                behavior, 'False', self.db_number
+                behavior, 'False', db_number
             )
         for counting in behavioral_data_counting:
             redis_utilities.write_access_conversation_data(
-                counting, 0, self.db_number
+                counting, 0, db_number
             )
 
     def update_database(self) -> None:
@@ -185,7 +185,7 @@ class Conversation:
         redis_utilities.write_access_conversation_data(
             'user_incivility', str(self.is_user_incivility), self.db_number)"""
         db_data = [
-            {'user,incivility': self.is_user_incivility},
+            {'user_incivility': self.is_user_incivility},
             {'user_indecency': self.is_user_indecency},
             {'user_incomprehension': self.is_user_incomprehension},
             {'number_of_incivility': self.number_of_indecency},
@@ -219,11 +219,11 @@ class Conversation:
         compare = Conversation.compare_this_set()
         indecency_set_data = compare[1]
         self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
-        if not self.is_user_indecency:
+        if self.is_user_indecency:
             self.number_of_indecency += 1
         return (self.is_user_indecency, self.number_of_indecency)
 
-    def calculate_the_incomprehension(self) -> bool:
+    def calculate_the_incomprehension(self) -> tuple:
         """update the attributes is_user_incomprehension and number_of_incomprehension
         if self.user_entry_data_split is 'XXXX ...'
         then is_user_incomprehension = True and number_of_incomprehension += 1"""
@@ -232,13 +232,14 @@ class Conversation:
         civility_set_data, indecency_set_data, unnecessary_set_data = [
             compare[0], compare[1], compare[2]
         ]
-        if civility_set_data.isdisjoint(user_entry_lowercase) and \
+        if not civility_set_data.isdisjoint(user_entry_lowercase) and \
             indecency_set_data.isdisjoint(user_entry_lowercase) and \
             unnecessary_set_data.isdisjoint(user_entry_lowercase):
             self.is_user_incomprehension = True
+            self.number_of_incomprehension += 1
         else:
             self.is_user_incomprehension = False
-        return self.is_user_incomprehension
+        return (self.is_user_incomprehension, self.number_of_incomprehension)
 
     def calculate_the_user_entries(self) -> int:
         """update the attribute number_of_user_entries
@@ -260,5 +261,6 @@ class Conversation:
 
 
 if __name__ == '__main__':
-    chat_session = Conversation('bonjour')
-    chat_session.database_init()
+    # chat_session = Conversation('bonjour')
+    # chat_session.database_init()
+    pass
