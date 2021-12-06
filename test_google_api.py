@@ -18,9 +18,6 @@ def get_mockreturn(result):
 
 
 class TestGoogleApi:
-    def __init__(self):
-        pass
-
     def setup_method(self):
         self.place_id = google_api.get_placeid_from_address('openClassrooms')
         self.address_placeid = google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')
