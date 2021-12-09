@@ -29,11 +29,12 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_incomprehension(self, monkeypatch):
-        expected_result = {
+        expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
         }
-        mock_result = expected_result
+        expected_result = (True, 1)
+        mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
         result1 = Conversation.get_placeid_from_address('gjegruiotuygtugyt')
@@ -41,11 +42,12 @@ class TestConversation:
         assert expected_result == result1
         assert exception_result ==  result2
 
-        expected_result = {
+        expected_mock_result = {
             'candidates': [],
             'status': 'INVALID_REQUEST'
         }
-        mock_result = expected_result
+        expected_result = (True, 2)
+        mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
         result = Conversation.get_placeid_from_address('')
