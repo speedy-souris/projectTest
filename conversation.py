@@ -202,7 +202,7 @@ class Conversation:
         example :
         if self.user_entry_data_split is 'Blablabla...'
         then is_user_incivility = True and number_of_incivilities += 1"""
-        user_entry_lowercase = self.do_this_from_attribut()
+        user_entry_lowercase = self.lower_and_split_user_entry()
         compare = Conversation.compare_this_set()
         civility_set_data = compare[0]
         self.is_user_incivility = civility_set_data.isdisjoint(user_entry_lowercase)
@@ -215,7 +215,7 @@ class Conversation:
         example :
         if self.user_entry_data_split is 'vieux...'
         then is_user_indecency = True and number_of_indecencies += 1"""
-        user_entry_lowercase = self.do_this_from_attribut()
+        user_entry_lowercase = self.lower_and_split_user_entry()
         compare = Conversation.compare_this_set()
         indecency_set_data = compare[1]
         self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
