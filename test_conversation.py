@@ -30,8 +30,6 @@ class TestConversation:
 
     def test_calculate_the_incomprehension(self, monkeypatch):
         incomprehensible_user = Conversation('gjegruiotuygtugyt', db_number=1)
-        incomprehensible_user2 = Conversation('1255871436', db_number=1)
-        inconsistent_user = Conversation('', db_number=1)
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
@@ -40,18 +38,29 @@ class TestConversation:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        result1 = incomprehensible_user.calculate_the_incomprehension()
-        result2 = incomprehensible_user2.calculate_the_incomprehension()
-        assert expected_result == result1
-        assert exception_result ==  result2
+        result = incomprehensible_user.calculate_the_incomprehension()
+        assert expected_result == result
 
+        incomprehensible_user = Conversation('1255871436', db_number=1)
         expected_mock_result = {
             'candidates': [],
-            'status': 'INVALID_REQUEST'
+            'status': 'ZERO_RESULTS'
         }
         expected_result = (True, 2)
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        result = inconsistent_user.calculate_the_incomprehension()
+        result = incomprehensible_user.calculate_the_incomprehension()
+        assert expected_result == result
+
+        incomprehensible_user = Conversation('', db_number=1)
+        expected_mock_result = {
+            'candidates': [],
+            'status': 'INVALID_REQUEST'
+        }
+        expected_result = (True, 3)
+        mock_result = expected_mock_result
+        mockreturn = get_mockreturn(mock_result)
+        monkeypatch.setattr(requests, 'get', mockreturn)
+        result = incomprehensible_user.calculate_the_incomprehension()
         assert expected_result == result
