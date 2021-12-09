@@ -16,9 +16,9 @@ class Conversation:
         self.is_user_incivility = redis_utilities.string_to_boolean_conversion(
             redis_utilities.read_access_conversation_data('incivility', self.db_number)
         )
-        # self.is_user_indecency = redis_utilities.string_to_boolean_conversion(
-        #     redis_utilities.read_access_conversation_data('indecency', self.db_number)
-        # )
+        self.is_user_indecency = redis_utilities.string_to_boolean_conversion(
+            redis_utilities.read_access_conversation_data('indecency', self.db_number)
+        )
         # self.is_user_incomprehension = redis_utilities.string_to_boolean_conversion(
         #     redis_utilities.read_access_conversation_data('incomprehension', self.db_number)
         # )
@@ -26,10 +26,10 @@ class Conversation:
             'number_of_incivility', self.db_number
         )
         )
-        # self.number_of_indecency = int(redis_utilities.read_access_conversation_data(
-        #     'number_of_indecency', self.db_number
-        # )
-        # )
+        self.number_of_indecency = int(redis_utilities.read_access_conversation_data(
+            'number_of_indecency', self.db_number
+        )
+        )
         # self.number_of_incomprehension = int(redis_utilities.read_access_conversation_data(
         #     'number_of_incomprehension', self.db_number
         # )
@@ -39,7 +39,7 @@ class Conversation:
         # )
         # )
 
-    def do_this_from_attribut(self) -> list:
+    def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""
         user_entry_lowercase = self.user_entry.lower()
         return user_entry_lowercase.split()
@@ -50,14 +50,14 @@ class Conversation:
         # Data for check civility
         cls.civility_set_data = set(['bonjour', 'bonsoir', 'salut', 'hello', 'hi'])
         # Data for check decency
-        # cls.indecency_set_data = set(
-        #     [
-        #        'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
-        #         'senille', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'senille',
-        #         'gateux', 'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr',
-        #         'bsr', 'slt'
-        #     ]
-        # )
+        cls.indecency_set_data = set(
+            [
+               'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
+                'senille', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'senille',
+                'gateux', 'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr',
+                'bsr', 'slt'
+            ]
+        )
         # # Data for parser (deleted for research)
         # cls.unnecessary_set_data = set(
         #     [
@@ -141,7 +141,7 @@ class Conversation:
         #         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'
         #     ]
         # )
-        return cls.civility_set_data, #cls.indecency_set_data, cls.unnecessary_set_data
+        return cls.civility_set_data, cls.indecency_set_data#, cls.unnecessary_set_data
 
     # @staticmethod
     # def get_grandpy_status(status_value: str) -> str:
@@ -210,19 +210,19 @@ class Conversation:
             self.number_of_incivility += 1
         return self.is_user_incivility, self.number_of_incivility
 
-    # def calculate_the_indecency(self) -> tuple:
-    #     """update the attributes is_user_indecency and number_of_indecencies
-    #     example :
-    #     if self.user_entry_data_split is 'vieux...'
-    #     then is_user_indecency = True and number_of_indecencies += 1"""
-    #     user_entry_lowercase = self.do_this_from_attribut()
-    #     compare = Conversation.compare_this_set()
-    #     indecency_set_data = compare[1]
-    #     self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
-    #     if self.is_user_indecency:
-    #         self.number_of_indecency += 1
-    #     return self.is_user_indecency, self.number_of_indecency
-    #
+    def calculate_the_indecency(self) -> tuple:
+        """update the attributes is_user_indecency and number_of_indecencies
+        example :
+        if self.user_entry_data_split is 'vieux...'
+        then is_user_indecency = True and number_of_indecencies += 1"""
+        user_entry_lowercase = self.do_this_from_attribut()
+        compare = Conversation.compare_this_set()
+        indecency_set_data = compare[1]
+        self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
+        if self.is_user_indecency:
+            self.number_of_indecency += 1
+        return self.is_user_indecency, self.number_of_indecency
+
     # def calculate_the_incomprehension(self) -> tuple:
     #     """update the attributes is_user_incomprehension and number_of_incomprehension
     #     if self.user_entry_data_split is 'XXXX ...'
