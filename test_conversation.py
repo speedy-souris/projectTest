@@ -13,3 +13,9 @@ class TestConversation:
         expected_result = ['bonjour']
         result = user_request.do_this_from_attribut()
         assert expected_result == result
+
+    def test_calculate_the_incivility(self):
+        user_request = self.entry_bonjour
+        expected_result = (False, 0)
+        result = user_request.calculate_the_incivility()
+        assert expected_result == result
