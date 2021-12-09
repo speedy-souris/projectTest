@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import requests
 from conversation import Conversation
+from mock_api import get_mockreturn
 
 
 class TestConversation:
@@ -25,4 +26,27 @@ class TestConversation:
         user_request = self.incorrect_entry
         expected_result = (True, 1)
         result = user_request.calculate_the_indecency()
+        assert expected_result == result
+
+    def test_calculate_the_incomprehension(self, monkeypatch):
+        expected_result = {
+            'candidates': [],
+            'status': 'ZERO_RESULTS'
+        }
+        mock_result = expected_result
+        mockreturn = get_mockreturn(mock_result)
+        monkeypatch.setattr(requests, 'get', mockreturn)
+        result1 = Conversation.get_placeid_from_address('gjegruiotuygtugyt')
+        result2 = Conversation.get_placeid_from_address('1255871436')
+        assert expected_result == result1
+        assert exception_result ==  result2
+
+        expected_result = {
+            'candidates': [],
+            'status': 'INVALID_REQUEST'
+        }
+        mock_result = expected_result
+        mockreturn = get_mockreturn(mock_result)
+        monkeypatch.setattr(requests, 'get', mockreturn)
+        result = Conversation.get_placeid_from_address('')
         assert expected_result == result

@@ -1,20 +1,7 @@
 #!/usr/bin/env python
 import requests
 import google_api
-
-
-def get_mockreturn(result):
-    """mock template call"""
-    def mock_get(url, params):
-        """Mock function on api object"""
-        class JsonResponse:
-            """mock result in JSON format"""
-            @staticmethod
-            def json():
-                """Json method"""
-                return result
-        return JsonResponse()
-    return mock_get
+from mock_api import get_mockreturn
 
 
 class TestGoogleApi:
@@ -24,12 +11,8 @@ class TestGoogleApi:
 
     def test_get_placeid(self, monkeypatch):
         expected_result = {
-            'candidates': [
-                {
-                     'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'
-                }
-           ],
-           'status' : 'OK'
+            'candidates': [{'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
+            'status' : 'OK'
         }
         mock_result = expected_result
         mockreturn = get_mockreturn(mock_result)
