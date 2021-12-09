@@ -9,10 +9,10 @@ class TestConversation:
         self.entry_bonjour = Conversation('Bonjour', db_number=1)
         self.incorrect_entry = Conversation('vieux', db_number=1)
 
-    def test_do_this_from_attribut(self):
+    def test_lower_and_split_user_entry(self):
         user_request = self.entry_bonjour
         expected_result = ['bonjour']
-        result = user_request.do_this_from_attribut()
+        result = user_request.lower_and_split_user_entry()
         assert expected_result == result
 
     def test_calculate_the_incivility(self):
