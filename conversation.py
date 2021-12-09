@@ -19,9 +19,9 @@ class Conversation:
         self.is_user_indecency = redis_utilities.string_to_boolean_conversion(
             redis_utilities.read_access_conversation_data('indecency', self.db_number)
         )
-        # self.is_user_incomprehension = redis_utilities.string_to_boolean_conversion(
-        #     redis_utilities.read_access_conversation_data('incomprehension', self.db_number)
-        # )
+        self.is_user_incomprehension = redis_utilities.string_to_boolean_conversion(
+            redis_utilities.read_access_conversation_data('incomprehension', self.db_number)
+        )
         self.number_of_incivility = int(redis_utilities.read_access_conversation_data(
             'number_of_incivility', self.db_number
         )
@@ -30,10 +30,10 @@ class Conversation:
             'number_of_indecency', self.db_number
         )
         )
-        # self.number_of_incomprehension = int(redis_utilities.read_access_conversation_data(
-        #     'number_of_incomprehension', self.db_number
-        # )
-        # )
+        self.number_of_incomprehension = int(redis_utilities.read_access_conversation_data(
+            'number_of_incomprehension', self.db_number
+        )
+        )
         # self.number_of_user_entries = int(redis_utilities.read_access_conversation_data(
         #     'number_of_user_entries', self.db_number
         # )
@@ -223,23 +223,18 @@ class Conversation:
             self.number_of_indecency += 1
         return self.is_user_indecency, self.number_of_indecency
 
-    # def calculate_the_incomprehension(self) -> tuple:
-    #     """update the attributes is_user_incomprehension and number_of_incomprehension
-    #     if self.user_entry_data_split is 'XXXX ...'
-    #     then is_user_incomprehension = True and number_of_incomprehension += 1"""
-    #     user_entry_lowercase = self.do_this_from_attribut()
-    #     compare = Conversation.compare_this_set()
-    #     civility_set_data, indecency_set_data, unnecessary_set_data = [
-    #         compare[0], compare[1], compare[2]
-    #     ]
-    #     if not civility_set_data.isdisjoint(user_entry_lowercase) and \
-    #             indecency_set_data.isdisjoint(user_entry_lowercase) and \
-    #             unnecessary_set_data.isdisjoint(user_entry_lowercase):
-    #         self.is_user_incomprehension = True
-    #         self.number_of_incomprehension += 1
-    #     else:
-    #         self.is_user_incomprehension = False
-    #     return self.is_user_incomprehension, self.number_of_incomprehension
+    def calculate_the_incomprehension(self) -> tuple:
+        """update the attributes is_user_incomprehension and number_of_incomprehension
+        if self.user_entry_data_split is 'XXXX ...'
+        then is_user_incomprehension = True and number_of_incomprehension += 1"""
+        compare = Conversation.get_placeid_from_address(self.user_entry)
+        if compare == {'candidates': [], 'status': 'ZERO_RESULTS'}\
+            or compare == {'candidates': [], 'status': 'INVALID_REQUEST'} :
+            self.is_user_incomprehension = True
+            self.number_of_incomprehension += 1
+        else:
+            self.is_user_incomprehension = False
+        return self.is_user_incomprehension, self.number_of_incomprehension
     #
     # def calculate_the_user_entries(self) -> int:
     #     """update the attribute number_of_user_entries
