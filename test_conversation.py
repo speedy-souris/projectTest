@@ -2,6 +2,7 @@
 import requests
 from conversation import Conversation
 from mock_api import get_mockreturn
+from google_api import get_placeid_from_address
 
 
 class TestConversation:
@@ -37,8 +38,8 @@ class TestConversation:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        result1 = Conversation.get_placeid_from_address('gjegruiotuygtugyt')
-        result2 = Conversation.get_placeid_from_address('1255871436')
+        result1 = get_placeid_from_address('gjegruiotuygtugyt')
+        result2 = get_placeid_from_address('1255871436')
         assert expected_result == result1
         assert exception_result ==  result2
 
@@ -50,5 +51,5 @@ class TestConversation:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        result = Conversation.get_placeid_from_address('')
+        result = get_placeid_from_address('')
         assert expected_result == result
