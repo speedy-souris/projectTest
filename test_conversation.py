@@ -7,6 +7,7 @@ class TestConversation:
     def setup_method(self):
         Conversation.database_init(1)
         self.entry_bonjour = Conversation('Bonjour', db_number=1)
+        self.incorrect_entry = Conversation('vieux', db_number=1)
 
     def test_do_this_from_attribut(self):
         user_request = self.entry_bonjour
@@ -18,4 +19,10 @@ class TestConversation:
         user_request = self.entry_bonjour
         expected_result = (False, 0)
         result = user_request.calculate_the_incivility()
+        assert expected_result == result
+
+    def test_calculate_the_indecency(self):
+        user_request = self.incorrect_entry
+        expected_result = (True, 1)
+        result = user_request.calculate_the_indecency()
         assert expected_result == result
