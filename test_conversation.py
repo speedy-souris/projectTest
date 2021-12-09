@@ -2,7 +2,6 @@
 import requests
 from conversation import Conversation
 from mock_api import get_mockreturn
-from google_api import get_placeid_from_address
 
 
 class TestConversation:
@@ -30,6 +29,9 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_incomprehension(self, monkeypatch):
+        incomprehensible_user = Conversation('gjegruiotuygtugyt', db_number=1)
+        incomprehensible_user2 = Conversation('1255871436', db_number=1)
+        inconsistent_user = Conversation('', db_number=1)
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
@@ -38,8 +40,8 @@ class TestConversation:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        result1 = get_placeid_from_address('gjegruiotuygtugyt')
-        result2 = get_placeid_from_address('1255871436')
+        result1 = incomprehensible_user.calculate_the_incomprehension()
+        result2 = incomprehensible_user2.calculate_the_incomprehension()
         assert expected_result == result1
         assert exception_result ==  result2
 
@@ -51,5 +53,5 @@ class TestConversation:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        result = get_placeid_from_address('')
+        result = inconsistent_user.calculate_the_incomprehension()
         assert expected_result == result
