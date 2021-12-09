@@ -46,7 +46,7 @@ class TestConversation:
             'candidates': [],
             'status': 'ZERO_RESULTS'
         }
-        expected_result = (True, 2)
+        expected_result = (True, 1)
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
@@ -58,7 +58,7 @@ class TestConversation:
             'candidates': [],
             'status': 'INVALID_REQUEST'
         }
-        expected_result = (True, 3)
+        expected_result = (True, 1)
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
