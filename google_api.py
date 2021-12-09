@@ -13,12 +13,12 @@ def google_api_keys():
     if os.environ.get('HEROKU_KEY_API_MAP') is None:  # local internal key
         key_map = os.getenv('KEY_API_MAP')
         key_static_map = os.getenv('KEY_API_STATIC_MAP')
-        status_prod = False
+        has_status_prod = False
     else:  # internal production key
         key_map = os.getenv('HEROKU_KEY_API_MAP')
         key_static_map = os.getenv('HEROKU_KEY_API_STATIC_MAP')
-        status_prod = True
-    return key_map, key_static_map, status_prod
+        has_status_prod = True
+    return key_map, key_static_map, has_status_prod
 
 
 def get_url_from_json(url, params):
