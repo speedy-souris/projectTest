@@ -2,6 +2,7 @@
 """conversation management module between grandpyRobot and a user"""
 from frozendict import frozendict
 import redis_utilities
+from google_api import get_placeid_from_address
 
 
 class Conversation:
@@ -225,9 +226,9 @@ class Conversation:
 
     def calculate_the_incomprehension(self) -> tuple:
         """update the attributes is_user_incomprehension and number_of_incomprehension
-        if self.user_entry_data_split is 'XXXX ...'
+        if self.user_entry_data_split is 'gjegruiotuygtugyt ...'
         then is_user_incomprehension = True and number_of_incomprehension += 1"""
-        compare = Conversation.get_placeid_from_address(self.user_entry)
+        compare = get_placeid_from_address(self.user_entry)
         if compare == {'candidates': [], 'status': 'ZERO_RESULTS'}\
             or compare == {'candidates': [], 'status': 'INVALID_REQUEST'} :
             self.is_user_incomprehension = True
