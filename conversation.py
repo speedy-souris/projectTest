@@ -162,8 +162,8 @@ class Conversation:
     #     })
     #     return grandpy_response[status_value]
 
-    @classmethod
-    def database_init(cls, db_number) -> None:
+    @staticmethod
+    def database_init(db_number) -> None:
         """initialization of redis database
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', self.db_number)
