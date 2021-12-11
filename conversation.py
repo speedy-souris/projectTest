@@ -11,9 +11,9 @@ class Conversation:
     def __init__(self, user_entry, db_number=0):
         self.user_entry = user_entry
         self.db_number = db_number
-        # self.is_fatigue_quotas_in_conversation = redis_utilities.string_to_boolean_conversion(
-        #     redis_utilities.read_access_conversation_data('quotas', self.db_number)
-        # )
+        self.is_fatigue_quotas_in_conversation = redis_utilities.string_to_boolean_conversion(
+            redis_utilities.read_access_conversation_data('quotas', self.db_number)
+        )
         self.is_user_incivility = redis_utilities.string_to_boolean_conversion(
             redis_utilities.read_access_conversation_data('incivility', self.db_number)
         )
@@ -144,23 +144,24 @@ class Conversation:
         # )
         return cls.civility_set_data, cls.indecency_set_data#, cls.unnecessary_set_data
 
-    # @staticmethod
-    # def get_grandpy_status(status_value: str) -> str:
-    #     """Generation of grandpy response according to user entry and Conversation attributes"""
-    #     grandpy_response = frozendict({
-    #         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
-    #         'user_question': 'As tu une nouvelle question a me demander ?',
-    #         'response': 'Voici Ta Réponse à la question !',
-    #         'tired': 'houla, maintenant ma memoire commence a fatiguer !',
-    #         'incomprehension': "Ha, Je ne comprends pas, essaye d'être plus précis ... !",
-    #         'mannerless': "s'il te plait, reformule ta question en étant plus polis ... !",
-    #         'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
-    #         'incivility_limit': 'cette impolitesse me FATIGUE ... !',
-    #         'indecency_limit': 'cette grossierete me FATIGUE ... !',
-    #         'incomprehension_limit': 'cette incomprehension me FATIGUE ... !',
-    #         'exhausted': 'je suis fatigué reviens me voir demain !'
-    #     })
-    #     return grandpy_response[status_value]
+    @classmethod
+    def get_grandpy_status(cls, status_value='home'):
+        """Generation of grandpy response according to user entry and Conversation attributes"""
+        grandpy_code = frozendict({
+            'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
+            'user_question': 'As tu une nouvelle question a me demander ?',
+            'response': 'Voici Ta Réponse à la question !',
+            'tired': 'houla, maintenant ma memoire commence a fatiguer !',
+            'incomprehension': "Ha, Je ne comprends pas, essaye d'être plus précis ... !",
+            'mannerless': "s'il te plait, reformule ta question en étant plus polis ... !",
+            'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
+            'incivility_limit': 'cette impolitesse me FATIGUE ... !',
+            'indecency_limit': 'cette grossierete me FATIGUE ... !',
+            'incomprehension_limit': 'cette incomprehension me FATIGUE ... !',
+            'exhausted': 'je suis fatigué reviens me voir demain !'
+        })
+        cls.grandpy_code = status_value
+        cls.grandpy_response[status_value]
 
     @staticmethod
     def database_init(db_number) -> None:
@@ -208,8 +209,18 @@ class Conversation:
         civility_set_data = compare[0]
         self.is_user_incivility = civility_set_data.isdisjoint(user_entry_lowercase)
         if self.is_user_incivility:
-            self.number_of_incivility += 1
-        return self.is_user_incivility, self.number_of_incivility
+            if self.number_of_incivility >= 3:
+                self.number_of_inciliity = 3
+                self.is_fatigue_quotas_in_conversation = True
+            else :
+                self.number_of_incivility += 1
+        status_incivility = (
+            self.is_user_incivility,
+            self.number_of_incivility,
+            self.is_fatigue_quotas_in_conversation
+        )
+        return status_incivility
+
 
     def calculate_the_indecency(self) -> tuple:
         """update the attributes is_user_indecency and number_of_indecencies
