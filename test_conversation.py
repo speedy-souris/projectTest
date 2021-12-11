@@ -64,3 +64,11 @@ class TestConversation:
         monkeypatch.setattr(requests, 'get', mockreturn)
         result = incomprehensible_user.calculate_the_incomprehension()
         assert expected_result == result
+
+    def test_number_incivility_max(self):
+        first_user_request = Conversation('openClassroom', db_number=1)
+        second_user_request = Conversation('openClassroom', db_number=1)
+        three_user_request = Conversation('openClassroom', db_number=1)
+        expected_result = (True, 3, False, 0, False, 0, True)
+        result = three_user_request.grandpy_status()
+        assert expected_result == result
