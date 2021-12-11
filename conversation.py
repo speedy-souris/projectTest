@@ -252,10 +252,19 @@ class Conversation:
         if compare == {'candidates': [], 'status': 'ZERO_RESULTS'}\
             or compare == {'candidates': [], 'status': 'INVALID_REQUEST'} :
             self.is_user_incomprehension = True
-            self.number_of_incomprehension += 1
+            if self.number_of_incomprehension >= 3:
+                self.number_of_incomprehension = 3
+                self.is_fatigue_quotas_in_conversation = True
+            else:
+                self.number_of_incomprehension += 1
         else:
             self.is_user_incomprehension = False
-        return self.is_user_incomprehension, self.number_of_incomprehension
+        status_incomprehension = (
+            self.is_user_incomprehension,
+            self.number_of_incomprehension,
+            self.is_fatigue_quotas_in_conversation
+        )
+        return status_incomprehension
     #
     # def calculate_the_user_entries(self) -> int:
     #     """update the attribute number_of_user_entries
