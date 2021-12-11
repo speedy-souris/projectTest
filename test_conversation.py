@@ -24,7 +24,7 @@ class TestConversation:
 
     def test_calculate_the_indecency(self):
         user_request = self.incorrect_entry
-        expected_result = (True, 1)
+        expected_result = (True, 1, False)
         result = user_request.calculate_the_indecency()
         assert expected_result == result
 
@@ -73,4 +73,13 @@ class TestBadUserBehavior:
         user_request.calculate_the_incivility()
         user_request.calculate_the_incivility()
         result = user_request.calculate_the_incivility()
+        assert expected_result == result
+
+    def test_number_indecency_max(self):
+        user_request = Conversation('vieux', db_number=1)
+        expected_result = (True, 3, True)
+        user_request.calculate_the_indecency()
+        user_request.calculate_the_indecency()
+        user_request.calculate_the_indecency()
+        result = user_request.calculate_the_indecency()
         assert expected_result == result
