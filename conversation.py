@@ -232,8 +232,17 @@ class Conversation:
         indecency_set_data = compare[1]
         self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
         if self.is_user_indecency:
-            self.number_of_indecency += 1
-        return self.is_user_indecency, self.number_of_indecency
+            if self.number_of_indecency >= 3:
+                self.number_of_indecency = 3
+                self.is_fatigue_quotas_in_conversation = True
+            else:
+                self.number_of_indecency += 1
+        status_indecency = (
+            self.is_user_indecency,
+            self.number_of_indecency,
+            self.is_fatigue_quotas_in_conversation
+        )
+        return status_indecency
 
     def calculate_the_incomprehension(self) -> tuple:
         """update the attributes is_user_incomprehension and number_of_incomprehension
