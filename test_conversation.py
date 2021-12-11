@@ -65,7 +65,7 @@ class TestConversation:
         result = incomprehensible_user.calculate_the_incomprehension()
         assert expected_result == result
 
-class TestBadUserBehavior:
+class TestBadUserBehaviorToX3:
     def test_number_incivility_max(self):
         user_request = Conversation('openClassroom', db_number=1)
         expected_result = (True, 3, True)
@@ -82,4 +82,19 @@ class TestBadUserBehavior:
         user_request.calculate_the_indecency()
         user_request.calculate_the_indecency()
         result = user_request.calculate_the_indecency()
+        assert expected_result == result
+
+    def test_number_incomprehension_max(self):
+        incomprehensible_user = Conversation('gjegruiotuygtugyt', db_number=1)
+        expected_mock_result = {
+            'candidates': [],
+            'status': 'ZERO_RESULTS'
+        }
+        expected_result = (True, 3, True)
+        mock_result = expected_mock_result
+        mockreturn = get_mockreturn(mock_result)
+        monkeypatch.setattr(requests, 'get', mockreturn)
+        incomprehensible_user.calculate_the_incomprehension()
+        incomprehensible_user.calculate_the_incomprehension()
+        result = incomprehensible_user.calculate_the_incomprehension()
         assert expected_result == result
