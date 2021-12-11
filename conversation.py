@@ -210,7 +210,7 @@ class Conversation:
         self.is_user_incivility = civility_set_data.isdisjoint(user_entry_lowercase)
         if self.is_user_incivility:
             if self.number_of_incivility >= 3:
-                self.number_of_inciliity = 3
+                self.number_of_incivility = 3
                 self.is_fatigue_quotas_in_conversation = True
             else:
                 self.number_of_incivility += 1
@@ -247,9 +247,11 @@ class Conversation:
         """update the attributes is_user_incomprehension and number_of_incomprehension
         if self.user_entry_data_split is 'gjegruiotuygtugyt ...'
         then is_user_incomprehension = True and number_of_incomprehension += 1"""
-        compare = get_placeid_from_address(self.user_entry)
-        if compare == {'candidates': [], 'status': 'ZERO_RESULTS'} \
-                or compare == {'candidates': [], 'status': 'INVALID_REQUEST'}:
+        result_api = get_placeid_from_address(self.user_entry)
+        if result_api in (
+                {'candidates': [], 'status': 'ZERO_RESULTS'},
+                {'candidates': [], 'status': 'INVALID_REQUEST'}
+        ):
             self.is_user_incomprehension = True
             if self.number_of_incomprehension >= 3:
                 self.number_of_incomprehension = 3
