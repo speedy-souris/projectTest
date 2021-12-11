@@ -7,7 +7,6 @@ from google_api import get_placeid_from_address
 
 class Conversation:
     """conversation setting class"""
-
     def __init__(self, user_entry, db_number=0):
         self.user_entry = user_entry
         self.db_number = db_number
@@ -49,19 +48,16 @@ class Conversation:
     def compare_this_set(cls) -> tuple:
         """management of sets to parse it"""
         # Data for check civility
-        cls.civility_set_data = set(['bonjour', 'bonsoir', 'salut', 'hello', 'hi'])
+        cls.incivility_set_data = {'bonjour', 'bonsoir', 'salut', 'hello', 'hi'}
         # Data for check decency
-        cls.indecency_set_data = set(
-            [
-               'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
-                'senille', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'senille',
-                'gateux', 'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr',
-                'bsr', 'slt'
-            ]
-        )
+        cls.indecency_set_data = {
+            'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
+            'senille', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'senille',
+            'gateux', 'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr',
+            'bsr', 'slt'
+        }
         # # Data for parser (deleted for research)
-        # cls.unnecessary_set_data = set(
-        #     [
+        # cls.unnecessary_set_data = {
         #         'a', 'abord', 'absolument', 'afin', 'ah', 'ai', 'aie', 'ailleurs', 'ainsi', 'ait',
         #         'allaient', 'allo', 'allons', 'allô', 'alors', 'ancetre', 'ancetre demode',
         #         'anterieur', 'anterieure', 'anterieures', 'antiquite', 'apres', 'après',
@@ -140,9 +136,12 @@ class Conversation:
         #         'vu', 'vé', 'vôtre', 'vôtres', 'w', 'x', 'y', 'z', 'zut', 'à', 'â', 'ça', 'ès',
         #         'étaient', 'étais', 'était', 'étant', 'été', 'être', 'ô', ',', ';', '.', '?', '!',
         #         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'
-        #     ]
-        # )
-        return cls.civility_set_data, cls.indecency_set_data#, cls.unnecessary_set_data
+        #    }
+        data_behavior_sets = (
+            cls.incivility_set_data,
+            cls.indecency_set_data
+        )
+        return data_behavior_sets
 
     @classmethod
     def get_grandpy_status(cls, status_value='home'):
@@ -161,7 +160,7 @@ class Conversation:
             'exhausted': 'je suis fatigué reviens me voir demain !'
         })
         cls.grandpy_code = status_value
-        cls.grandpy_response[status_value]
+        cls.grandpy_response = grandpy_code[status_value]
 
     @staticmethod
     def database_init(db_number) -> None:
@@ -180,6 +179,7 @@ class Conversation:
             )
         for counting in behavioral_data_counting:
             redis_utilities.write_access_conversation_data(counting, 0, db_number)
+
     #
     # def update_database(self) -> None:
     #     """after all data processing update redis database with local attributes
@@ -212,7 +212,7 @@ class Conversation:
             if self.number_of_incivility >= 3:
                 self.number_of_inciliity = 3
                 self.is_fatigue_quotas_in_conversation = True
-            else :
+            else:
                 self.number_of_incivility += 1
         status_incivility = (
             self.is_user_incivility,
@@ -220,7 +220,6 @@ class Conversation:
             self.is_fatigue_quotas_in_conversation
         )
         return status_incivility
-
 
     def calculate_the_indecency(self) -> tuple:
         """update the attributes is_user_indecency and number_of_indecencies
@@ -249,8 +248,8 @@ class Conversation:
         if self.user_entry_data_split is 'gjegruiotuygtugyt ...'
         then is_user_incomprehension = True and number_of_incomprehension += 1"""
         compare = get_placeid_from_address(self.user_entry)
-        if compare == {'candidates': [], 'status': 'ZERO_RESULTS'}\
-            or compare == {'candidates': [], 'status': 'INVALID_REQUEST'} :
+        if compare == {'candidates': [], 'status': 'ZERO_RESULTS'} \
+                or compare == {'candidates': [], 'status': 'INVALID_REQUEST'}:
             self.is_user_incomprehension = True
             if self.number_of_incomprehension >= 3:
                 self.number_of_incomprehension = 3
