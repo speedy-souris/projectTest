@@ -18,7 +18,7 @@ class TestConversation:
 
     def test_calculate_the_incivility(self):
         user_request = self.entry_bonjour
-        expected_result = (False, 0)
+        expected_result = (False, 0, False)
         result = user_request.calculate_the_incivility()
         assert expected_result == result
 
@@ -66,9 +66,9 @@ class TestConversation:
         assert expected_result == result
 
     def test_number_incivility_max(self):
-        first_user_request = Conversation('openClassroom', db_number=1)
-        second_user_request = Conversation('openClassroom', db_number=1)
-        three_user_request = Conversation('openClassroom', db_number=1)
+        user_request = Conversation('openClassroom', db_number=1)
         expected_result = (True, 3, True)
-        result = three_user_request.calculate_the_incivility()
+        user_request.calculate_the_incivility()
+        user_request.calculate_the_incivility()
+        result = user_request.calculate_the_incivility()
         assert expected_result == result
