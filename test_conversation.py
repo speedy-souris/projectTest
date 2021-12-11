@@ -84,7 +84,7 @@ class TestBadUserBehaviorToX3:
         result = user_request.calculate_the_indecency()
         assert expected_result == result
 
-    def test_number_incomprehension_max(self):
+    def test_number_incomprehension_max(self, monkeypatch):
         incomprehensible_user = Conversation('gjegruiotuygtugyt', db_number=1)
         expected_mock_result = {
             'candidates': [],
