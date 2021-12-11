@@ -69,6 +69,6 @@ class TestConversation:
         first_user_request = Conversation('openClassroom', db_number=1)
         second_user_request = Conversation('openClassroom', db_number=1)
         three_user_request = Conversation('openClassroom', db_number=1)
-        expected_result = (True, 3, False, 0, False, 0, True)
-        result = three_user_request.grandpy_status()
+        expected_result = (True, 3, True)
+        result = three_user_request.calculate_the_incivility()
         assert expected_result == result
