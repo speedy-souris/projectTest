@@ -65,9 +65,11 @@ class TestConversation:
         result = incomprehensible_user.calculate_the_incomprehension()
         assert expected_result == result
 
+class TestBadUserBehavior:
     def test_number_incivility_max(self):
         user_request = Conversation('openClassroom', db_number=1)
         expected_result = (True, 3, True)
+        user_request.calculate_the_incivility()
         user_request.calculate_the_incivility()
         user_request.calculate_the_incivility()
         result = user_request.calculate_the_incivility()
