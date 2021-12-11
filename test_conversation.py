@@ -96,5 +96,6 @@ class TestBadUserBehaviorToX3:
         monkeypatch.setattr(requests, 'get', mockreturn)
         incomprehensible_user.calculate_the_incomprehension()
         incomprehensible_user.calculate_the_incomprehension()
+        incomprehensible_user.calculate_the_incomprehension()
         result = incomprehensible_user.calculate_the_incomprehension()
         assert expected_result == result
