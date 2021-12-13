@@ -42,4 +42,9 @@ def test_number_incomprehension_max(monkeypatch):
 
 
 def test_get_grandpy_status():
-    pass
+    user_request = Conversation('bonjour', db_number=1)
+    expected_code = 'home'
+    expected_message = "Bonjour Mon petit, en quoi puis-je t'aider ?"
+    result = user_request.get_grandpy_status()
+    assert expected_code and expected_message == result
+
