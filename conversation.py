@@ -143,7 +143,7 @@ class Conversation:
         return data_behavior_sets
 
     @classmethod
-    def get_grandpy_status(cls, status_value='home'):
+    def get_grandpy_status(cls, status_value='home')-> None:
         """Generation of grandpy response according to user entry and Conversation attributes"""
         grandpy_code = frozendict({
             'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
@@ -284,7 +284,7 @@ class Conversation:
     #             self.number_of_user_entries += 1
     #     return self.number_of_user_entries
 
-    def get_request_parser(self):
+    def get_request_parser(self) -> str:
         """function which cuts the character string
         of the user request with the words present in the unnecessary set
         to keep only the keywords for the search
