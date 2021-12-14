@@ -62,3 +62,9 @@ def test_calculate_the_incomprehension(monkeypatch):
     monkeypatch.setattr(requests, 'get', mockreturn)
     result = incomprehensible_user.calculate_the_incomprehension()
     assert expected_result == result
+
+def test_get_request_parser():
+    user_request = Conversation('ou se trouve openClassrooms', db_number=1)
+    expected_result = 'openClassrooms'
+    result = user_request.get_request_parser()
+    assert expected_result == result

@@ -49,10 +49,3 @@ def test_get_grandpy_status():
     expected_result = (expected_code, expected_message)
     result = (user_request.grandpy_code, user_request.grandpy_response)
     assert expected_result == result
-
-
-def test_get_request_parser():
-    user_request = Conversation('ou se trouve openClassrooms', db_number=1)
-    expected_result = 'openClassrooms'
-    result = user_request.get_request_parser()
-    assert expected_result == result
