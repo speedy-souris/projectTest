@@ -16,7 +16,12 @@ def test_calculate_the_incivility():
     Conversation.database_init(1)
     user_request = Conversation('Bonjour', db_number=1)
     expected_result = (False, 0, False)
-    result = user_request.calculate_the_incivility()
+    user_request.calculate_the_incivility()
+    result = (
+        user_request.is_user_incivility,
+        user_request.number_of_incivility,
+        user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+    )
     assert expected_result == result
 
 
@@ -24,7 +29,12 @@ def test_calculate_the_indecency():
     Conversation.database_init(1)
     user_request = Conversation('vieux', db_number=1)
     expected_result = (True, 1, False)
-    result = user_request.calculate_the_indecency()
+    user_request.calculate_the_indecency()
+    result = (
+        user_request.is_user_indecency,
+        user_request.number_of_indecency,
+        user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+    )
     assert expected_result == result
 
 
@@ -38,7 +48,12 @@ def test_calculate_the_incomprehension(monkeypatch):
     mock_result = expected_mock_result
     mockreturn = get_mockreturn(mock_result)
     monkeypatch.setattr(requests, 'get', mockreturn)
-    result = incomprehensible_user.calculate_the_incomprehension()
+    incomprehensible_user.calculate_the_incomprehension()
+    result = (
+        incomprehensible_user.is_user_incomprehension,
+        incomprehensible_user.number_of_incomprehension,
+        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+    )
     assert expected_result == result
     incomprehensible_user = Conversation('1255871436', db_number=1)
     expected_mock_result = {
@@ -49,7 +64,12 @@ def test_calculate_the_incomprehension(monkeypatch):
     mock_result = expected_mock_result
     mockreturn = get_mockreturn(mock_result)
     monkeypatch.setattr(requests, 'get', mockreturn)
-    result = incomprehensible_user.calculate_the_incomprehension()
+    incomprehensible_user.calculate_the_incomprehension()
+    result = (
+        incomprehensible_user.is_user_incomprehension,
+        incomprehensible_user.number_of_incomprehension,
+        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+    )
     assert expected_result == result
     incomprehensible_user = Conversation('', db_number=1)
     expected_mock_result = {
@@ -60,7 +80,12 @@ def test_calculate_the_incomprehension(monkeypatch):
     mock_result = expected_mock_result
     mockreturn = get_mockreturn(mock_result)
     monkeypatch.setattr(requests, 'get', mockreturn)
-    result = incomprehensible_user.calculate_the_incomprehension()
+    incomprehensible_user.calculate_the_incomprehension()
+    result = (
+        incomprehensible_user.is_user_incomprehension,
+        incomprehensible_user.number_of_incomprehension,
+        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+    )
     assert expected_result == result
 
 
