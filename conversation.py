@@ -273,6 +273,7 @@ class Conversation:
 
 
 if __name__ == '__main__':
-    chat_session = Conversation('ou se trouve openClassrooms', 1)
-    print(chat_session.get_request_parser())
+    # chat_session = Conversation('ou se trouve openClassrooms', 1)
+    # print(chat_session.get_request_parser())
+    pass
 
