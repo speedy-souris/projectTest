@@ -5,7 +5,7 @@ from conversation import Conversation
 
 
 def initialisation():
-    return Conversation.database_and_class_init(1)
+    Conversation.database_and_class_init(1)
 
 
 def test_lower_and_split_user_entry():
@@ -19,6 +19,7 @@ def test_lower_and_split_user_entry():
 def test_calculate_the_incivility():
     initialisation()
     user_request = Conversation('Bonjour', db_number=1)
+    print(f'quotas-fatigue {user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION}')
     expected_result = (False, 0, False)
     user_request.calculate_the_incivility()
     result = (
