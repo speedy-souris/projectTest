@@ -160,7 +160,7 @@ class Conversation:
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', self.db_number)
         """
-        cls.IS_FATIGUE_QUOTAS_IN_conversation = False
+        cls.IS_FATIGUE_QUOTAS_IN_CONVERSATION = False
         cls.GRANDPY_CODE = ''
         cls.GRANDPY_RESPONSE = ''
         user_behavior = ['user_incivility', 'user_indecency', 'user_incomprehension']
@@ -267,12 +267,12 @@ class Conversation:
         example
         user_request = 'where is the Eiffel Tower' ==> get_request_parser = 'eiffel tower'"""
         user_question = self.user_entry.split()
-        result = [w for w in user_question if w.lower() not in self.INDECENCY_SET_DATA]
+        result = [w for w in user_question if w.lower() not in self.UNNECESSARY_SET_DATA]
         modified_message = ' '.join(result)
         return modified_message
 
 
 if __name__ == '__main__':
-    # chat_session = Conversation('bonjour')
-    # chat_session.database_init()
-    pass
+    chat_session = Conversation('ou se trouve openClassrooms', 1)
+    print(chat_session.get_request_parser())
+
