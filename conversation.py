@@ -154,12 +154,15 @@ class Conversation:
         user_entry_lowercase = self.user_entry.lower()
         return user_entry_lowercase.split()
 
-    @staticmethod
-    def database_init(db_number) -> None:
+    @classmethod
+    def database_and_class_init(cls,  db_number) -> None:
         """initialization of redis database
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', self.db_number)
         """
+        cls.IS_FATIGUE_QUOTAS_IN_conversation = False
+        cls.GRANDPY_CODE = ''
+        cls.GRANDPY_RESPONSE = ''
         user_behavior = ['user_incivility', 'user_indecency', 'user_incomprehension']
         behavioral_data_counting = [
             'number_of_incivility', 'number_of_indecency',
