@@ -4,8 +4,12 @@ from mock_api import get_mockreturn
 from conversation import Conversation
 
 
+def initialisation():
+    return Conversation.database_and_class_init(1)
+
+
 def test_lower_and_split_user_entry():
-    Conversation.database_init(1)
+    initialisation()
     user_request = Conversation('Bonjour', db_number=1)
     expected_result = ['bonjour']
     result = user_request.lower_and_split_user_entry()
@@ -13,7 +17,7 @@ def test_lower_and_split_user_entry():
 
 
 def test_calculate_the_incivility():
-    Conversation.database_init(1)
+    initialisation()
     user_request = Conversation('Bonjour', db_number=1)
     expected_result = (False, 0, False)
     user_request.calculate_the_incivility()
@@ -26,7 +30,7 @@ def test_calculate_the_incivility():
 
 
 def test_calculate_the_indecency():
-    Conversation.database_init(1)
+    initialisation()
     user_request = Conversation('vieux', db_number=1)
     expected_result = (True, 1, False)
     user_request.calculate_the_indecency()
