@@ -12,9 +12,9 @@ def test_number_incivility_max():
     user_request.calculate_the_incivility()
     user_request.calculate_the_incivility()
     result = (
-        user_request.is_user_incivility,
-        user_request.number_of_incivility,
-        user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        user_request.user_behavior['user_incivility'],
+        user_request.user_behavior['number_of_incivility'],
+        user_request.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
 
@@ -27,9 +27,9 @@ def test_number_indecency_max():
     user_request.calculate_the_indecency()
     user_request.calculate_the_indecency()
     result = (
-        user_request.is_user_indecency,
-        user_request.number_of_indecency,
-        user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        user_request.user_behavior['user_indecency'],
+        user_request.user_behavior['number_of_indecency'],
+        user_request.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
 
@@ -49,18 +49,16 @@ def test_number_incomprehension_max(monkeypatch):
     incomprehensible_user.calculate_the_incomprehension()
     incomprehensible_user.calculate_the_incomprehension()
     result = (
-        incomprehensible_user.is_user_incomprehension,
-        incomprehensible_user.number_of_incomprehension,
-        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        incomprehensible_user.user_behavior['user_incomprehension'],
+        incomprehensible_user.user_behavior['number_of_incomprehension'],
+        incomprehensible_user.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
 
 
 def test_get_grandpy_status():
     user_request = Conversation('bonjour', db_number=1)
-    expected_code = 'home'
     expected_message = "Bonjour Mon petit, en quoi puis-je t'aider ?"
-    user_request.get_grandpy_status()
-    expected_result = (expected_code, expected_message)
-    result = (user_request.GRANDPY_CODE, user_request.GRANDPY_RESPONSE)
-    assert expected_result == result
+    user_request.get_grandpy_status('home')
+    result = user_request.user_behavior['grandpy_code']
+    assert expected_message == result
