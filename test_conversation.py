@@ -5,7 +5,7 @@ from conversation import Conversation
 
 
 def initialisation():
-    Conversation.database_and_class_init(1)
+    Conversation.database_init(1)
 
 
 def test_lower_and_split_user_entry():
