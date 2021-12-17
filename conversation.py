@@ -7,6 +7,28 @@ from google_api import get_placeid_from_address
 
 class Conversation:
     """conversation setting class"""
+    # database initialization parameter
+    BEHAVIORAL_DATA = [
+        'user_incivility', 'user_indecency', 'user_incomprehension',
+        'fatigue_quotas', 'grandpy_code'
+    ]
+    BEHAVIORAL_DATA_COUNTING = [
+        'number_of_incivility', 'number_of_indecency',
+        'number_of_incomprehension', 'number_of_user_entries'
+    ]
+    GRANDPY_CODE = frozendict({
+        'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
+        'user_question': 'As-tu une nouvelle question à me demander ?',
+        'response': 'Voici Ta Réponse à la question !',
+        'tired': 'houla, maintenant ma memoire commence a fatiguée" !',
+        'incomprehension': "Ha, je ne comprends pas, essaye d'être plus précis ... !",
+        'mannerless': "s'il te plait, reformule ta question en étant plus polis ... !",
+        'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
+        'incivility_limit': 'cette impolitesse me FATIGUE ... !',
+        'indecency_limit': 'cette grossièreté me FATIGUE ... !',
+        'incomprehension_limit': 'cette incomprehension me FATIGUE ... !',
+        'exhausted': 'je suis fatigué reviens me voir demain !'
+    })
     # Data for check civility
     INCIVILITY_SET_DATA = {'bonjour', 'bonsoir', 'salut', 'hello', 'hi'}
     # Data for check decency
@@ -99,148 +121,127 @@ class Conversation:
 
     def __init__(self, user_entry, db_number=0):
         self.user_entry = user_entry
-        self.is_user_incivility = redis_utilities.string_to_boolean_conversion(
-            redis_utilities.read_access_conversation_data('incivility', db_number)
-        )
-        self.is_user_indecency = redis_utilities.string_to_boolean_conversion(
-            redis_utilities.read_access_conversation_data('indecency', db_number)
-        )
-        self.is_user_incomprehension = redis_utilities.string_to_boolean_conversion(
-            redis_utilities.read_access_conversation_data('incomprehension', db_number)
-        )
-        self.number_of_incivility = int(redis_utilities.read_access_conversation_data(
-            'number_of_incivility', db_number
-        )
-        )
-        self.number_of_indecency = int(redis_utilities.read_access_conversation_data(
-            'number_of_indecency', db_number
-        )
-        )
-        self.number_of_incomprehension = int(redis_utilities.read_access_conversation_data(
-            'number_of_incomprehension', db_number
-        )
-        )
-        # self.number_of_user_entries = int(redis_utilities.read_access_conversation_data(
-        #     'number_of_user_entries', self.db_number
-        # )
-        # )
+        self.user_behavior = self.user_behavior_init(db_number=db_number)
 
     @classmethod
-    def get_grandpy_status(cls, status_value='home') -> None:
-        """Generation of grandpy response according to user entry and Conversation attributes"""
-        grandpy_code = frozendict({
-            'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
-            'user_question': 'As tu une nouvelle question a me demander ?',
-            'response': 'Voici Ta Réponse à la question !',
-            'tired': 'houla, maintenant ma memoire commence a fatiguer !',
-            'incomprehension': "Ha, Je ne comprends pas, essaye d'être plus précis ... !",
-            'mannerless': "s'il te plait, reformule ta question en étant plus polis ... !",
-            'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
-            'incivility_limit': 'cette impolitesse me FATIGUE ... !',
-            'indecency_limit': 'cette grossierete me FATIGUE ... !',
-            'incomprehension_limit': 'cette incomprehension me FATIGUE ... !',
-            'exhausted': 'je suis fatigué reviens me voir demain !'
-        })
-        cls.GRANDPY_CODE = status_value
-        cls.GRANDPY_RESPONSE = grandpy_code[status_value]
+    def database_init(cls, db_number) -> None:
+        """initialization of redis database
+        example :
+        redis_utilities.write_access_conversation_data ('user_incivility', 'False', db_number)
+        """
+        behavioral_data = cls.BEHAVIORAL_DATA
+        behavioral_data_counting = cls.BEHAVIORAL_DATA_COUNTING
+        for behavior in behavioral_data:
+            if behavior == 'grandpy_code':
+                redis_utilities.write_access_conversation_data(
+                    behavior, 'home', db_number
+                )
+            else:
+                redis_utilities.write_access_conversation_data(
+                    behavior, 'False', db_number
+                )
+        for counting in behavioral_data_counting:
+            redis_utilities.write_access_conversation_data(counting, 0, db_number)
 
     @classmethod
-    def fatigue_quotas(cls, quotas=False) -> None:
+    def user_behavior_init(cls, db_number) -> dict:
+        """user behavior initialization parameter"""
+        behavioral_data = cls.BEHAVIORAL_DATA
+        behavioral_data_counting = cls.BEHAVIORAL_DATA_COUNTING
+        user_behavior = {}
+        for behavior in behavioral_data:
+            if behavior == 'grandpy_code':
+                user_behavior[behavior] =\
+                    redis_utilities.read_access_conversation_data(behavior, db_number)
+            else:
+                user_behavior[behavior] = redis_utilities.string_to_boolean_conversion(
+                    redis_utilities.read_access_conversation_data(behavior, db_number)
+                )
+        for counting in behavioral_data_counting:
+            user_behavior[counting] = redis_utilities.string_to_boolean_conversion(
+                redis_utilities.read_access_conversation_data(counting, db_number)
+            )
+        return user_behavior
+
+    def get_grandpy_status(self, status_value) -> None:
+        """Generation of grandpy response according to user entry"""
+        self.user_behavior['grandpy_code'] = self.__class__.GRANDPY_CODE[status_value]
+
+    def fatigue_quotas(self, quotas_value) -> None:
         """determine fatigue quotas in the conversation"""
-        cls.IS_FATIGUE_QUOTAS_IN_CONVERSATION = quotas
+        self.user_behavior['fatigue_quotas'] = quotas_value
 
     def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""
         user_entry_lowercase = self.user_entry.lower()
         return user_entry_lowercase.split()
 
-    @classmethod
-    def database_and_class_init(cls,  db_number) -> None:
-        """initialization of redis database
+    def update_database(self, db_number) -> None:
+        """after all data processing update redis database with local attributes
         example :
-        redis_utilities.write_access_conversation_data ('user_incivility', 'False', self.db_number)
-        """
-        cls.IS_FATIGUE_QUOTAS_IN_CONVERSATION = False
-        cls.GRANDPY_CODE = ''
-        cls.GRANDPY_RESPONSE = ''
-        user_behavior = ['user_incivility', 'user_indecency', 'user_incomprehension']
-        behavioral_data_counting = [
-            'number_of_incivility', 'number_of_indecency',
-            'number_of_incomprehension', 'number_of_user_entries'
+        redis_utilities.write_access_conversation_data(
+            'user_incivility', str(self.is_user_incivility), self.db_number)"""
+        db_data = [
+            {'user_incivility': self.user_behavior['user_incivility']},
+            {'user_indecency': self.user_behavior['user_indecency']},
+            {'user_incomprehension': self.user_behavior['user_incomprehension']},
+            {'fatigue_quotas': self.user_behavior['fatigue_quotas']},
+            {'number_of_incivility': self.user_behavior['number_of_indecency']},
+            {'number_of_indecency': self.user_behavior['number_of_indecency']},
+            {'number_of_incomprehension': self.user_behavior['number_of_indecency']},
+            {'number_of_user_entries': self.user_behavior['number_of_user_entries']}
         ]
-        for behavior in user_behavior:
-            redis_utilities.write_access_conversation_data(
-                behavior, 'False', db_number
-            )
-        for counting in behavioral_data_counting:
-            redis_utilities.write_access_conversation_data(counting, 0, db_number)
-
-    #
-    # def update_database(self) -> None:
-    #     """after all data processing update redis database with local attributes
-    #     example :
-    #     redis_utilities.write_access_conversation_data(
-    #         'user_incivility', str(self.is_user_incivility), self.db_number)"""
-    #     db_data = [
-    #         {'user_incivility': self.is_user_incivility},
-    #         {'user_indecency': self.is_user_indecency},
-    #         {'user_incomprehension': self.is_user_incomprehension},
-    #         {'number_of_incivility': self.number_of_indecency},
-    #         {'number_of_indecency': self.number_of_indecency},
-    #         {'number_of_incomprehension': self.number_of_indecency},
-    #         {'number_of_user_entries': self.number_of_user_entries}
-    #     ]
-    #     for counting in db_data:
-    #         for (data, value) in counting.items():
-    #             redis_utilities.write_access_conversation_data(data, str(value), self.db_number)
+        for counting in db_data:
+            for (data, value) in counting.items():
+                redis_utilities.write_access_conversation_data(data, str(value), db_number)
 
     def calculate_the_incivility(self) -> None:
         """update the attributes is_user_incivility and number_of_incivilities
         example :
-        if self.user_entry_data_split is 'Blablabla...'
+        if self.lower_and_split_user_entry is 'Blablabla...'
         then is_user_incivility = True and number_of_incivilities += 1"""
         user_entry_lowercase = self.lower_and_split_user_entry()
-        civility_set_data = self.INCIVILITY_SET_DATA
-        self.is_user_incivility = civility_set_data.isdisjoint(user_entry_lowercase)
-        if self.is_user_incivility:
-            if self.number_of_incivility >= 3:
-                self.number_of_incivility = 3
-                self.fatigue_quotas(quotas=True)
+        civility_set_data = self.__class__.INCIVILITY_SET_DATA
+        self.user_behavior['user_incivility'] = civility_set_data.isdisjoint(user_entry_lowercase)
+        if self.user_behavior['user_incivility']:
+            if self.user_behavior['number_of_incivility'] >= 3:
+                self.user_behavior['number_of_incivility'] = 3
+                self.user_behavior['fatigue_quotas'] = True
             else:
-                self.number_of_incivility += 1
+                self.user_behavior['number_of_incivility'] += 1
 
     def calculate_the_indecency(self) -> None:
         """update the attributes is_user_indecency and number_of_indecencies
         example :
-        if self.user_entry_data_split is 'vieux...'
+        if self.lower_and_split_user_entry is 'vieux...'
         then is_user_indecency = True and number_of_indecencies += 1"""
         user_entry_lowercase = self.lower_and_split_user_entry()
-        indecency_set_data = self.INDECENCY_SET_DATA
-        self.is_user_indecency = not indecency_set_data.isdisjoint(user_entry_lowercase)
-        if self.is_user_indecency:
-            if self.number_of_indecency >= 3:
-                self.number_of_indecency = 3
-                self.fatigue_quotas(quotas=True)
+        indecency_set_data = self.__class__.INDECENCY_SET_DATA
+        self.user_behavior['user_indecency'] = indecency_set_data.isdisjoint(user_entry_lowercase)
+        if self.user_behavior['user_indecency']:
+            if self.user_behavior['number_of_indecency'] >= 3:
+                self.user_behavior['number_of_indecency'] = 3
+                self.user_behavior['fatigue_quotas'] = True
             else:
-                self.number_of_indecency += 1
+                self.user_behavior['number_of_indecency'] += 1
 
     def calculate_the_incomprehension(self) -> None:
         """update the attributes is_user_incomprehension and number_of_incomprehension
-        if self.user_entry_data_split is 'gjegruiotuygtugyt ...'
+        if self.lower_and_split_user_entry is 'gjegruiotuygtugyt ...'
         then is_user_incomprehension = True and number_of_incomprehension += 1"""
         result_api = get_placeid_from_address(self.user_entry)
         if result_api in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
                 {'candidates': [], 'status': 'INVALID_REQUEST'}
         ):
-            self.is_user_incomprehension = True
-            if self.number_of_incomprehension >= 3:
-                self.number_of_incomprehension = 3
-                self.fatigue_quotas(quotas=True)
+            self.user_behavior['user_incomprehension'] = True
+            if self.user_behavior['number_of_incomprehension'] >= 3:
+                self.user_behavior['number_of_incomprehension'] = 3
+                self.user_behavior['fatigue_quotas'] = True
             else:
-                self.number_of_incomprehension += 1
+                self.user_behavior['number_of_incomprehension'] += 1
         else:
-            self.is_user_incomprehension = False
+            self.user_behavior['user_incomprehension'] = False
     #
     # def calculate_the_user_entries(self) -> int:
     #     """update the attribute number_of_user_entries
@@ -267,7 +268,7 @@ class Conversation:
         example
         user_request = 'where is the Eiffel Tower' ==> get_request_parser = 'eiffel tower'"""
         user_question = self.user_entry.split()
-        result = [w for w in user_question if w.lower() not in self.UNNECESSARY_SET_DATA]
+        result = [w for w in user_question if w.lower() not in self.__class__.UNNECESSARY_SET_DATA]
         modified_message = ' '.join(result)
         return modified_message
 
@@ -276,4 +277,3 @@ if __name__ == '__main__':
     # chat_session = Conversation('ou se trouve openClassrooms', 1)
     # print(chat_session.get_request_parser())
     pass
-
