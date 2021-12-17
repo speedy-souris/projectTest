@@ -19,13 +19,12 @@ def test_lower_and_split_user_entry():
 def test_calculate_the_incivility():
     initialisation()
     user_request = Conversation('Bonjour', db_number=1)
-    print(f'quotas-fatigue {user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION}')
     expected_result = (False, 0, False)
     user_request.calculate_the_incivility()
     result = (
-        user_request.is_user_incivility,
-        user_request.number_of_incivility,
-        user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        user_request.user_behavior['user_incivility'],
+        user_request.user_behavior['number_of_incivility'],
+        user_request.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
 
@@ -36,9 +35,9 @@ def test_calculate_the_indecency():
     expected_result = (True, 1, False)
     user_request.calculate_the_indecency()
     result = (
-        user_request.is_user_indecency,
-        user_request.number_of_indecency,
-        user_request.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        user_request.user_behavior['user_indecency'],
+        user_request.user_behavior['number_of_indecency'],
+        user_request.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
 
@@ -55,9 +54,9 @@ def test_calculate_the_incomprehension(monkeypatch):
     monkeypatch.setattr(requests, 'get', mockreturn)
     incomprehensible_user.calculate_the_incomprehension()
     result = (
-        incomprehensible_user.is_user_incomprehension,
-        incomprehensible_user.number_of_incomprehension,
-        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        incomprehensible_user.user_behavior['user_incomprehension'],
+        incomprehensible_user.user_behavior['number_of_incomprehension'],
+        incomprehensible_user.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
     incomprehensible_user = Conversation('1255871436', db_number=1)
@@ -71,9 +70,9 @@ def test_calculate_the_incomprehension(monkeypatch):
     monkeypatch.setattr(requests, 'get', mockreturn)
     incomprehensible_user.calculate_the_incomprehension()
     result = (
-        incomprehensible_user.is_user_incomprehension,
-        incomprehensible_user.number_of_incomprehension,
-        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        incomprehensible_user.user_behavior['user_incomprehension'],
+        incomprehensible_user.user_behavior['number_of_incomprehension'],
+        incomprehensible_user.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
     incomprehensible_user = Conversation('', db_number=1)
@@ -87,9 +86,9 @@ def test_calculate_the_incomprehension(monkeypatch):
     monkeypatch.setattr(requests, 'get', mockreturn)
     incomprehensible_user.calculate_the_incomprehension()
     result = (
-        incomprehensible_user.is_user_incomprehension,
-        incomprehensible_user.number_of_incomprehension,
-        incomprehensible_user.IS_FATIGUE_QUOTAS_IN_CONVERSATION
+        incomprehensible_user.user_behavior['user_incomprehension'],
+        incomprehensible_user.user_behavior['number_of_incomprehension'],
+        incomprehensible_user.user_behavior['fatigue_quotas']
     )
     assert expected_result == result
 
