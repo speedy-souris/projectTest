@@ -7,14 +7,27 @@ from google_api import get_placeid_from_address
 
 class Conversation:
     """conversation setting class"""
-    # database initialization parameter
+    # database initialization behavior parameter
+    USER_BEHAVIOR = {
+        'user_incivility': False,
+        'user_indecency': False,
+        'user_incomprehension': False,
+        'fatigue_quotas': False,
+        'grandpy_code': 'home',
+        'number_of_incivility': 0,
+        'number_of_indecency': 0,
+        'number_of_incomprehension': 0,
+        'number_of_user_entries': 0
+    }
     BEHAVIORAL_DATA = [
         'user_incivility', 'user_indecency', 'user_incomprehension',
-        'fatigue_quotas', 'grandpy_code'
-    ]
-    BEHAVIORAL_DATA_COUNTING = [
-        'number_of_incivility', 'number_of_indecency',
+        'fatigue_quotas', 'grandpy_code', 'number_of_incivility', 'number_of_indecency',
         'number_of_incomprehension', 'number_of_user_entries'
+    ]
+    NAME_GRANDPY_CODE = [
+        'home', 'user_question', 'response', 'tired',
+        'incomprehension', 'mannerless', 'disrespectful', 'incivility_limit',
+        'indecency_limit', 'incomprehension_limit', 'exhausted'
     ]
     GRANDPY_CODE = frozendict({
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
@@ -124,48 +137,37 @@ class Conversation:
         self.user_behavior = self.user_behavior_init(db_number=db_number)
 
     @classmethod
-    def database_init(cls, db_number) -> None:
+    def database_init(cls, db_number) -> dict:
         """initialization of redis database
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', db_number)
         """
-        behavioral_data = cls.BEHAVIORAL_DATA
-        behavioral_data_counting = cls.BEHAVIORAL_DATA_COUNTING
-        for behavior in behavioral_data:
-            if behavior == 'grandpy_code':
-                redis_utilities.write_access_conversation_data(
-                    behavior, 'home', db_number
-                )
-            else:
-                redis_utilities.write_access_conversation_data(
-                    behavior, 'False', db_number
-                )
-        for counting in behavioral_data_counting:
-            redis_utilities.write_access_conversation_data(counting, 0, db_number)
+        behavioral_data = cls.USER_BEHAVIOR
+        for key, value in behavioral_data.items():
+            redis_utilities.write_access_conversation_data(
+                    key, value, db_number
+            )
+        return behavioral_data
 
     @classmethod
     def user_behavior_init(cls, db_number) -> dict:
         """user behavior initialization parameter"""
         behavioral_data = cls.BEHAVIORAL_DATA
-        behavioral_data_counting = cls.BEHAVIORAL_DATA_COUNTING
         user_behavior = {}
-        for behavior in behavioral_data:
-            if behavior == 'grandpy_code':
-                user_behavior[behavior] =\
-                    redis_utilities.read_access_conversation_data(behavior, db_number)
-            else:
-                user_behavior[behavior] = redis_utilities.string_to_boolean_conversion(
-                    redis_utilities.read_access_conversation_data(behavior, db_number)
-                )
-        for counting in behavioral_data_counting:
-            user_behavior[counting] = redis_utilities.string_to_boolean_conversion(
-                redis_utilities.read_access_conversation_data(counting, db_number)
-            )
+        try:
+            for behavior in behavioral_data:
+                user_behavior[behavior] = \
+                    redis_utilities.read_access_conversation_data(
+                        behavior, cls.NAME_GRANDPY_CODE, db_number
+                    )
+        except TypeError:
+            user_behavior = cls.database_init(db_number)
         return user_behavior
 
-    def get_grandpy_status(self, status_value) -> None:
+    def get_grandpy_status(self, status_value='home') -> frozendict:
         """Generation of grandpy response according to user entry"""
-        self.user_behavior['grandpy_code'] = self.__class__.GRANDPY_CODE[status_value]
+        self.user_behavior['grandpy_code'] = status_value
+        return self.__class__.GRANDPY_CODE[self.user_behavior['grandpy_code']]
 
     def fatigue_quotas(self, quotas_value) -> None:
         """determine fatigue quotas in the conversation"""
@@ -274,6 +276,25 @@ class Conversation:
 
 
 if __name__ == '__main__':
-    # chat_session = Conversation('ou se trouve openClassrooms', 1)
-    # print(chat_session.get_request_parser())
+    # chat_session = Conversation('bonjour')
+    # print(f'Grandpy Response : {chat_session.get_grandpy_status()}')
+    # chat_session = Conversation('hfdkhjfkhjfk')
+    # chat_session .calculate_the_incomprehension()
+    # print(f'Grandpy Response : {chat_session.get_grandpy_status(status_value="incomprehension")}')
+    # chat_session = Conversation('hfdkhjfkhjfk')
+    # chat_session.calculate_the_incomprehension()
+    # print(f'Grandpy Response : {chat_session.get_grandpy_status(status_value="incomprehension")}')
+    # chat_session = Conversation('hfdkhjfkhjfk')
+    # chat_session.calculate_the_incomprehension()
+    # print(f'Grandpy Response : {chat_session.get_grandpy_status(status_value="incomprehension")}')
+    # chat_session = Conversation('hfdkhjfkhjfk')
+    # chat_session .calculate_the_incomprehension()
+    # print(f'Grandpy Response : {chat_session.get_grandpy_status(status_value="incomprehension")}')
+    # chat_session = Conversation('hfdkhjfkhjfk')
+    # chat_session .calculate_the_incomprehension()
+    # print(f'Grandpy Response :\
+    #     {chat_session.get_grandpy_status(status_value="incomprehension_limit")}'
+    # )
+    # print(f'Grandpy Response : {chat_session.get_grandpy_status(status_value="exhausted")}')
+    # print(f'attribut = {chat_session .user_behavior}')
     pass

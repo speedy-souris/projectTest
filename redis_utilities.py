@@ -13,44 +13,36 @@ def get_database_access(db_number=0):
     )
     return redis_connect
 
-def boolean_to_string_conversion(boolean_value):
-    """conversion from boolean to string"""
-    if boolean_value:
-        boolean_value = 'True'
-    else:
-        boolean_value = 'False'
-    return boolean_value
 
-def string_to_boolean_conversion(string_value):
+def value_to_string_conversion(script_value):
+    """conversion from script_value to string"""
+    return str(script_value)
+
+
+def byte_to_value_conversion(string_value, name_grandpy_code):
     """conversion from string to boolean"""
     if string_value == b'False':
         string_value = False
     elif string_value == b'True':
         string_value = True
+    elif string_value in b'01235789':
+        string_value = int(string_value)
     else:
-        string_value = False
+        for value in name_grandpy_code:
+            if string_value in value:
+                string_value = value
     return string_value
-
-def string_to_int_conversion(string_value):
-    """conversion from string to integer"""
-    return int(string_value)
 
 
 def write_access_conversation_data(name_user_behavior, value_user_behavior, db_number):
     """writing data to the database"""
     chat_access = get_database_access(db_number=db_number)
-    if type(value_user_behavior) == bool:
-        value = boolean_to_string_conversion(value_user_behavior)
-    else:
-        value = value_user_behavior
-    chat_access.set(name_user_behavior, value)
+    chat_access.set(name_user_behavior, value_to_string_conversion(value_user_behavior))
 
 
-def read_access_conversation_data(name_user_behavior, db_number):
+def read_access_conversation_data(name_user_behavior, name_grandpy_code, db_number):
     """reading data from the database"""
     chat_access = get_database_access(db_number=db_number)
-    if 'number' in name_user_behavior:
-        data_value = string_to_int_conversion(chat_access.get(name_user_behavior))
-    else:
-        data_value = string_to_boolean_conversion(chat_access.get(name_user_behavior))
-    return data_value
+    name_user_behavior =\
+        byte_to_value_conversion(chat_access.get(name_user_behavior), name_grandpy_code)
+    return name_user_behavior
