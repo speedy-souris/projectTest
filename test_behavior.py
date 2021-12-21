@@ -61,7 +61,15 @@ class TestBehavior:
 
     def test_get_grandpy_status(self):
         user_request = Conversation('bonjour', db_number=1)
-        expected_message = "Bonjour Mon petit, en quoi puis-je t'aider ?"
-        user_request.get_grandpy_status('home')
+        expected_message = 'bonjour'
+        user_request.get_grandpy_status()
         result = user_request.user_behavior['grandpy_code']
+        assert expected_message == result
+
+    def test_grandpy_code(self):
+        user_request = Conversation('bonjour', db_number=1)
+        expected_message = "Bonjour Mon petit, en quoi puis-je t'aider ?"
+        user_request.get_grandpy_status()
+        grandpy_code = user_request.user_behavior['grandpy_code']
+        result = user_request.GRANDPY_CODE[grandpy_code]
         assert expected_message == result
