@@ -235,10 +235,11 @@ class Conversation:
             )
 
     def calculate_the_indecency(self) -> None:
-        """update the attributes is_user_indecency and number_of_indecencies
+        """update the attributes' user_indecency and number_of_indecencies
         example :
         if self.lower_and_split_user_entry is 'vieux...'
-        then is_user_indecency = True and number_of_indecencies += 1"""
+        then self.user_behavior['user_indecency'] = True and
+        self.user_behavior['number_of_indecency'] += 1"""
         user_entry_lowercase = self.lower_and_split_user_entry()
         indecency_set_data = self.__class__.INDECENCY_SET_DATA
         self.user_behavior['user_indecency'] = \
@@ -270,10 +271,11 @@ class Conversation:
             )
 
     def calculate_the_incomprehension(self) -> None:
-        """update the attributes is_user_incomprehension and number_of_incomprehension
+        """update the attributes' user_incomprehension and number_of_incomprehension
         example
         if self.lower_and_split_user_entry is 'gjegruiotuygtugyt ...'
-        then is_user_incomprehension = True and number_of_incomprehension += 1"""
+        then self.user_behavior['user_incomprehension'] = True and
+        self.user_behavior['number_of_incomprehension'] += 1"""
         result_api = get_placeid_from_address(self.user_entry)
         if result_api in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
@@ -305,23 +307,41 @@ class Conversation:
                 f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
             )
 
-    # def calculate_the_user_entries(self) -> None:
-    #     """update the attribute number_of_user_entries
-    #     example:
-    #     if self.lower_and_split_user_entry is 'openClassrooms ...' X 10 times
-    #     after self.user_entry_data_split = 'bonjour' then number_of_the_user_entries += 1"""
-    #     user_entry_lowercase = self.do_this_from_attribut()
-    #     compare = Conversation.compare_this_set()
-    #     civility_set_data, indecency_set_data, unnecessary_set_data = [
-    #         compare[0], compare[1], compare[2]
-    #     ]
-    #     if civility_set_data.isdisjoint(user_entry_lowercase) and \
-    #             not indecency_set_data.isdisjoint(user_entry_lowercase) and \
-    #             not unnecessary_set_data.isdisjoint(user_entry_lowercase):
-    #         if self.number_of_user_entries >= 10:
-    #             self.number_of_user_entries = 10
-    #         else:
-    #             self.number_of_user_entries += 1
+    def calculate_the_user_entries(self) -> None:
+        """update the attribute number_of_user_entries
+        example:
+        if self.lower_and_split_user_entry is 'openClassrooms ...' X 10 times
+        after self.lower_and_split_user_entry = 'bonjour' then number_of_the_user_entries += 1"""
+        self.calculate_the_indecency()
+        self.calculate_the_incomprehension()
+        if not self.user_behavior['user_indecency'] and \
+            not self.user_behavior['user_incomprehension']:
+
+            if self.user_behavior['number_of_user_entries'] >= 10:
+                self.user_behavior['number_of_user_entries'] = 10
+                self.user_behavior['fatigue_quotas'] = True
+                self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[9]
+                print(
+                    'Grandpy_response : '
+                    f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
+                )
+                self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[10]
+                print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
+            else:
+                self.user_behavior['number_of_user_entries'] += 1
+                self.user_behavior['fatigue_quotas'] = False
+                self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[4]
+                print(
+                    'Grandpy_response : '
+                    f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
+                )
+        else:
+            self.user_behavior['user_indecency'] = False
+            self.user_behavior['user_incomprehension'] = False
+            print(
+                'Grandpy_response : '
+                f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
+            )
 
     def get_request_parser(self) -> str:
         """function which cuts the character string
