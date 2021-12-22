@@ -73,3 +73,25 @@ class TestBehavior:
         grandpy_code = user_request.user_behavior['grandpy_code']
         result = user_request.GRANDPY_CODE[grandpy_code]
         assert expected_message == result
+
+    def test_number_request_max(self):
+        user_request = Conversation('openClassroom', db_number=1)
+        expected_result = (False, False, 10, True)
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        user_request.calculate_the_user_entries()
+        result = (
+            user_request.user_behavior['user_indecency'],
+            user_request.user_behavior['user_incomprehension'],
+            user_request.user_behavior['number_of_user_entries'],
+            user_request.user_behavior['fatigue_quotas']
+        )
+        assert expected_result == result
