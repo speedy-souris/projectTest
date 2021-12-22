@@ -315,8 +315,7 @@ class Conversation:
         self.calculate_the_indecency()
         self.calculate_the_incomprehension()
         if not self.user_behavior['user_indecency'] and \
-            not self.user_behavior['user_incomprehension']:
-
+                not self.user_behavior['user_incomprehension']:
             if self.user_behavior['number_of_user_entries'] >= 10:
                 self.user_behavior['number_of_user_entries'] = 10
                 self.user_behavior['fatigue_quotas'] = True
