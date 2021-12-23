@@ -76,7 +76,7 @@ class TestBehavior:
 
     def test_number_request_max(self, monkeypatch):
         user_request = Conversation('openClassroom', db_number=1)
-        user.request.calculate_the_incivility()
+        user_request.calculate_the_incivility()
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
