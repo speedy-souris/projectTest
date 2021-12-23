@@ -74,9 +74,17 @@ class TestBehavior:
         result = user_request.GRANDPY_CODE[grandpy_code]
         assert expected_message == result
 
-    def test_number_request_max(self):
+    def test_number_request_max(self, monkeypatch):
         user_request = Conversation('openClassroom', db_number=1)
+        user.request.calculate_the_incivility()
+        expected_mock_result = {
+            'candidates': [],
+            'status': 'ZERO_RESULTS'
+        }
         expected_result = (False, False, 10, True)
+        mock_result = expected_mock_result
+        mockreturn = get_mockreturn(mock_result)
+        monkeypatch.setattr(requests, 'get', mockreturn)
         user_request.calculate_the_user_entries()
         user_request.calculate_the_user_entries()
         user_request.calculate_the_user_entries()
