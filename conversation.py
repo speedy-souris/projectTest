@@ -153,15 +153,20 @@ class Conversation:
     def user_behavior_init(cls, db_number) -> dict:
         """user behavior initialization parameter"""
         behavioral_data = cls.BEHAVIORAL_DATA
+        grandpy_status = behavioral_data[3]  # fatigue_quotas value
         user_behavior = {}
         try:
-            for behavior in behavioral_data:
-                user_behavior[behavior] = \
-                    redis_utilities.read_access_conversation_data(
-                        behavior, cls.NAME_GRANDPY_CODE, db_number
-                    )
-        except TypeError:
+            user_behavior[grandpy_status] =\
+                redis_utilities.read_access_conversation_data(grandpy_status, db_number)
+        except AttributeError:
+            #  deletion of data from database 1 ==> database for Test
+            redis_utilities.erasing_data(1)
+            #  deletion of data from database 0 ==> database for prod
+            redis_utilities.erasing_data(0)
             user_behavior = cls.database_init(db_number)
+        for behavior in behavioral_data:
+            user_behavior[behavior] =\
+                redis_utilities.read_access_conversation_data(behavior, db_number)
         return user_behavior
 
     def get_grandpy_status(self, status_value='home') -> frozendict:
@@ -185,19 +190,18 @@ class Conversation:
             'user_incivility', str(self.user_behavior['user_incivility']), db_number)"""
         behavior_data = self.__class__.BEHAVIORAL_DATA
         db_data = {
-            behavior_data[0]: self.user_behavior['user_incivility'],
-            behavior_data[1]: self.user_behavior['user_indecency'],
-            behavior_data[2]: self.user_behavior['user_incomprehension'],
-            behavior_data[3]: self.user_behavior['fatigue_quotas'],
+            # behavior_data[0]: self.user_behavior['user_incivility'],
+            # behavior_data[1]: self.user_behavior['user_indecency'],
+            # behavior_data[2]: self.user_behavior['user_incomprehension'],
+            # behavior_data[3]: self.user_behavior['fatigue_quotas'],
             behavior_data[4]: self.user_behavior['grandpy_code'],
-            behavior_data[5]: self.user_behavior['number_of_indecency'],
+            behavior_data[5]: self.user_behavior['number_of_incivility'],
             behavior_data[6]: self.user_behavior['number_of_indecency'],
-            behavior_data[7]: self.user_behavior['number_of_indecency'],
+            behavior_data[7]: self.user_behavior['number_of_incomprehension'],
             behavior_data[8]: self.user_behavior['number_of_user_entries']
         }
-        for counting in db_data:
-            for (data, value) in counting.items():
-                redis_utilities.write_access_conversation_data(data, str(value), db_number)
+        for (data, value) in db_data.items():
+            redis_utilities.write_access_conversation_data(data, str(value), db_number)
 
     def calculate_the_incivility(self) -> None:
         """update the attribute user_incivility
@@ -209,25 +213,30 @@ class Conversation:
         civility_set_data = self.__class__.INCIVILITY_SET_DATA
         self.user_behavior['user_incivility'] = civility_set_data.isdisjoint(user_entry_lowercase)
         if self.user_behavior['user_incivility']:
+            self.user_behavior['number_of_incivility'] += 1
             if self.user_behavior['number_of_incivility'] >= 3:
                 self.user_behavior['number_of_incivility'] = 3
                 self.user_behavior['fatigue_quotas'] = True
+                #  display incivility_limit value in grandpy_code
                 self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[7]
                 print(
                     'Grandpy_response : '
                     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 )
+                # display exhausted value in grandpy_code
                 self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[10]
                 print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
+                redis_utilities.data_expiration(0)
             else:
-                self.user_behavior['number_of_incivility'] += 1
                 self.user_behavior['fatigue_quotas'] = False
+                # display mannerless value in grandpy_code
                 self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[5]
                 print(
                     'Grandpy_response : '
                     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 )
         else:
+            # display home value in grandpy_code
             self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[1]
             print(
                 'Grandpy_response : '
@@ -312,10 +321,7 @@ class Conversation:
         example:
         if self.lower_and_split_user_entry is 'openClassrooms ...' X 10 times
         after self.lower_and_split_user_entry = 'bonjour' then number_of_the_user_entries += 1"""
-        self.calculate_the_indecency()
-        self.calculate_the_incomprehension()
-        if not self.user_behavior['user_indecency'] and \
-                not self.user_behavior['user_incomprehension']:
+        if self.user_behavior['user_indecency'] or self.user_behavior['user_incomprehension']:
             if self.user_behavior['number_of_user_entries'] >= 10:
                 self.user_behavior['number_of_user_entries'] = 10
                 self.user_behavior['fatigue_quotas'] = True
@@ -326,17 +332,10 @@ class Conversation:
                 )
                 self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[10]
                 print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
-            else:
-                self.user_behavior['number_of_user_entries'] += 1
-                self.user_behavior['fatigue_quotas'] = False
-                self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[4]
-                print(
-                    'Grandpy_response : '
-                    f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                )
         else:
-            self.user_behavior['user_indecency'] = False
-            self.user_behavior['user_incomprehension'] = False
+            self.user_behavior['number_of_user_entries'] += 1
+            self.user_behavior['fatigue_quotas'] = False
+            self.user_behavior['grandpy_code'] = self.__class__.NAME_GRANDPY_CODE[4]
             print(
                 'Grandpy_response : '
                 f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
@@ -355,10 +354,4 @@ class Conversation:
 
 
 if __name__ == '__main__':
-    # chat_session = Conversation('openClassrooms')
-    # chat_session.calculate_the_incivility()
-    # chat_session.calculate_the_incivility()
-    # chat_session.calculate_the_incivility()
-    # chat_session.calculate_the_incivility()
-    # print(f'attribut = {chat_session.user_behavior}')
     pass
