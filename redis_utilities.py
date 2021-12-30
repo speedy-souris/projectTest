@@ -21,12 +21,14 @@ def value_to_string_conversion(script_value):
 def byte_to_value_conversion(string_value):
     """conversion from string to boolean"""
     string_value = string_value.decode()  # byte to string
+    try:
+        string_value = int(string_value)
+    except ValueError:
+        pass
     if string_value == 'False':
         string_value = False
     elif string_value == 'True':
         string_value = True
-    elif string_value in '01235789':
-        string_value = int(string_value)
     return string_value
 
 def write_access_conversation_data(name_user_behavior, value_user_behavior, db_number):
@@ -43,7 +45,7 @@ def read_access_conversation_data(name_user_behavior, db_number):
 def erasing_data(db_number):
     """data erasure redis"""
     redis = get_database_access(db_number)
-    for key in redis.keys('prefix:*'):
+    for key in redis.keys('*'):
         redis.delete(key)
 
 def data_expiration(db_number):
