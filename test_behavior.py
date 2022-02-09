@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import requests
 from mock_api import get_mockreturn
+from conversation import Conversation
 from main import search_address_to_wiki
 
 
@@ -57,22 +58,19 @@ class TestBehavior:
         assert expected_result == result
 
     def test_get_grandpy_status(self):
-        user_request = Conversation('bonjour', db_number=1)
         expected_message = 'home'
-        user_request.get_grandpy_status()
+        user_request = search_address_to_wiki('bonjour')
         result = user_request.user_behavior['grandpy_code']
         assert expected_message == result
 
     def test_grandpy_code(self):
-        user_request = Conversation('bonjour', db_number=1)
         expected_message = "Bonjour Mon petit, en quoi puis-je t'aider ?"
-        user_request.get_grandpy_status()
+        user_request = search_address_to_wiki('bonjour')
         grandpy_code = user_request.user_behavior['grandpy_code']
         result = user_request.GRANDPY_CODE[grandpy_code]
         assert expected_message == result
 
     def test_number_request_max(self, monkeypatch):
-        user_request = Conversation('openClassroom', db_number=1)
         user_request.calculate_the_incivility()
         expected_mock_result = {
             'candidates': [],
@@ -82,17 +80,17 @@ class TestBehavior:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
-        user_request.calculate_the_user_entries()
+        search_address_to_wiki('bonjour')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        user_request = search_address_to_wiki('openClassrooms')
         result = (
             user_request.user_behavior['user_indecency'],
             user_request.user_behavior['user_incomprehension'],
