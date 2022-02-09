@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import requests
 from mock_api import get_mockreturn
-from conversation import Conversation
+from main import search_address_to_wiki
 
 
 def teardown_method():
@@ -11,12 +11,11 @@ def teardown_method():
 class TestBehavior:
 
     def test_number_incivility_max(self):
-        user_request = Conversation('openClassroom', db_number=1)
         expected_result = (True, 3, True)
-        user_request.calculate_the_incivility()
-        user_request.calculate_the_incivility()
-        user_request.calculate_the_incivility()
-        user_request.calculate_the_incivility()
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        search_address_to_wiki('openClassrooms')
+        user_request = search_address_to_wiki('openClassrooms')
         result = (
             user_request.user_behavior['user_incivility'],
             user_request.user_behavior['number_of_incivility'],
@@ -25,12 +24,11 @@ class TestBehavior:
         assert expected_result == result
 
     def test_number_indecency_max(self):
-        user_request = Conversation('vieux', db_number=1)
         expected_result = (True, 3, True)
-        user_request.calculate_the_indecency()
-        user_request.calculate_the_indecency()
-        user_request.calculate_the_indecency()
-        user_request.calculate_the_indecency()
+        search_address_to_wiki('vieux')
+        search_address_to_wiki('vieux')
+        search_address_to_wiki('vieux')
+        user_request = search_address_to_wiki('vieux')
         result = (
             user_request.user_behavior['user_indecency'],
             user_request.user_behavior['number_of_indecency'],
@@ -39,7 +37,6 @@ class TestBehavior:
         assert expected_result == result
 
     def test_number_incomprehension_max(self, monkeypatch):
-        incomprehensible_user = Conversation('gjegruiotuygtugyt', db_number=1)
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
@@ -48,10 +45,10 @@ class TestBehavior:
         mock_result = expected_mock_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
-        incomprehensible_user.calculate_the_incomprehension()
-        incomprehensible_user.calculate_the_incomprehension()
-        incomprehensible_user.calculate_the_incomprehension()
-        incomprehensible_user.calculate_the_incomprehension()
+        search_address_to_wiki('gjegruiotuygtugyt')
+        search_address_to_wiki('gjegruiotuygtugyt')
+        search_address_to_wiki('gjegruiotuygtugyt')
+        incomprehensible_user = search_address_to_wiki('gjegruiotuygtugyt')
         result = (
             incomprehensible_user.user_behavior['user_incomprehension'],
             incomprehensible_user.user_behavior['number_of_incomprehension'],
