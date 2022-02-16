@@ -54,7 +54,9 @@ def search_address_to_wiki(user_request, db_number=0):
         chat_session.user_entry = chat_session.get_request_parser()
         # print(f'search keyword : {user_request} ?')
         chat_session.calculate_the_user_entries()
-        chat_session.update_database(db_number=db_number)
+    print(f"Fatique_quotas = {chat_session.user_behavior['fatigue_quotas']}")
+    print(f"nombre de conversation utilisateur {chat_session.user_behavior['number_of_user_entries']}")
+    chat_session.update_database(db_number=db_number)
     return chat_session
 
 
