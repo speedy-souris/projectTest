@@ -4,14 +4,29 @@ from mock_api import get_mockreturn
 from conversation import Conversation
 from main import search_address_to_wiki
 
-
-def teardown_method():
+def setup_method():
     Conversation.database_init(1)
-
 
 class TestBehavior:
 
-    def test_number_incivility_max(self):
+    def test_number_incivility_max(self, monkeypatch):
+        expected_result = {
+            'html_attributions': [],
+            'result': {
+                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
+                'geometry': {
+                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
+                    'viewport': {
+                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
+                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}
+                    }
+                }
+            },
+            'status': 'OK'
+        }
+        mock_result = expected_result
+        mockreturn = get_mockreturn(mock_result)
+        monkeypatch.setattr(requests, 'get', mockreturn)
         expected_result = (True, 3, True)
         search_address_to_wiki('openClassrooms')
         search_address_to_wiki('openClassrooms')
@@ -71,7 +86,6 @@ class TestBehavior:
         assert expected_message == result
 
     def test_number_request_max(self, monkeypatch):
-        user_request.calculate_the_incivility()
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'

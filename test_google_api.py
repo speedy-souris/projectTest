@@ -5,7 +5,6 @@ import google_api
 
 
 def test_get_placeid(monkeypatch):
-    place_id = google_api.get_placeid_from_address('openClassrooms')
     expected_result = {
         'candidates': [{'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
         'status' : 'OK'
@@ -13,12 +12,12 @@ def test_get_placeid(monkeypatch):
     mock_result = expected_result
     mockreturn = get_mockreturn(mock_result)
     monkeypatch.setattr(requests, 'get', mockreturn)
+    place_id = google_api.get_placeid_from_address('openClassrooms')
     result = place_id
     assert expected_result == result
 
 
 def test_get_address_api_from_placeid(monkeypatch):
-    address_placeid = google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')
     expected_result = {
         'html_attributions': [],
         'result': {
@@ -36,5 +35,6 @@ def test_get_address_api_from_placeid(monkeypatch):
     mock_result = expected_result
     mockreturn = get_mockreturn(mock_result)
     monkeypatch.setattr(requests, 'get', mockreturn)
+    address_placeid = google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')
     result = address_placeid
     assert expected_result == result
