@@ -22,14 +22,18 @@ def search_address_to_wiki(user_request, db_number=0):
                     chat_session.calculate_the_user_entries()
             else:
                 chat_session.user_behavior['grandpy_code'] = \
-                    chat_session.__class__.NAME_GRANDPY_CODE[1]
+                    chat_session.__class__.grandpy_status_search_key(
+                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
+                    )
                 # print(
                 #     'Grandpy_response[user_indecency] : '
                 #     f"{chat.get_grandpy_status(chat.user_behavior['grandpy_code'])}"
                 # )
         else:
             chat_session.user_behavior['grandpy_code'] =\
-                chat_session.__class__.NAME_GRANDPY_CODE[1]
+                chat_session.__class__.grandpy_status_search_key(
+                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
+                )
             # print(
             #     'Grandpy_response[user_incivility] : '
             #     f"{chat_session.get_grandpy_status(chat_session.user_behavior['grandpy_code'])}"
@@ -45,7 +49,9 @@ def search_address_to_wiki(user_request, db_number=0):
                     chat_session.calculate_the_user_entries()
             else:
                 chat_session.user_behavior['grandpy_code'] = \
-                    chat_session.__class__.NAME_GRANDPY_CODE[1]
+                    chat_session.__class__.grandpy_status_search_key(
+                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
+                    )
                 # print(
                 #     'Grandpy_response[user_indecency] : '
                 #     f"{chat.get_grandpy_status(chat.user_behavior['grandpy_code'])}"
