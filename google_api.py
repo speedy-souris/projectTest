@@ -34,6 +34,7 @@ def get_settings_for_placeid_api(address):
     parameters = {'input': f'{address}', 'inputtype': 'textquery', 'key': f'{key}'}
     return parameters
 
+
 def get_settings_for_address_api(placeid):
     """determining the localized address for the found placeid"""
     key = google_api_keys()[0]
