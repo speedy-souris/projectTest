@@ -132,6 +132,7 @@ class Conversation:
 
     @classmethod
     def grandpy_status_search_key(cls, data_value) -> str:
+        """return the GRANDPY_STATUS_DATA dictionary key according to its value"""
         lst_status_key = [
             Key for Key, value in cls.GRANDPY_STATUS_DATA.items() if value == data_value
         ]
