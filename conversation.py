@@ -11,14 +11,14 @@ class Conversation:
     """conversation setting class"""
     # database initialization behavior parameter
     USER_BEHAVIOR_DEFAULT_DATA = OrderedDict({
-        'user_incivility': False,
-        'user_indecency': False,
-        'user_incomprehension': False,
-        'fatigue_quotas': False,
-        'grandpy_code': 'home',
-        'number_of_incivility': 0,
-        'number_of_indecency': 0,
-        'number_of_incomprehension': 0,
+        'user_incivility_status': False,
+        'user_indecency_status': False,
+        'user_incomprehension_status': False,
+        'fatigue_quotas_of_grandpy': False,
+        'grandpy_status_code': 'home',
+        'number_of_user_incivility': 0,
+        'number_of_user_indecency': 0,
+        'number_of_user_incomprehension': 0,
         'number_of_user_entries': 0
     })
     USER_BEHAVIOR_DEFAULT_DATA_KEY = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
@@ -27,7 +27,7 @@ class Conversation:
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
         'user_question': 'As-tu une nouvelle question à me demander ?',
         'response': 'Voici Ta Réponse à la question !',
-        'tired': 'houla, maintenant ma memoire commence a fatiguée !',
+        'tired': 'houla, maintenant ma memoire commence à fatiguée !',
         'incomprehension': "Ha, je ne comprends pas, essaye d'être plus précis ... !",
         'mannerless': "s'il te plait, reformule ta question en étant plus polis ... !",
         'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
@@ -171,9 +171,9 @@ class Conversation:
                 read_access_conversation_data(behavior, db_number)
         return user_behavior
 
-    def get_grandpy_status(self, status_value='home') -> frozendict:
+    def get_grandpy_status(self, grandpy_code='home') -> frozendict:
         """Generation of grandpy response according to user entry"""
-        self.user_behavior['grandpy_code'] = status_value
+        self.user_behavior['grandpy_code'] = grandpy_code
         return self.__class__.GRANDPY_STATUS_DATA[self.user_behavior['grandpy_code']]
 
     def fatigue_quotas(self, quotas_value) -> None:
