@@ -21,7 +21,7 @@ class Conversation:
         'number_of_incomprehension': 0,
         'number_of_user_entries': 0
     })
-    USER_BEHAVIOR_DEFAULT_DATA_KEY = tuple(frozendict(USER_BEHAVIOR_DEFAULT_DATA).keys())
+    USER_BEHAVIOR_DEFAULT_DATA_KEY = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
 
     GRANDPY_STATUS_DATA = frozendict({
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
