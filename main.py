@@ -67,10 +67,11 @@ def search_address_to_wiki():
 def main(user_request, db_number=0):
     """question and answer"""
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
-    # 2) TODO calling class method to read grandpy answer
-    # 3) TODO calling APIs (GoogleMap / WIKIPEDIA)
-    # 4) TODO Create test_main.py module
-    # 6) TODO Add conditional statements (incivility, indecency...)
+    # 2) TODO create max_number_of_incivility function
+    # 3) DONE Create test_main.py module
+    # 12) TODO Add incivility conditional statements
+    # 17) TODO Add indecency conditional statements
+    # 22) TODO Add incomprehension conditional statements
     return chat_session.GRANDPY_STATUS_DATA['response']
 
 def OLD_search_address_to_wiki(user_request, db_number=0):
@@ -137,18 +138,16 @@ def OLD_search_address_to_wiki(user_request, db_number=0):
 
 if __name__ == '__main__':
     erasing_data(0)
-    chat_session = Conversation('openClassrooms', db_number=0)
+    # 5) TODO correct query creation X1
+    # 7) TODO correct query creation X10
+    # 9) TODO incivility query creation X1
+    # 11) TODO incivility query creation X3
+    # 14) TODO indecency query creation X1
+    # 16) TODO indecency query creation X3
+    # 19) TODO incomprehension query creation X1
+    # 21) TODO incomprehension query creation X3
+    main('bonjour', db_number=0)
+    print(f"présentation de l'utilisateur : {user_request}")
+    print(chat_session.read_grandpy_answer('home'))
+    print(f"requete utilisateur = {'ou se trouve openClassrooms'}")
 
-    # print("Grandpy response[Accueil] :  Bonjour mon petit en quoi puis je t'aider")
-    # chat = search_address_to_wiki('bonjour')
-    # print(f"user_request {chat.user_entry}")
-    # print(f'\nuser_behavior = {chat.user_behavior}')
-    # # request_parsed = chat.get_request_parser()
-    # # print(f'user_request parsed : {chat.user_entry}')
-    # for i in range(11):
-    #     print(f" request number  {i+1}")
-    #     print(f"Grandpy_response {chat.__class__.GRANDPY_CODE[chat.user_behavior['grandpy_code']]}")
-    #     chat1 = search_address_to_wiki('ou se trouve openClassrooms')
-    #     chat = chat1
-    #     print(f"user_request {chat.user_entry}")
-    #     print(f'\nuser_behavior = {chat.user_behavior}')
