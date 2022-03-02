@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """conversation management module between grandpyRobot and a user"""
-from collections import OrderedDict
+from frozenordereddict import FrozenOrderedDict
 from frozendict import frozendict
 from google_api import get_placeid_from_address
 from redis_utilities import write_access_conversation_data, read_access_conversation_data
@@ -10,7 +10,7 @@ from redis_utilities import erasing_data, data_expiration
 class Conversation:
     """conversation setting class"""
     # database initialization behavior parameter
-    USER_BEHAVIOR_DEFAULT_DATA = OrderedDict({
+    USER_BEHAVIOR_DEFAULT_DATA = FrozenOrderedDict({
         'user_incivility_status': False,
         'user_indecency_status': False,
         'user_incomprehension_status': False,
@@ -138,6 +138,13 @@ class Conversation:
         ]
         status_key = "".join(lst_status_key)
         return status_key
+
+    # 1) TODO Create class method to read grandpy answer
+    @classmethod
+    def read_grandpy_answer(cls, grandpy_status):
+        """class method to read grandpy answer"""
+        response = cls.GRANDPY_STATUS_DATA[grandpy_status]
+        return response
 
     @classmethod
     def database_init(cls, db_number) -> dict:
