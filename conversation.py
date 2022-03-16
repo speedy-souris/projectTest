@@ -276,7 +276,7 @@ class Conversation:
                 # print(f'user_question : {self.user_entry} ?')
         else:
             # display home value in grandpy_status_code
-            self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = \
+            self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]] = \
                 self.__class__.GRANDPY_STATUS_DATA_KEY[1]
             # display user_incivility_status value
             self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]] = False
@@ -432,4 +432,5 @@ class Conversation:
 
 if __name__ == '__main__':
     chat_session = Conversation('bonjour')
-    print(chat_session.user_behavior)
+    chat_session.calculate_the_incivility()
+

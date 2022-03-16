@@ -7,7 +7,7 @@ import google_api
 def test_get_placeid(monkeypatch):
     expected_result = {
         'candidates': [{'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
-        'status' : 'OK'
+        'status': 'OK'
     }
     mock_result = expected_result
     mockreturn = get_mockreturn(mock_result)

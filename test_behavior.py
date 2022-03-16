@@ -2,10 +2,12 @@
 import requests
 from mock_api import get_mockreturn
 from conversation import Conversation
-from main import search_address_to_wiki
+from main import search_address_to_gMap
+
 
 def setup_method():
     Conversation.database_init(1)
+
 
 class TestBehavior:
 
@@ -27,11 +29,12 @@ class TestBehavior:
         mock_result = expected_result
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
+        chat_session = Conversation('openClassrooms', db_number=1)
         expected_result = (True, 3, True)
-        search_address_to_wiki('openClassrooms')
-        search_address_to_wiki('openClassrooms')
-        search_address_to_wiki('openClassrooms')
-        user_request = search_address_to_wiki('openClassrooms')
+        search_address_to_gMap(chat_session, 'openClassrooms')
+        search_address_to_gMap(chat_session, 'openClassrooms')
+        search_address_to_gMap(chat_session, 'openClassrooms')
+        user_request = search_address_to_gMap(chat_session, 'openClassrooms')
         result = (
             user_request.user_behavior['user_incivility'],
             user_request.user_behavior['number_of_incivility'],

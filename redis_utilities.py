@@ -43,8 +43,13 @@ def write_access_conversation_data(name_user_behavior, value_user_behavior, db_n
 def read_access_conversation_data(name_user_behavior, db_number):
     """reading data from the database"""
     chat_access = get_database_access(db_number=db_number)
-    data_conversion = byte_to_value_conversion(chat_access.get(name_user_behavior))
-    return data_conversion
+    try:
+        data_conversion = byte_to_value_conversion(chat_access.get(name_user_behavior))
+    except AttributeError:
+        key_data = name_user_behavior
+    else:
+        key_data = data_conversion
+    return key_data
 
 
 def erasing_data(db_number):

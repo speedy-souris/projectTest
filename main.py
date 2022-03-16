@@ -123,7 +123,7 @@ def search_address_to_wiki():
 def main(user_request, db_number=0):
     """question answer between user and Grandpy"""
     # 6) DONE Create test_main.py module
-    # 8) TODO correct query creation X1
+    # 8) DONE correct query creation X1
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
     chat_session.calculate_the_incivility()
     # incivility_limit
@@ -132,8 +132,7 @@ def main(user_request, db_number=0):
         max_number_of_incivility(chat_session)
     else:
         chat_session.user_behavior[chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]] =\
-            chat_session.read_grandpy_answer(chat_session.__class__.get_grandpy_status_key(1))
-        print(chat_session.read_grandpy_answer(chat_session.__class__.get_grandpy_status_key(1)))
+            chat_session.__class__.get_grandpy_status_key(1)
 
     # 10) TODO correct query creation X10
     # 12) TODO incivility query creation X1
