@@ -189,7 +189,7 @@ class Conversation:
 
     def fatigue_quotas(self, quotas_value) -> None:
         """determine fatigue quotas in the conversation"""
-        self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = quotas_value
+        self.user_behavior[self.__class__.get_user_behavior_key(3)] = quotas_value
 
     def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""
@@ -204,29 +204,29 @@ class Conversation:
         behavior_data = self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY
         db_data = {
             # user_incivility_status
-            behavior_data[0]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]],
+            behavior_data[0]: self.user_behavior[self.__class__.get_user_behavior_key(0)],
             # user_indecency_status
-            behavior_data[1]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[1]],
+            behavior_data[1]: self.user_behavior[self.__class__.get_user_behavior_key(1)],
             # user_incomprehension_status
-            behavior_data[2]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[2]],
+            behavior_data[2]: self.user_behavior[self.__class__.get_user_behavior_key(2)],
             # grandpy_status_code
-            behavior_data[4]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]],
+            behavior_data[4]: self.user_behavior[self.__class__.get_user_behavior_key(4)],
             # number_of_user_incivility
-            behavior_data[5]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[5]],
+            behavior_data[5]: self.user_behavior[self.__class__.get_user_behavior_key(5)],
             # number_of_user_indecency
-            behavior_data[6]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[6]],
+            behavior_data[6]: self.user_behavior[self.__class__.get_user_behavior_key(6)],
             # number_of_user_incomprehension
-            behavior_data[7]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[7]],
+            behavior_data[7]: self.user_behavior[self.__class__.get_user_behavior_key(7)],
             # number_of_user_entries
-            behavior_data[8]: self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[8]]
+            behavior_data[8]: self.user_behavior[self.__class__.get_user_behavior_key(8)]
         }
         # (in database redis) writing fatigue_quotas_of_grandpy
         write_access_conversation_data(
-            behavior_data[3],
-            str(self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]]), db_number
+            self.__class__.get_user_behavior_key(3),
+            str(self.user_behavior[self.__class__.get_user_behavior_key(3)]), db_number
         )
         # expiration of data fatigue_quotas_of_grandpy in a delai of 24h00
-        if self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]]:
+        if self.user_behavior[self.__class__.get_user_behavior_key(3)]:
             data_expiration(db_number)
         # (in database redis) writing all
         for (data, value) in db_data.items():
@@ -241,34 +241,34 @@ class Conversation:
         user_entry_lowercase = self.lower_and_split_user_entry()
         civility_set_data = self.__class__.INCIVILITY_SET_DATA
         # user_incivility_status
-        self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]] =\
+        self.user_behavior[self.__class__.get_user_behavior_key(0)] =\
             civility_set_data.isdisjoint(user_entry_lowercase)
-        if self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]]:
+        if self.user_behavior[self.__class__.get_user_behavior_key(0)]:
             # display mannerless value in grandpy_code
-            self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]] =\
-                self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[5]
+            self.user_behavior[self.__class__.get_user_behavior_key(4)] =\
+                self.__class__.get_user_behavior_key(5)
             # number_of_user_incivility
-            self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[5]] += 1
-            if self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[5]] >= 3:
-                self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[5]] = 3
+            self.user_behavior[self.__class__.get_user_behavior_key(5)] += 1
+            if self.user_behavior[self.__class__.get_user_behavior_key(5)] >= 3:
+                self.user_behavior[self.__class__.get_user_behavior_key(5)] = 3
                 # fatigue_quotas_of_grandpy
-                self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = True
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = True
                 #  display incivility_limit value in grandpy_code
-                self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[7]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(7)
                 # print(
                 #     'Grandpy_response : '
                 #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 # )
                 # display exhausted value in grandpy_code
-                self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = \
-                    self.__class__.GRANDPY_STATUS_DATA[self.__class__.GRANDPY_STATUS_DATA_KEY[10]]
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = \
+                    self.__class__.get_grandpy_status_key(10)
                 # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
             else:
-                self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = False
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = False
                 # display mannerless value in grandpy_code
-                self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]] =\
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[5]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] =\
+                    self.__class__.get_user_behavior_key(5)
                 # print(
                 #     'Grandpy_response : '
                 #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
@@ -276,10 +276,10 @@ class Conversation:
                 # print(f'user_question : {self.user_entry} ?')
         else:
             # display home value in grandpy_status_code
-            self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]] = \
-                self.__class__.GRANDPY_STATUS_DATA_KEY[1]
+            self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                self.__class__.get_grandpy_status_key(1)
             # display user_incivility_status value
-            self.user_behavior[self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]] = False
+            self.user_behavior[self.__class__.get_user_behavior_key(0)] = False
 
     def calculate_the_indecency(self) -> None:
         """update the attributes' user_indecency and number_of_indecencies
@@ -289,37 +289,38 @@ class Conversation:
         self.user_behavior['number_of_indecency'] += 1"""
         user_entry_lowercase = self.lower_and_split_user_entry()
         indecency_set_data = self.__class__.INDECENCY_SET_DATA
-        self.user_behavior['user_indecency'] = \
+        self.user_behavior[self.__class__.get_user_behavior_key(1)] = \
             not indecency_set_data.isdisjoint(user_entry_lowercase)
-        if self.user_behavior['user_indecency']:
-            self.user_behavior['number_of_indecency'] += 1
-            if self.user_behavior['number_of_indecency'] >= 3:
-                self.user_behavior['number_of_indecency'] = 3
-                self.user_behavior['fatigue_quotas'] = True
+        if self.user_behavior[self.__class__.get_user_behavior_key(1)]:
+            self.user_behavior[self.__class__.get_user_behavior_key(6)] += 1
+            if self.user_behavior[self.__class__.get_user_behavior_key(6)] >= 3:
+                self.user_behavior[self.__class__.get_user_behavior_key(6)] = 3
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = True
                 #  display indecency_limit value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[8]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(8)
                 # print(
                 #     'Grandpy_response : '
                 #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 # )
                 # display exhausted value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[10]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(10)
                 # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
             else:
-                self.user_behavior['fatigue_quotas'] = False
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = False
                 # display disrespectful value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[6]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(6)
                 # print(
                 #     'Grandpy_response : '
                 #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 # )
         else:
             # display home value in grandpy_code
-            self.user_behavior['grandpy_code'] = self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]
-            self.user_behavior['user_indecency'] = False
+            self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                self.__class__.get_user_behavior_key(0)
+            self.user_behavior[self.__class__.get_user_behavior_key(1)] = False
             # print(
             #     'Grandpy_response : '
             #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
@@ -336,35 +337,36 @@ class Conversation:
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
                 {'candidates': [], 'status': 'INVALID_REQUEST'}
         ):
-            self.user_behavior['number_of_incomprehension'] += 1
-            self.user_behavior['user_incomprehension'] = True
-            if self.user_behavior['number_of_incomprehension'] >= 3:
-                self.user_behavior['number_of_incomprehension'] = 3
-                self.user_behavior['fatigue_quotas'] = True
+            self.user_behavior[self.__class__.get_user_behavior_key(7)] += 1
+            self.user_behavior[self.__class__.get_user_behavior_key(2)] = True
+            if self.user_behavior[self.__class__.get_user_behavior_key(7)] >= 3:
+                self.user_behavior[self.__class__.get_user_behavior_key(7)] = 3
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = True
                 #  display incomprehension_limit value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[9]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(9)
                 # print(
                 #     'Grandpy_response : '
                 #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 # )
                 # display exhausted value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[10]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(10)
                 # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
             else:
-                self.user_behavior['fatigue_quotas'] = False
+                self.user_behavior[self.__class__.get_user_behavior_key(3)] = False
                 # display incomprehension value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]
+                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                    self.__class__.get_user_behavior_key(4)
                 # print(
                 #     'Grandpy_response : '
                 #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
                 # )
         else:
             # display home value in grandpy_code
-            self.user_behavior['grandpy_code'] = self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]
-            self.user_behavior['user_incomprehension'] = False
+            self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
+                self.__class__.get_user_behavior_key(0)
+            self.user_behavior[self.__class__.get_user_behavior_key(2)] = False
             # print(
             #     'Grandpy_response : '
             #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
@@ -431,6 +433,4 @@ class Conversation:
 
 
 if __name__ == '__main__':
-    chat_session = Conversation('bonjour')
-    chat_session.calculate_the_incivility()
-
+    pass

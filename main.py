@@ -4,15 +4,29 @@ from conversation import Conversation
 from redis_utilities import erasing_data
 
 
+def question_answer(chat_session):
+    # TODO create a simple dialogue (a question, an answer)
+    """grandpy receives the user politely, the user answers politely then he asks a question
+     has grandpy. Grandpy answers him with one address of googleMap and a review of the quarter
+      on Wikipedia"""
+
+    pass
+
+# TODO create a behaviour of discourtesy for the user
+# TODO create a behaviour of indecency for the user
+# TODO create a behaviour incomprehension for the user
+# TODO create the beginning of tiredness for grandpy
+
+
 # 3) DONE create max_number_of_incivility
 def max_number_of_incivility(chat_session):
     # DONE max_incivlity counter
     """restoration of grandpy's status since a number of user incivility equal to 3"""
     incivility_limit_finded = chat_session.__class__.get_grandpy_status_key(7)  #  incivility_limit
     #  user_incivility_status
-    chat_session.user_behavior[chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[0]] = True
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)] = True
     #  fatigue_quotas_of_grandpy
-    chat_session.user_behavior[chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[3]] = True
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(3)] = True
     print(
         'Réponse de Grandpy : '
         f'{chat_session.__class__.read_grandpy_answer(incivility_limit_finded)}'
@@ -125,14 +139,26 @@ def main(user_request, db_number=0):
     # 6) DONE Create test_main.py module
     # 8) DONE correct query creation X1
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
-    chat_session.calculate_the_incivility()
-    # incivility_limit
-    if chat_session.__class__.read_grandpy_answer(
-        chat_session.__class__.get_grandpy_status_key(7)) == 'incivility_limit':
-        max_number_of_incivility(chat_session)
-    else:
-        chat_session.user_behavior[chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY[4]] =\
-            chat_session.__class__.get_grandpy_status_key(1)
+    # if user_behavior['grandpy_status_code'] == 'home'
+    if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+        chat_session.__class__.get_grandpy_status_key(0):
+        chat_session.calculate_the_incivility()
+        # incivility_limit
+        if chat_session.__class__.read_grandpy_answer(
+            chat_session.__class__.get_grandpy_status_key(7)
+        ) == chat_session.__class__.get_grandpy_status_key(7):
+            max_number_of_incivility(chat_session)
+        else:
+            chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] =\
+                chat_session.__class__.get_grandpy_status_key(1)
+    # if user_behavior['grandpy_status_code'] == 'user_question'
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+        chat_session.__class__.get_grandpy_status_key(1):
+        print(
+            'user_incivility ='
+            f' {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]}'
+        )
+        question_answer(chat_session)
 
     # 10) TODO correct query creation X10
     # 12) TODO incivility query creation X1
