@@ -2,15 +2,8 @@
 """main module"""
 from conversation import Conversation
 from redis_utilities import erasing_data
+import counting_behaviour
 
-
-def question_answer(chat_session):
-    # TODO create a simple dialogue (a question, an answer)
-    """grandpy receives the user politely, the user answers politely then he asks a question
-     has grandpy. Grandpy answers him with one address of googleMap and a review of the quarter
-      on Wikipedia"""
-
-    pass
 
 # TODO create a behaviour of discourtesy for the user
 # TODO create a behaviour of indecency for the user
@@ -18,96 +11,20 @@ def question_answer(chat_session):
 # TODO create the beginning of tiredness for grandpy
 
 
-# 3) DONE create max_number_of_incivility
-def max_number_of_incivility(chat_session):
-    # DONE max_incivlity counter
-    """restoration of grandpy's status since a number of user incivility equal to 3"""
-    incivility_limit_finded = chat_session.__class__.get_grandpy_status_key(7)  #  incivility_limit
-    #  user_incivility_status
-    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)] = True
-    #  fatigue_quotas_of_grandpy
-    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(3)] = True
-    print(
-        'Réponse de Grandpy : '
-        f'{chat_session.__class__.read_grandpy_answer(incivility_limit_finded)}'
-    )
-    log_off_for_24_hours = chat_session.__class__.get_grandpy_status_key(10)  # exhausted
-    print(
-        f'Réponse de Grandpy : {chat_session.__class__.read_grandpy_answer(log_off_for_24_hours)}'
-    )
-
-
-def max_number_of_indecency(chat_session):
-    # DONE max_indecency counter
-    """restoration of grandpy's status since a number of user indecency equal to 3"""
-    indecency_limit_reached = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-            chat_session.__class__.GRANDPY_STATUS_DATA['disrespectful']
-        )
-    )
-    chat_session.user_behavior[indecency_limit_reached] = True
-    chat_session.user_behavior['fatigue_quotas'] = True
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[indecency_limit_reached]}')
-    log_off_for_24_hours = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-            chat_session.__class__.grandpy_status_search_key(
-                chat_session.__class__.read_grandpy_answer('exhausted')
-            )
-        )
-    )
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[log_off_for_24_hours]}')
-
-
 def max_number_of_incomprehension(chat_session):
     # DONE max incomprehension counter
     """restoration of grandpy's status since a number of user incomprehension equal to 3"""
-    incomprehension_limit_reached = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-            chat_session.__class__.GRANDPY_STATUS_DATA['incomprehension_limit']
-        )
-    )
-    chat_session.user_behavior[incomprehension_limit_reached] = True
-    chat_session.user_behavior['fatigue_quotas'] = True
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[incomprehension_limit_reached]}')
-    log_off_for_24_hours = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-            chat_session.__class__.grandpy_status_search_key(
-                chat_session.__class__.read_grandpy_answer('exhausted')
-            )
-        )
-    )
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[log_off_for_24_hours]}')
-
-
-def number_of_user_entries_to_X5(chat_session):
-    # DONE user_entries X5
-    """restore grandpy status from correct user request count of 5"""
-    level_tired = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-             chat_session.__class__.GRANDPY_STATUS_DATA['tired']
-        )
-    )
-    chat_session.user_behavior['grandpy_code'] = level_tired
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[level_tired]}')
-    log_off_for_24_hours = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-            chat_session.__class__.read_grandpy_answer('exhausted')
-        )
-    )
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[log_off_for_24_hours]}')
+    incomprehension_limit_found = chat_session.__class__.get_grandpy_status_key(9)
+    chat_session.has_user_incomprehension_status(True)
+    session_data_display(chat_session, incomprehension_limit_found)
 
 
 def max_number_of_user_entries(chat_session):
     # DONE max_user_entries counter
     """restoration of grandpy's status
     since a maximum number of correct requests from the user equal to 10"""
-    chat_session.user_behavior['fatigue_quotas'] = True
-    log_off_for_24_hours = chat_session.get_grandpy_status(
-        chat_session.__class__.grandpy_status_search_key(
-            chat_session.__class__.read_grandpy_answer('exhausted')
-        )
-    )
-    print(f'Réponse de Grandpy : {chat_session.user_behavior[log_off_for_24_hours]}')
+    response_limit_found = chat_session.__class__.get_grandpy_status_key(2)
+    session_data_display(chat_session, response_limit_found)
 
 
 def conversation_between_user_and_grandpy(user_request, db_number=0):
@@ -123,6 +40,7 @@ def search_address_to_gMap(chat_session, user_request_parsed):
     # DONE GoogleMap API calling
     """call of the GoogleMap APIs according to the user's request"""
     gmap_api_placeId_value = chat_session.get_placeid_from_address(user_request_parsed)
+    print(f"placeid value = {gmap_api_placeId_value}")
     gmap_api_address_value = chat_session.get_address_api_from_placeid(gmap_api_placeId_value)
     return gmap_api_address_value
 
@@ -142,23 +60,30 @@ def main(user_request, db_number=0):
     # if user_behavior['grandpy_status_code'] == 'home'
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(0):
-        chat_session.calculate_the_incivility()
-        # incivility_limit
-        if chat_session.__class__.read_grandpy_answer(
-            chat_session.__class__.get_grandpy_status_key(7)
-        ) == chat_session.__class__.get_grandpy_status_key(7):
-            max_number_of_incivility(chat_session)
-        else:
-            chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] =\
-                chat_session.__class__.get_grandpy_status_key(1)
+        chat_session.calculate_the_incivility(db_number)
     # if user_behavior['grandpy_status_code'] == 'user_question'
     elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(1):
-        print(
-            'user_incivility ='
-            f' {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]}'
-        )
-        question_answer(chat_session)
+        chat_session.calculate_the_indecency(db_number)
+        chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] += 1
+        counting_behaviour.user_question_answer_count(chat_session, db_number)
+    #     if chat_session.__class__.read_grandpy_answer(
+    #             chat_session.__class__.get_grandpy_status_key(7)
+    #     )\
+    #         == chat_session.__class__.get_grandpy_status_key(7):
+    #         max_number_of_incivility(chat_session)
+    #     else:
+    #         # user_behavior['grandpy_status_code'] == 'user_question'
+    #         chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] =\
+    #             chat_session.__class__.get_grandpy_status_key(1)
+    # # if user_behavior['grandpy_status_code'] == 'user_question'
+    # elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+    #     chat_session.__class__.get_grandpy_status_key(1):
+    #     print(
+    #             'user_incivility ='
+    #             f' {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]}'
+    #     )
+    # question_answer(chat_session)
 
     # 10) TODO correct query creation X10
     # 12) TODO incivility query creation X1
@@ -237,11 +162,10 @@ def OLD_search_address_to_wiki(user_request, db_number=0):
 
 
 if __name__ == '__main__':
-    erasing_data(0)
-    main('bonjour', db_number=0)
-    print(f"présentation de l'utilisateur : {user_request}")
-    print(chat_session.read_grandpy_answer())
-    print(f"requete utilisateur = {'ou se trouve openClassrooms'}")
-
+    # erasing_data(1)
+    main('openclassrooms', db_number=1)
+    main('openclassrooms', db_number=1)
+    main('openclassrooms', db_number=1)
+    main('openclassrooms', db_number=1)
 
 

@@ -4,24 +4,26 @@ from frozenordereddict import FrozenOrderedDict
 from collections import OrderedDict
 from google_api import get_placeid_from_address, get_address_api_from_placeid
 from redis_utilities import write_access_conversation_data, read_access_conversation_data
-from redis_utilities import erasing_data, data_expiration
+from redis_utilities import erasing_data, value_to_string_conversion, data_expiration
+from counting_behaviour import user_incivility_count, user_indecency_count
+from counting_behaviour import user_incomprehension_count
 
 
 class Conversation:
     """conversation setting class"""
     # database initialization behavior parameter
     USER_BEHAVIOR_DEFAULT_DATA = FrozenOrderedDict({
-        'user_incivility_status': False,
-        'user_indecency_status': False,
-        'user_incomprehension_status': False,
-        'fatigue_quotas_of_grandpy': False,
+        'has_user_incivility_status': False,
+        'has_user_indecency_status': False,
+        'has_user_incomprehension_status': False,
+        'has_fatigue_quotas_of_grandpy': False,
         'grandpy_status_code': 'home',
         'number_of_user_incivility': 0,
         'number_of_user_indecency': 0,
         'number_of_user_incomprehension': 0,
         'number_of_user_entries': 0
     })
-    USER_BEHAVIOR_DEFAULT_DATA_KEY = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
+    USER_BEHAVIOR_DEFAULT_DATA_KEYS = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
 
     # data grandpy satus values
     GRANDPY_STATUS_DATA = FrozenOrderedDict({
@@ -37,7 +39,7 @@ class Conversation:
         'incomprehension_limit': 'cette incomprehension me FATIGUE ... !',
         'exhausted': 'je suis fatigué reviens me voir demain !'
     })
-    GRANDPY_STATUS_DATA_KEY = tuple(GRANDPY_STATUS_DATA.keys())
+    GRANDPY_STATUS_DATA_KEYS = tuple(GRANDPY_STATUS_DATA.keys())
 
     # Data for check incivility
     INCIVILITY_SET_DATA = frozenset({'bonjour', 'bonsoir', 'salut', 'hello', 'hi'})
@@ -131,63 +133,77 @@ class Conversation:
 
     def __init__(self, user_entry, db_number=0):
         self.user_entry = user_entry
-        self.user_behavior = self.user_behavior_init(db_number=db_number)
+        self.user_behavior = self.user_behavior_init_ordered(db_number=db_number)
 
     @classmethod
     def get_user_behavior_key(cls, key_position) -> str:
         """returns a key in USER_BEHAVIOR_DEFAULT_DATA dictionary"""
-        behavior_key = cls.USER_BEHAVIOR_DEFAULT_DATA_KEY[key_position]
+        behavior_key = cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[key_position]
         return behavior_key
 
     # 1) DONE Create class method to read grandpy status
     @classmethod
     def get_grandpy_status_key(cls, key_position) -> str:
         """returns a key in GRANDPY_STATUS_DATA dictionary"""
-        status_key = cls.GRANDPY_STATUS_DATA_KEY[key_position]
+        status_key = cls.GRANDPY_STATUS_DATA_KEYS[key_position]
         return status_key
 
     # 2) DONE Create class method to read grandpy answer
     @classmethod
     def read_grandpy_answer(cls, grandpy_status_key) -> str:
         """method to read grandpy answer"""
-        response = cls.GRANDPY_STATUS_DATA[grandpy_status_key]
+        response = cls.GRANDPY_STATUS_DATA_KEYS[grandpy_status_key]
         return response
 
     @classmethod
-    def database_init(cls, db_number) -> dict:
+    def database_init_ordered(cls, db_number) -> dict:
         """initialization of redis database
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', db_number)
         """
-        lst_key, lst_value = list(), list()
+        list_data_keys, list_data_values = list(), list()
         for (key, value) in cls.USER_BEHAVIOR_DEFAULT_DATA.items():
-            lst_key.append(key)
-            lst_value.append(value)
-        behavioral_data = OrderedDict(zip(lst_key, lst_value))
+            list_data_keys.append(key)
+            list_data_values.append(value)
+        behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
+
         for (key, value) in behavioral_data.items():
             write_access_conversation_data(
                 key, value, db_number
             )
         return behavioral_data
 
-    def user_behavior_init(self, db_number) -> dict:
+    def user_behavior_init_ordered(self, db_number) -> dict:
         """user behavior initialization parameter"""
-        lst_key, lst_value = list(), list()
-        for val in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY:
-            lst_key.append(val)
-            lst_value.append(read_access_conversation_data(val, db_number))
-        behavioral_data = OrderedDict(zip(lst_key, lst_value))
+        list_data_keys, list_data_values = list(), list()
+        for value in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS:
+            list_data_keys.append(value)
+            list_data_values.append(read_access_conversation_data(value, db_number))
+        behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
         try:
-            behavioral_data[lst_key[3]]  # fatigue_quotas_of_grandpy
+            # fatigue_quotas_of_grandpy
+            behavioral_data[self.__class__.get_user_behavior_key(3)]
         except AttributeError:
             #  deletion of data from database 1 ==> database for Test
             erasing_data(1)
             #  deletion of data from database 0 ==> database for prod
             erasing_data(0)
-            behavioral_data = self.__class__.database_init(db_number)
+            behavioral_data = self.__class__.database_init_ordered(db_number)
         return behavioral_data
 
-    def fatigue_quotas(self, quotas_value) -> None:
+    def set_has_user_incivility_status(self, incivility_value) -> None:
+        """determine user incivility status in the conversation"""
+        self.user_behavior[self.__class__.get_user_behavior_key(0)] = incivility_value
+
+    def set_has_user_indecency_status(self, indecency_value) -> None:
+        """determine user incivility status in the conversation"""
+        self.user_behavior[self.__class__.get_user_behavior_key(1)] = indecency_value
+
+    def set_has_user_incomprehension_status(self, incomprehension_value) -> None:
+        """determine user incivility status in the conversation"""
+        self.user_behavior[self.__class__.get_user_behavior_key(2)] = incomprehension_value
+
+    def set_has_fatigue_quotas_of_grandpy(self, quotas_value) -> None:
         """determine fatigue quotas in the conversation"""
         self.user_behavior[self.__class__.get_user_behavior_key(3)] = quotas_value
 
@@ -201,14 +217,16 @@ class Conversation:
         example :
         write_access_conversation_data(
             'user_incivility', str(self.user_behavior['user_incivility']), db_number)"""
-        behavior_data = self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEY
+        behavior_data = self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS
         db_data = {
-            # user_incivility_status
+            # has_user_incivility_status
             behavior_data[0]: self.user_behavior[self.__class__.get_user_behavior_key(0)],
-            # user_indecency_status
+            # has_user_indecency_status
             behavior_data[1]: self.user_behavior[self.__class__.get_user_behavior_key(1)],
-            # user_incomprehension_status
+            # has_user_incomprehension_status
             behavior_data[2]: self.user_behavior[self.__class__.get_user_behavior_key(2)],
+            # has_fatigue_quotas_of_grandpy
+            behavior_data[3]: self.user_behavior[self.__class__.get_user_behavior_key(3)],
             # grandpy_status_code
             behavior_data[4]: self.user_behavior[self.__class__.get_user_behavior_key(4)],
             # number_of_user_incivility
@@ -220,216 +238,93 @@ class Conversation:
             # number_of_user_entries
             behavior_data[8]: self.user_behavior[self.__class__.get_user_behavior_key(8)]
         }
-        # (in database redis) writing fatigue_quotas_of_grandpy
-        write_access_conversation_data(
-            self.__class__.get_user_behavior_key(3),
-            str(self.user_behavior[self.__class__.get_user_behavior_key(3)]), db_number
-        )
-        # expiration of data fatigue_quotas_of_grandpy in a delai of 24h00
-        if self.user_behavior[self.__class__.get_user_behavior_key(3)]:
-            data_expiration(db_number)
         # (in database redis) writing all
         for (data, value) in db_data.items():
-            write_access_conversation_data(data, str(value), db_number)
+            write_access_conversation_data(data, value_to_string_conversion(value), db_number)
 
-    def calculate_the_incivility(self) -> None:
-        """update the attribute user_incivility
-        example :
-        if self.lower_and_split_user_entry is 'Blablabla...'
-        then self.user_behavior['user_incivility'] = True and
-        self.user_behavior['number_of_incivilities'] += 1"""
+    def calculate_the_incivility(self, db_number) -> None:
+        """update the attribut has_user_incivility_status since INCIVILITY_SET_DATA set"""
         user_entry_lowercase = self.lower_and_split_user_entry()
-        civility_set_data = self.__class__.INCIVILITY_SET_DATA
-        # user_incivility_status
-        self.user_behavior[self.__class__.get_user_behavior_key(0)] =\
-            civility_set_data.isdisjoint(user_entry_lowercase)
-        if self.user_behavior[self.__class__.get_user_behavior_key(0)]:
-            # display mannerless value in grandpy_code
-            self.user_behavior[self.__class__.get_user_behavior_key(4)] =\
-                self.__class__.get_user_behavior_key(5)
-            # number_of_user_incivility
-            self.user_behavior[self.__class__.get_user_behavior_key(5)] += 1
-            if self.user_behavior[self.__class__.get_user_behavior_key(5)] >= 3:
-                self.user_behavior[self.__class__.get_user_behavior_key(5)] = 3
-                # fatigue_quotas_of_grandpy
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = True
-                #  display incivility_limit value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(7)
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-                # display exhausted value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = \
-                    self.__class__.get_grandpy_status_key(10)
-                # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
-            else:
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = False
-                # display mannerless value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] =\
-                    self.__class__.get_user_behavior_key(5)
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-                # print(f'user_question : {self.user_entry} ?')
-        else:
-            # display home value in grandpy_status_code
-            self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                self.__class__.get_grandpy_status_key(1)
-            # display user_incivility_status value
-            self.user_behavior[self.__class__.get_user_behavior_key(0)] = False
+        incivility_set_data = self.__class__.INCIVILITY_SET_DATA
+        self.set_has_user_incivility_status(incivility_set_data.isdisjoint(user_entry_lowercase))
+        user_incivility_count(self, data_expiration, db_number)
 
-    def calculate_the_indecency(self) -> None:
-        """update the attributes' user_indecency and number_of_indecencies
-        example :
-        if self.lower_and_split_user_entry is 'vieux...'
-        then self.user_behavior['user_indecency'] = True and
-        self.user_behavior['number_of_indecency'] += 1"""
+    def calculate_the_indecency(self, db_number) -> None:
+        """update the attribut has_user_indecency_status since INDECENCY_SET_DATA set"""
         user_entry_lowercase = self.lower_and_split_user_entry()
         indecency_set_data = self.__class__.INDECENCY_SET_DATA
-        self.user_behavior[self.__class__.get_user_behavior_key(1)] = \
-            not indecency_set_data.isdisjoint(user_entry_lowercase)
-        if self.user_behavior[self.__class__.get_user_behavior_key(1)]:
-            self.user_behavior[self.__class__.get_user_behavior_key(6)] += 1
-            if self.user_behavior[self.__class__.get_user_behavior_key(6)] >= 3:
-                self.user_behavior[self.__class__.get_user_behavior_key(6)] = 3
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = True
-                #  display indecency_limit value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(8)
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-                # display exhausted value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(10)
-                # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
-            else:
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = False
-                # display disrespectful value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(6)
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-        else:
-            # display home value in grandpy_code
-            self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                self.__class__.get_user_behavior_key(0)
-            self.user_behavior[self.__class__.get_user_behavior_key(1)] = False
-            # print(
-            #     'Grandpy_response : '
-            #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-            # )
+        self.set_has_user_indecency_status(not indecency_set_data.isdisjoint(user_entry_lowercase))
+        user_indecency_count(self, data_expiration, db_number)
 
-    def calculate_the_incomprehension(self) -> None:
-        """update the attributes' user_incomprehension and number_of_incomprehension
-        example
-        if self.lower_and_split_user_entry is 'gjegruiotuygtugyt ...'
-        then self.user_behavior['user_incomprehension'] = True and
-        self.user_behavior['number_of_incomprehension'] += 1"""
+    def calculate_the_incomprehension(self, db_number) -> None:
+        """update the attribut has_user_indecency_status since GoogleMap API"""
         result_api = get_placeid_from_address(self.user_entry)
         if result_api in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
                 {'candidates': [], 'status': 'INVALID_REQUEST'}
         ):
-            self.user_behavior[self.__class__.get_user_behavior_key(7)] += 1
-            self.user_behavior[self.__class__.get_user_behavior_key(2)] = True
-            if self.user_behavior[self.__class__.get_user_behavior_key(7)] >= 3:
-                self.user_behavior[self.__class__.get_user_behavior_key(7)] = 3
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = True
-                #  display incomprehension_limit value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(9)
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-                # display exhausted value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(10)
-                # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
-            else:
-                self.user_behavior[self.__class__.get_user_behavior_key(3)] = False
-                # display incomprehension value in grandpy_code
-                self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                    self.__class__.get_user_behavior_key(4)
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
+            self.set_has_user_incomprehension_status(True)
         else:
-            # display home value in grandpy_code
-            self.user_behavior[self.__class__.get_user_behavior_key(4)] = \
-                self.__class__.get_user_behavior_key(0)
-            self.user_behavior[self.__class__.get_user_behavior_key(2)] = False
-            # print(
-            #     'Grandpy_response : '
-            #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-            # )
-
-    def calculate_the_user_entries(self) -> None:
-        """update the attribute number_of_user_entries
-        example:
-        if self.lower_and_split_user_entry is 'openClassrooms ...' X 10 times
-        after self.lower_and_split_user_entry = 'bonjour' then number_of_the_user_entries += 1"""
-        if not self.user_behavior['user_indecency'] or \
-                not self.user_behavior['user_incomprehension']:
-            if self.user_behavior['number_of_user_entries'] >= 10:
-                self.user_behavior['number_of_user_entries'] = 10
-                self.user_behavior['fatigue_quotas'] = True
-                # display response value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.grandpy_status_search_key('Voici Ta Réponse à la question !')
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-                # display exhausted value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.grandpy_status_search_key(
-                        'je suis fatigué reviens me voir demain !'
-                    )
-                # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
-            elif self.user_behavior['number_of_user_entries'] == 5:
-                self.user_behavior['number_of_user_entries'] += 1
-                self.user_behavior['fatigue_quotas'] = False
-                # display tired value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.grandpy_status_search_key(
-                        'houla, maintenant ma memoire commence a fatiguée" !'
-                    )
-                # print(
-                #     'Grandpy_response : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
-            else:
-                self.user_behavior['number_of_user_entries'] += 1
-                self.user_behavior['fatigue_quotas'] = False
-                # display home value in grandpy_code
-                self.user_behavior['grandpy_code'] = \
-                    self.__class__.grandpy_status_search_key(
-                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
-                    )
-                # print(
-                #     'Grandpy_response[number_of_user_entries<10] : '
-                #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
-                # )
+            self.set_has_user_incomprehension_status(False)
+        user_incomprehension_count(self, data_expiration, db_number)
+    # def calculate_the_user_entries(self) -> None:
+    #     """update the attribute number_of_user_entries
+    #     example:
+    #     if self.lower_and_split_user_entry is 'openClassrooms ...' X 10 times
+    #     after self.lower_and_split_user_entry = 'bonjour' then number_of_the_user_entries += 1"""
+    #     if not self.user_behavior['user_indecency'] or \
+    #             not self.user_behavior['user_incomprehension']:
+    #         if self.user_behavior['number_of_user_entries'] >= 10:
+    #             self.user_behavior['number_of_user_entries'] = 10
+    #             self.user_behavior['fatigue_quotas'] = True
+    #             # display response value in grandpy_code
+    #             self.user_behavior['grandpy_code'] = \
+    #                 self.__class__.grandpy_status_search_key('Voici Ta Réponse à la question !')
+    #             # print(
+    #             #     'Grandpy_response : '
+    #             #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
+    #             # )
+    #             # display exhausted value in grandpy_code
+    #             self.user_behavior['grandpy_code'] = \
+    #                 self.__class__.grandpy_status_search_key(
+    #                     'je suis fatigué reviens me voir demain !'
+    #                 )
+    #             # print(f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}")
+    #         elif self.user_behavior['number_of_user_entries'] == 5:
+    #             self.user_behavior['number_of_user_entries'] += 1
+    #             self.user_behavior['fatigue_quotas'] = False
+    #             # display tired value in grandpy_code
+    #             self.user_behavior['grandpy_code'] = \
+    #                 self.__class__.grandpy_status_search_key(
+    #                     'houla, maintenant ma memoire commence a fatiguée" !'
+    #                 )
+    #             # print(
+    #             #     'Grandpy_response : '
+    #             #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
+    #             # )
+    #         else:
+    #             self.user_behavior['number_of_user_entries'] += 1
+    #             self.user_behavior['fatigue_quotas'] = False
+    #             # display home value in grandpy_code
+    #             self.user_behavior['grandpy_code'] = \
+    #                 self.__class__.grandpy_status_search_key(
+    #                     "Bonjour Mon petit, en quoi puis-je t'aider ?"
+    #                 )
+    #             # print(
+    #             #     'Grandpy_response[number_of_user_entries<10] : '
+    #             #     f"{self.get_grandpy_status(self.user_behavior['grandpy_code'])}"
+    #             # )
 
     def get_request_parser(self) -> str:
-        """function which cuts the character string
-        of the user request with the words present in the unnecessary set
-        to keep only the keywords for the search
-        example
-        user_request = 'where is the Eiffel Tower' ==> get_request_parser = 'eiffel tower'"""
-        user_question = self.user_entry.split()
-        result = [w for w in user_question if w.lower() not in self.__class__.UNNECESSARY_SET_DATA]
-        modified_message = ' '.join(result)
-        return modified_message
+        """recover the key words of the user request
+        by abolishing word contained in UNNECESSARY_SET_DATA set"""
+        list_of_word_request_user = self.user_entry.split()
+        list_of_key_word = [
+            w for w in list_of_word_request_user
+            if w.lower() not in self.__class__.UNNECESSARY_SET_DATA
+        ]
+        key_word = ' '.join(list_of_key_word)
+        return key_word
 
 
 if __name__ == '__main__':

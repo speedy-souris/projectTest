@@ -59,11 +59,11 @@ def erasing_data(db_number):
         db_redis.delete(key)
 
 
-def data_expiration(db_number):
-    """expiration of the fatigue_quotas data for a theoretical duration of 24h00
-    which simulates the well-deserved rest of grandpy ==> real duration for the tests 60 seconds"""
+def data_expiration(fatigue_quotas_of_grandpy, db_number):
+    """expiration of the fatigue_quotas_of_grandpy data for a theoretical duration of 24h00
+    which simulates the well-deserved rest of grandpy ==> real duration for the tests 120 seconds"""
     db_redis = get_database_access(db_number)
-    db_redis.expire('fatigue_quotas', 60)
+    db_redis.expire(fatigue_quotas_of_grandpy, 120)
 
 
 if __name__ == '__main__':
