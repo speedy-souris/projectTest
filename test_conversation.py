@@ -6,10 +6,10 @@ from conversation import Conversation
 
 class TestConversation:
     def setup_method(self):
-        Conversation.database_init_ordered(1)
+        Conversation('', 1).database_init_ordered()
 
     def test_lower_and_split_user_entry(self):
-        user_request = Conversation('Bonjour', db_number=1)
+        user_request = Conversation('Bonjour', 1)
 
         expected_result = ['bonjour']
 
@@ -17,7 +17,7 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_incivility(self):
-        user_request = Conversation('Bonjour', db_number=1)
+        user_request = Conversation('Bonjour', 1)
 
         user_incivility_status, number_of_user_incivility, fatigue_quotas_of_grandpy =\
             False, 0, False
@@ -26,7 +26,7 @@ class TestConversation:
             user_incivility_status, number_of_user_incivility, fatigue_quotas_of_grandpy
         )
 
-        user_request.calculate_the_incivility(1)
+        user_request.calculate_the_incivility()
 
         user_incivility_status_to_false, \
             number_of_user_incivility_to_0, \
@@ -43,7 +43,7 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_incivility_to_false(self):
-        user_request = Conversation('openClassrooms', db_number=1)
+        user_request = Conversation('openClassrooms', 1)
 
         user_incivility_status, number_of_user_incivility, fatigue_quotas_of_grandpy =\
             True, 1, False
@@ -52,7 +52,7 @@ class TestConversation:
             user_incivility_status, number_of_user_incivility, fatigue_quotas_of_grandpy
         )
 
-        user_request.calculate_the_incivility(1)
+        user_request.calculate_the_incivility()
 
         user_incivility_status_to_true, \
             number_of_user_incivility_to_1, \
@@ -69,7 +69,7 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_indecency(self):
-        user_request = Conversation('vieux', db_number=1)
+        user_request = Conversation('vieux', 1)
 
         user_indecency_status, number_of_user_indecency, fatigue_quotas_of_grandpy = \
             True, 1, False
@@ -78,7 +78,7 @@ class TestConversation:
             user_indecency_status, number_of_user_indecency, fatigue_quotas_of_grandpy
         )
 
-        user_request.calculate_the_indecency(1)
+        user_request.calculate_the_indecency()
 
         user_indecency_status_to_true, \
             number_of_user_indecency_to_1, \
@@ -95,7 +95,7 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_indecency_to_false(self):
-        user_request = Conversation('bonjour', db_number=1)
+        user_request = Conversation('bonjour', 1)
 
         user_indecency_status, number_of_user_indecency, fatigue_quotas_of_grandpy = \
             False, 0, False
@@ -104,7 +104,7 @@ class TestConversation:
             user_indecency_status, number_of_user_indecency, fatigue_quotas_of_grandpy
         )
 
-        user_request.calculate_the_indecency(1)
+        user_request.calculate_the_indecency()
 
         user_indecency_status_to_false, \
             number_of_user_indecency_to_0, \
@@ -121,7 +121,7 @@ class TestConversation:
         assert expected_result == result
 
     def test_calculate_the_incomprehension(self, monkeypatch):
-        incomprehensible_user = Conversation('gjegruiotuygtugyt', db_number=1)
+        incomprehensible_user = Conversation('gjegruiotuygtugyt', 1)
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
@@ -138,7 +138,7 @@ class TestConversation:
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
 
-        incomprehensible_user.calculate_the_incomprehension(1)
+        incomprehensible_user.calculate_the_incomprehension()
 
         user_incomprehension_status_to_true, \
             number_of_user_incomprehension_to_1, \
@@ -154,7 +154,7 @@ class TestConversation:
         )
         assert expected_result == result
 
-        incomprehensible_user = Conversation('1255871436', db_number=1)
+        incomprehensible_user = Conversation('1255871436', 1)
         expected_mock_result = {
             'candidates': [],
             'status': 'ZERO_RESULTS'
@@ -171,7 +171,7 @@ class TestConversation:
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
 
-        incomprehensible_user.calculate_the_incomprehension(1)
+        incomprehensible_user.calculate_the_incomprehension()
 
         user_incomprehension_status_to_true, \
             number_of_user_incomprehension_to_1, \
@@ -187,7 +187,7 @@ class TestConversation:
         )
         assert expected_result == result
 
-        incomprehensible_user = Conversation('', db_number=1)
+        incomprehensible_user = Conversation('', 1)
         expected_mock_result = {
             'candidates': [],
             'status': 'INVALID_REQUEST'
@@ -204,7 +204,7 @@ class TestConversation:
         mockreturn = get_mockreturn(mock_result)
         monkeypatch.setattr(requests, 'get', mockreturn)
 
-        incomprehensible_user.calculate_the_incomprehension(1)
+        incomprehensible_user.calculate_the_incomprehension()
 
         user_incomprehension_status_to_true, \
             number_of_user_incomprehension_to_1, \
@@ -221,7 +221,7 @@ class TestConversation:
         assert expected_result == result
 
     def test_get_request_parser(self):
-        user_request = Conversation('ou se trouve openClassrooms', db_number=1)
+        user_request = Conversation('ou se trouve openClassrooms', 1)
         expected_result = 'openClassrooms'
         result = user_request.get_request_parser()
         assert expected_result == result

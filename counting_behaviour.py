@@ -1,72 +1,185 @@
 #!/usr/bin/env python
 """module of counting of the behaviour of the user """
+from redis_utilities import data_expiration
 
 
-def display_grandpy_status(
-        chat_session, status_found, data_expiration, db_number, following_billing=1
-):
+def display_grandpy_status_code_to_user_question(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(1)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    user_question = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return user_question
+
+
+def display_grandpy_status_code_to_response(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(2)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_tired(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(3)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_incomprehension(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(4)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_mannerless(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(5)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_disrespectful(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(6)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_limit_incivility(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(7)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_limit_indecency(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(8)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_limit_incomprehension(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(9)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status_code_to_exhausted(chat_session):
+    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+        chat_session.__class__.get_grandpy_status_key(10)
+    grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+    grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+    return grandpy_response
+
+
+def display_grandpy_status(chat_session, response_grandpy, following_billing=True):
     """billing of status of grandpy just before its repose of 24 h 00"""
-    if following_billing == 1:
-        chat_session.has_fatigue_quotas_of_grandpy(True)
-        print(
-            'Réponse de Grandpy : '
-            f'{chat_session.__class__.read_grandpy_answer(status_found)}'
-        )
-        grandpy_exhausted_for_24_hours = chat_session.__class__.get_grandpy_status_key(10)
-        print(
-            'Réponse de Grandpy : '
-            f'{chat_session.__class__.read_grandpy_answer(grandpy_exhausted_for_24_hours)}'
-        )
-    elif following_billing != 1:
-        chat_session.has_fatigue_quotas_of_grandpy(False)
-        print(
-            'Réponse de Grandpy : '
-            f'{chat_session.__class__.read_grandpy_answer(status_found)}'
-        )
-    # fatigue_quotas_of_grandpy expire dans 120 secondes (en théorie 24h00)
-    fatigue_quotas_of_grandpy = \
-        chat_session.user_behavior[chat_session.__class__.get_grandpy_status_key(3)]
-    data_expiration(fatigue_quotas_of_grandpy, db_number)
+    if not following_billing:
+        chat_session.set_has_fatigue_quotas_of_grandpy(True)
+        print(f'Réponse de Grandpy : {response_grandpy}')
+        print(f'Réponse de Grandpy : {display_grandpy_status_code_to_exhausted(chat_session)}')
+        # fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
+        fatigue_quotas_of_grandpy = chat_session.__class___.get_user_behavior_key(3)
+        data_expiration(fatigue_quotas_of_grandpy, chat_session.db_number)
+    elif following_billing:
+        chat_session.set_has_fatigue_quotas_of_grandpy(False)
+        print(f'val= {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}')
+        if 1 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 4:
+            print(f'Réponse de Grandpy (1-4): {response_grandpy}')
+        # if user_behavior['number_of_user_entries'] == 5
+        elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 5:
+            print(f'Réponse de Grandpy (5): {response_grandpy}')
+            # user_behavior['grandpy_status_code']= 'response'
+            print('Réponse de Grandpy (5) : '
+                  f'{display_grandpy_status_code_to_response(chat_session)}')
+        # else:
+        #     # user_behavior['grandpy_status_code']= 'response'
+        #     print('Réponse de Grandpy (6-9) : '
+        #           f'{display_grandpy_status_code_to_response(chat_session)}')
+        # else:
+        #     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]:
+        #         print('Réponse de grandpy (incivility): '
+        #               f'{display_grandpy_status_code_to_disrespectful(chat_session)}')
+        #     elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(2)]:
+        #         print('Réponse de grandpy (indecency): '
+        #               f'{display_grandpy_status_code_to_incomprehension(chat_session)}')
+        # user_behavior['grandpy_status_code']= 'user_question'
+        print('Réponse de Grandpy (fin) : '
+              f'{display_grandpy_status_code_to_user_question(chat_session)}')
 
 
 # 3) DONE create max_number_of_incivility
-def max_number_of_incivility(chat_session, data_expiration, db_number):
+def max_number_of_user_incivility(chat_session):
     # DONE max_incivlity counter
     """restoration of grandpy's status since a number of user incivility equal to 3"""
     incivility_limit_found = chat_session.__class__.get_grandpy_status_key(7)
     chat_session.has_user_incivility_status(True)
-    display_grandpy_status(chat_session, incivility_limit_found, data_expiration, db_number)
+    display_grandpy_status(chat_session, incivility_limit_found)
 
 
-def max_number_of_indecency(chat_session, data_expiration, db_number):
+def max_number_of_user_indecency(chat_session):
     # DONE max_indecency counter
     """restoration of grandpy's status since a number of user indecency equal to 3"""
     indecency_limit_found = chat_session.__class__.get_grandpy_status_key(8)
     chat_session.has_user_indecency_status(True)
-    display_grandpy_status(chat_session, indecency_limit_found, data_expiration, db_number)
+    display_grandpy_status(chat_session, indecency_limit_found)
 
 
-def max_number_of_incomprehension(chat_session, data_expiration, db_number):
-    # DONE max_indecency counter
+def max_number_of_user_incomprehension(chat_session):
+    # DONE max_incomprehension_counter
     """restoration of grandpy's status since a number of user incomprehension equal to 3"""
     incomprehension_limit_found = chat_session.__class__.get_grandpy_status_key(9)
     chat_session.has_user_incomprehension_status(True)
-    display_grandpy_status(chat_session, incomprehension_limit_found, data_expiration, db_number)
+    display_grandpy_status(chat_session, incomprehension_limit_found)
+
+
+def number_of_user_entries_X1_to_X4(chat_session):
+    """restore the grandpy status from correct user request between 1 and 4"""
+    # if user_behavior[' number_of_user_entries'] == 1 to 4
+    if 1 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 4:
+        # user_behavior['grandpy_status_code'] = 'response'
+        grandpy_response = display_grandpy_status_code_to_response(chat_session)
+        display_grandpy_status(chat_session, grandpy_response)
 
 
 def number_of_user_entries_to_X5(chat_session):
     # DONE user_entries X5
     """restore grandpy status from correct user request count of 5"""
-    tired_limit_found = chat_session.__class__.get_grandpy_status_key(3)
-    # grandpy_status_code takes the tired value
-    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
-        chat_session.__class__.get_grandpy_status_key(3)
-    # number_of_user_entries incremente of 1
-    chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] += 1
-    display_grandpy_status(chat_session, tired_limit_found, following_billing=0)
+    # user_behavior['grandpy_status_code'] = 'tired'
+    grandpy_tired = display_grandpy_status_code_to_tired(chat_session)
+    display_grandpy_status(chat_session, grandpy_tired)
 
 
-def user_incivility_count(chat_session, data_expiration, db_number):
+def number_of_user_entries_X6_to_X9(chat_session):
+    """restore the grandpy status from correct user request between 6 and 9"""
+    # if user_behavior[' number_of_user_entries'] == 6 to 9
+    if 6 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 9:
+        # user_behavior['grandpy_status_code'] = 'response'
+        grandpy_response = display_grandpy_status_code_to_response(chat_session)
+        display_grandpy_status(chat_session, grandpy_response)
+
+
+def max_number_of_user_entries(chat_session):
+    # DONE max_user_entries counter
+    """restoration of grandpy's status
+    since a maximum number of correct requests from the user equal to 10"""
+    # user_behavior['grandpy_status_code'] = 'response'
+    grandpy_response = display_grandpy_status_code_to_response(chat_session)
+    display_grandpy_status(chat_session, grandpy_response, following_billing=False)
+
+
+def user_incivility_count(chat_session):
     """discount of user's discourtesy"""
     # has_user_incivility_status
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
@@ -75,17 +188,17 @@ def user_incivility_count(chat_session, data_expiration, db_number):
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)] += 1
             # grandpy_status_code == 'mannerless'
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
-                chat_session.__class__.read_grandpy_answer(5)
+                chat_session.__class__.get_grandpy_status_key(5)
         elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)] >= 3:
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)] = 3
-            max_number_of_incivility(chat_session, data_expiration, db_number)
+            max_number_of_user_incivility(chat_session)
     elif not chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
         # grandpy_status_code == 'user_question'
         chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] =\
             chat_session.__class__.get_grandpy_status_key(1)
 
 
-def user_indecency_count(chat_session, data_expiration, db_number):
+def user_indecency_count(chat_session):
     """count of user's rudenness"""
     # has_user_indecency_status
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]:
@@ -94,14 +207,14 @@ def user_indecency_count(chat_session, data_expiration, db_number):
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] += 1
         elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] >= 3:
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] = 3
-            max_number_of_indecency(chat_session, data_expiration, db_number)
+            max_number_of_user_indecency(chat_session)
     else:
         # grandpy_status_code == 'user_question'
         chat_session.user_behavior[chat_session.get_user_behavior_key(4)] = \
             chat_session.__class__.get_grandpy_status_key(1)
 
 
-def user_incomprehension_count(chat_session, data_expiration, db_number):
+def user_incomprehension_count(chat_session):
     """discount of user's incomprehension"""
     # has_user_incomprehension_status
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(2)]:
@@ -110,24 +223,28 @@ def user_incomprehension_count(chat_session, data_expiration, db_number):
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(7)] += 1
         elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(7)] >= 3:
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(7)] = 3
-            max_number_of_incomprehension(chat_session, data_expiration, db_number)
+            max_number_of_user_incomprehension(chat_session)
     else:
         # grandpy_status_code == 'user_question'
         chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] =\
             chat_session.__class__.get_grandpy_status_key(1)
 
 
-def user_question_answer_count(chat_session, db_number):
-    # TODO create a simple dialogue (a question, an answer)
+def user_question_answer_count(chat_session):
+    # DONE create a simple dialogue (a question, an answer)
     """grandpy receives the user politely, the user answers politely then he asks a question
      has grandpy. Grandpy answers him with one address of googleMap and a review of the quarter
     on Wikipedia"""
-    print(
-        'grandpy status counting ='
-        f" {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]}"
-    )
-    print(
-        'number_of_ user entries counting ='
-        f" {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}"
-    )
+    if 1 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 4:
+        number_of_user_entries_X1_to_X4(chat_session)
+    # if user_behavior['number_of_number_of_user_entries'] == 5
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 5:
+        number_of_user_entries_to_X5(chat_session)
+    elif 6 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 9:
+        number_of_user_entries_X6_to_X9(chat_session)
+    # if user_behavior['number_of_number_of_user_entries'] == 10
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 10:
+        max_number_of_user_entries(chat_session)
+    # else:
+    #     display_grandpy_status(chat_session, "")
 

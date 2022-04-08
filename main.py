@@ -10,29 +10,11 @@ import counting_behaviour
 # TODO create a behaviour incomprehension for the user
 # TODO create the beginning of tiredness for grandpy
 
-
-def max_number_of_incomprehension(chat_session):
-    # DONE max incomprehension counter
-    """restoration of grandpy's status since a number of user incomprehension equal to 3"""
-    incomprehension_limit_found = chat_session.__class__.get_grandpy_status_key(9)
-    chat_session.has_user_incomprehension_status(True)
-    session_data_display(chat_session, incomprehension_limit_found)
-
-
-def max_number_of_user_entries(chat_session):
-    # DONE max_user_entries counter
-    """restoration of grandpy's status
-    since a maximum number of correct requests from the user equal to 10"""
-    response_limit_found = chat_session.__class__.get_grandpy_status_key(2)
-    session_data_display(chat_session, response_limit_found)
-
-
-def conversation_between_user_and_grandpy(user_request, db_number=0):
+def conversation_between_user_and_grandpy(user_request, db_number):
     # DONE conversation object
     """creation of the chat_session conversation object according to the user's request"""
-    chat_session = Conversation(user_request, db_number=db_number)
+    chat_session = Conversation(user_request, db_number)
     return chat_session
-
 
 # ---------------------------
 # 4) DONE management of the call to the GoogleMap API
@@ -44,13 +26,11 @@ def search_address_to_gMap(chat_session, user_request_parsed):
     gmap_api_address_value = chat_session.get_address_api_from_placeid(gmap_api_placeId_value)
     return gmap_api_address_value
 
-
 # 5) TODO management of the call to the WikiPedia API
 def search_address_to_wiki():
     # DONE WIKIPEDIA API calling
     """call of the WikiPedia APIs according to the user's request"""
 # ---------------------------
-
 
 def main(user_request, db_number=0):
     """question answer between user and Grandpy"""
@@ -60,13 +40,13 @@ def main(user_request, db_number=0):
     # if user_behavior['grandpy_status_code'] == 'home'
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(0):
-        chat_session.calculate_the_incivility(db_number)
+        chat_session.calculate_the_incivility()
     # if user_behavior['grandpy_status_code'] == 'user_question'
     elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(1):
-        chat_session.calculate_the_indecency(db_number)
+        # chat_session.calculate_the_indecency()
         chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] += 1
-        counting_behaviour.user_question_answer_count(chat_session, db_number)
+        counting_behaviour.user_question_answer_count(chat_session)
     #     if chat_session.__class__.read_grandpy_answer(
     #             chat_session.__class__.get_grandpy_status_key(7)
     #     )\
@@ -95,7 +75,7 @@ def main(user_request, db_number=0):
     # 24) TODO Add incivility conditional statements
     # 26) TODO Add indecency conditional statements
     # 28) TODO Add incomprehension conditional statements
-    chat_session.update_database(db_number)
+    chat_session.update_database()
     return chat_session
 
 

@@ -4,7 +4,7 @@ from frozenordereddict import FrozenOrderedDict
 from collections import OrderedDict
 from google_api import get_placeid_from_address, get_address_api_from_placeid
 from redis_utilities import write_access_conversation_data, read_access_conversation_data
-from redis_utilities import erasing_data, value_to_string_conversion, data_expiration
+from redis_utilities import erasing_data, value_to_string_conversion
 from counting_behaviour import user_incivility_count, user_indecency_count
 from counting_behaviour import user_incomprehension_count
 
@@ -131,9 +131,10 @@ class Conversation:
         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'
     })
 
-    def __init__(self, user_entry, db_number=0):
+    def __init__(self, user_entry, db_number):
         self.user_entry = user_entry
-        self.user_behavior = self.user_behavior_init_ordered(db_number=db_number)
+        self.db_number = db_number
+        self.user_behavior = self.user_behavior_init_ordered()
 
     @classmethod
     def get_user_behavior_key(cls, key_position) -> str:
@@ -150,35 +151,34 @@ class Conversation:
 
     # 2) DONE Create class method to read grandpy answer
     @classmethod
-    def read_grandpy_answer(cls, grandpy_status_key) -> str:
+    def read_grandpy_answer(cls, grandpy_status) -> str:
         """method to read grandpy answer"""
-        response = cls.GRANDPY_STATUS_DATA_KEYS[grandpy_status_key]
+        response = cls.GRANDPY_STATUS_DATA[grandpy_status]
         return response
 
-    @classmethod
-    def database_init_ordered(cls, db_number) -> dict:
+    def database_init_ordered(self) -> dict:
         """initialization of redis database
         example :
         redis_utilities.write_access_conversation_data ('user_incivility', 'False', db_number)
         """
         list_data_keys, list_data_values = list(), list()
-        for (key, value) in cls.USER_BEHAVIOR_DEFAULT_DATA.items():
+        for (key, value) in self.__class__.USER_BEHAVIOR_DEFAULT_DATA.items():
             list_data_keys.append(key)
             list_data_values.append(value)
         behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
 
         for (key, value) in behavioral_data.items():
             write_access_conversation_data(
-                key, value, db_number
+                key, value, self.db_number
             )
         return behavioral_data
 
-    def user_behavior_init_ordered(self, db_number) -> dict:
+    def user_behavior_init_ordered(self) -> dict:
         """user behavior initialization parameter"""
         list_data_keys, list_data_values = list(), list()
         for value in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS:
             list_data_keys.append(value)
-            list_data_values.append(read_access_conversation_data(value, db_number))
+            list_data_values.append(read_access_conversation_data(value, self.db_number))
         behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
         try:
             # fatigue_quotas_of_grandpy
@@ -188,7 +188,7 @@ class Conversation:
             erasing_data(1)
             #  deletion of data from database 0 ==> database for prod
             erasing_data(0)
-            behavioral_data = self.__class__.database_init_ordered(db_number)
+            behavioral_data = self.database_init_ordered()
         return behavioral_data
 
     def set_has_user_incivility_status(self, incivility_value) -> None:
@@ -212,7 +212,7 @@ class Conversation:
         user_entry_lowercase = self.user_entry.lower()
         return user_entry_lowercase.split()
 
-    def update_database(self, db_number) -> None:
+    def update_database(self) -> None:
         """after all data processing update redis database with local attributes
         example :
         write_access_conversation_data(
@@ -240,23 +240,23 @@ class Conversation:
         }
         # (in database redis) writing all
         for (data, value) in db_data.items():
-            write_access_conversation_data(data, value_to_string_conversion(value), db_number)
+            write_access_conversation_data(data, value_to_string_conversion(value), self.db_number)
 
-    def calculate_the_incivility(self, db_number) -> None:
+    def calculate_the_incivility(self) -> None:
         """update the attribut has_user_incivility_status since INCIVILITY_SET_DATA set"""
         user_entry_lowercase = self.lower_and_split_user_entry()
         incivility_set_data = self.__class__.INCIVILITY_SET_DATA
         self.set_has_user_incivility_status(incivility_set_data.isdisjoint(user_entry_lowercase))
-        user_incivility_count(self, data_expiration, db_number)
+        user_incivility_count(self)
 
-    def calculate_the_indecency(self, db_number) -> None:
+    def calculate_the_indecency(self) -> None:
         """update the attribut has_user_indecency_status since INDECENCY_SET_DATA set"""
         user_entry_lowercase = self.lower_and_split_user_entry()
         indecency_set_data = self.__class__.INDECENCY_SET_DATA
         self.set_has_user_indecency_status(not indecency_set_data.isdisjoint(user_entry_lowercase))
-        user_indecency_count(self, data_expiration, db_number)
+        user_indecency_count(self)
 
-    def calculate_the_incomprehension(self, db_number) -> None:
+    def calculate_the_incomprehension(self) -> None:
         """update the attribut has_user_indecency_status since GoogleMap API"""
         result_api = get_placeid_from_address(self.user_entry)
         if result_api in (
@@ -266,7 +266,7 @@ class Conversation:
             self.set_has_user_incomprehension_status(True)
         else:
             self.set_has_user_incomprehension_status(False)
-        user_incomprehension_count(self, data_expiration, db_number)
+        user_incomprehension_count(self)
     # def calculate_the_user_entries(self) -> None:
     #     """update the attribute number_of_user_entries
     #     example:
