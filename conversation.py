@@ -175,18 +175,22 @@ class Conversation:
 
     def user_behavior_init_ordered(self) -> dict:
         """user behavior initialization parameter"""
-        list_data_keys, list_data_values = list(), list()
-        for value in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS:
-            list_data_keys.append(value)
-            list_data_values.append(read_access_conversation_data(value, self.db_number))
-        behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
-        try:
-            # fatigue_quotas_of_grandpy
-            behavioral_data[self.__class__.get_user_behavior_key(3)]
-        except AttributeError:
+        # list_data_keys, list_data_values = list(), list()
+        # for value in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS:
+        #     list_data_keys.append(value)
+        #     list_data_values.append(read_access_conversation_data(value, self.db_number))
+        # behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
+        if read_access_conversation_data(self.__class__.get_user_behavior_key(3), self.db_number)\
+                != self.__class__.get_user_behavior_key(3):
+            list_data_keys, list_data_values = list(), list()
+            for value in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS:
+                list_data_keys.append(value)
+                list_data_values.append(read_access_conversation_data(value, self.db_number))
+            behavioral_data = OrderedDict(zip(list_data_keys, list_data_values))
+        else:
             #  deletion of data from database 1 ==> database for Test
             erasing_data(1)
-            #  deletion of data from database 0 ==> database for prod
+            # deletion of data from database 0 ==> database for prod
             erasing_data(0)
             behavioral_data = self.database_init_ordered()
         return behavioral_data
@@ -267,6 +271,7 @@ class Conversation:
         else:
             self.set_has_user_incomprehension_status(False)
         user_incomprehension_count(self)
+
     # def calculate_the_user_entries(self) -> None:
     #     """update the attribute number_of_user_entries
     #     example:

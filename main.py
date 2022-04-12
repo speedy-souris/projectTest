@@ -5,8 +5,8 @@ from redis_utilities import erasing_data
 import counting_behaviour
 
 
-# TODO create a behaviour of discourtesy for the user
-# TODO create a behaviour of indecency for the user
+
+
 # TODO create a behaviour incomprehension for the user
 # TODO create the beginning of tiredness for grandpy
 
@@ -38,13 +38,26 @@ def main(user_request, db_number=0):
     # 8) DONE correct query creation X1
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
     # if user_behavior['grandpy_status_code'] == 'home'
+    grandpy_status = \
+        chat_session.read_grandpy_answer(
+            chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)])
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(0):
+        print(f'1) Grandpy (home) main= {grandpy_status}')
         chat_session.calculate_the_incivility()
+        print(f'7) Réponse de Grandpy = {grandpy_status}')
+        print(f'8) status_code apres grandpy = '
+              f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]}')
     # if user_behavior['grandpy_status_code'] == 'user_question'
     elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(1):
-        # chat_session.calculate_the_indecency()
+        if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
+            chat_session.calculate_the_incivility()
+        else:
+            chat_session.calculate_the_indecency()
+    else:
+        print('je suis number_user_entry = '
+              f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}')
         chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] += 1
         counting_behaviour.user_question_answer_count(chat_session)
     #     if chat_session.__class__.read_grandpy_answer(
@@ -75,77 +88,18 @@ def main(user_request, db_number=0):
     # 24) TODO Add incivility conditional statements
     # 26) TODO Add indecency conditional statements
     # 28) TODO Add incomprehension conditional statements
+
     chat_session.update_database()
     return chat_session
 
 
-def OLD_search_address_to_wiki(user_request, db_number=0):
-    """Searched for a googleMaps address with a Wikipedia history"""
-    chat_session = Conversation(user_request, db_number=db_number)
-    if chat_session.user_behavior['grandpy_code'] == 'home':
-        if user_request in chat_session.__class__.INCIVILITY_SET_DATA:
-            # print(f'user_question : {user_request}, Grandpy !')
-            pass
-        else:
-            # print(f'user_question : {user_request} ?')
-            chat_session.calculate_the_incivility()
-        if not chat_session.user_behavior['user_incivility']:
-            chat_session.calculate_the_indecency()
-            if not chat_session.user_behavior['user_indecency']:
-                chat_session.calculate_the_incomprehension()
-                if not chat_session.user_behavior['user_incomprehension']:
-                    chat_session.calculate_the_user_entries()
-            else:
-                chat_session.user_behavior['grandpy_code'] = \
-                    chat_session.__class__.grandpy_status_search_key(
-                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
-                    )
-                # print(
-                #     'Grandpy_response[user_indecency] : '
-                #     f"{chat.get_grandpy_status(chat.user_behavior['grandpy_code'])}"
-                # )
-        else:
-            chat_session.user_behavior['grandpy_code'] =\
-                chat_session.__class__.grandpy_status_search_key(
-                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
-                )
-            # print(
-            #     'Grandpy_response[user_incivility] : '
-            #     f"{chat_session.get_grandpy_status(chat_session.user_behavior['grandpy_code'])}"
-            # )
-    elif not chat_session.user_behavior['fatigue_quotas'] and\
-            chat_session.user_behavior['number_of_user_entries'] == 0:
-        chat_session.calculate_the_incivility()
-        if not chat_session.user_behavior['user_incivility']:
-            chat_session.calculate_the_indecency()
-            if not chat_session.user_behavior['user_indecency']:
-                chat_session.calculate_the_incomprehension()
-                if not chat_session.user_behavior['user_incomprehension']:
-                    chat_session.calculate_the_user_entries()
-            else:
-                chat_session.user_behavior['grandpy_code'] = \
-                    chat_session.__class__.grandpy_status_search_key(
-                        "Bonjour Mon petit, en quoi puis-je t'aider ?"
-                    )
-                # print(
-                #     'Grandpy_response[user_indecency] : '
-                #     f"{chat.get_grandpy_status(chat.user_behavior['grandpy_code'])}"
-                # )
-    else:
-        chat_session.user_entry = chat_session.get_request_parser()
-        # print(f'search keyword : {user_request} ?')
-        chat_session.calculate_the_user_entries()
-    print(f"Fatique_quotas = {chat_session.user_behavior['fatigue_quotas']}")
-    print(f"nombre de conversation utilisateur {chat_session.user_behavior['number_of_user_entries']}")
-    chat_session.update_database(db_number=db_number)
-    return chat_session
-
-
 if __name__ == '__main__':
-    # erasing_data(1)
-    main('openclassrooms', db_number=1)
-    main('openclassrooms', db_number=1)
-    main('openclassrooms', db_number=1)
-    main('openclassrooms', db_number=1)
+    erasing_data(1)
+    main('bonjour', db_number=1)
+    main('openclassroom', db_number=1)
+    main('openclassroom', db_number=1)
+    main('openclassroom', db_number=1)
+    main('openclassroom', db_number=1)
+    main('openclassroom', db_number=1)
 
 
