@@ -2,9 +2,9 @@
 """main module"""
 from conversation import Conversation
 from redis_utilities import erasing_data
-import counting_behaviour
-
-
+from counting_behaviour import user_incivility_count
+from display_behaviour import display_grandpy_status_code_to_home, \
+    display_grandpy_status_code_to_mannerless
 
 
 # TODO create a behaviour incomprehension for the user
@@ -38,45 +38,26 @@ def main(user_request, db_number=0):
     # 8) DONE correct query creation X1
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
     # if user_behavior['grandpy_status_code'] == 'home'
-    grandpy_status = \
-        chat_session.read_grandpy_answer(
-            chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)])
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
         chat_session.__class__.get_grandpy_status_key(0):
-        print(f'1) Grandpy (home) main= {grandpy_status}')
+        display_grandpy_status_code_to_home(chat_session)
         chat_session.calculate_the_incivility()
-        print(f'7) Réponse de Grandpy = {grandpy_status}')
-        print(f'8) status_code apres grandpy = '
-              f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]}')
-    # if user_behavior['grandpy_status_code'] == 'user_question'
+        chat_session.calculate_the_indecency()
+    # if user_behavior['grandpy_status_code'] = 'mannerless'
     elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
-        chat_session.__class__.get_grandpy_status_key(1):
-        if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
-            chat_session.calculate_the_incivility()
-        else:
-            chat_session.calculate_the_indecency()
-    else:
-        print('je suis number_user_entry = '
-              f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}')
-        chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] += 1
-        counting_behaviour.user_question_answer_count(chat_session)
-    #     if chat_session.__class__.read_grandpy_answer(
-    #             chat_session.__class__.get_grandpy_status_key(7)
-    #     )\
-    #         == chat_session.__class__.get_grandpy_status_key(7):
-    #         max_number_of_incivility(chat_session)
-    #     else:
-    #         # user_behavior['grandpy_status_code'] == 'user_question'
-    #         chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] =\
-    #             chat_session.__class__.get_grandpy_status_key(1)
-    # # if user_behavior['grandpy_status_code'] == 'user_question'
-    # elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
-    #     chat_session.__class__.get_grandpy_status_key(1):
-    #     print(
-    #             'user_incivility ='
-    #             f' {chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]}'
-    #     )
-    # question_answer(chat_session)
+        chat_session.__class__.get_grandpy_status_key(5):
+        chat_session.calculate_the_incivility()
+    # if user_behavior['grandpy_status_code'] = 'disrespectful'
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+        chat_session.__class__.get_grandpy_status_key(6):
+        chat_session.calculate_the_indecency()
+            # display_grandpy_status_code_to_mannerless(chat_session)
+        # if 1 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)] <= 3:
+        #     print('number incivility 2 avant = '
+        #           f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)]}')
+        #     chat_session.calculate_the_incivility()
+        #     print('number incivility 2 apres = '
+        #           f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)]}')
 
     # 10) TODO correct query creation X10
     # 12) TODO incivility query creation X1
@@ -94,12 +75,49 @@ def main(user_request, db_number=0):
 
 
 if __name__ == '__main__':
-    erasing_data(1)
-    main('bonjour', db_number=1)
-    main('openclassroom', db_number=1)
-    main('openclassroom', db_number=1)
-    main('openclassroom', db_number=1)
-    main('openclassroom', db_number=1)
-    main('openclassroom', db_number=1)
+    # erasing_data(1)
+    # chat_session = main('vieux', db_number=1)
+    # print('user_incivility = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]}')
+    # print('user_indecency = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]}')
+    # print('user_incomprehension = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(2)]}')
+    # print('fatique_quotas = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(3)]}')
+    # print('grandpy_code = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]}')
+    # print('number_incivility = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)]}')
+    # print('number_indecency = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)]}')
+    # print('number_incomprehension = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(7)]}')
+    # print('number_entries = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}')
+    # #--------------------------------
+    # main('vieux', db_number=1)
+    # print('user_incivility = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]}')
+    # print('user_indecency = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]}')
+    # print('user_incomprehension = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(2)]}')
+    # print('fatique_quotas = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(3)]}')
+    # print('grandpy_code = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]}')
+    # print('number_incivility = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)]}')
+    # print('number_indecency = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)]}')
+    # print('number_incomprehension = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(7)]}')
+    # print('number_entries = '
+    #       f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}')
+    # main('vieux', db_number=1)
+    # main('vieux', db_number=1)
+    # main('vieux', db_number=1)
+    pass
 
 
