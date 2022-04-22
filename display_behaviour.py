@@ -11,12 +11,20 @@ def display_grandpy_status_code_to_home(chat_session):
     display_grandpy_status(chat_session, grandpy_response)
 
 
-def display_grandpy_status_code_to_user_question(chat_session):
+def display_grandpy_status_code_to_benevolent(chat_session):
     chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
         chat_session.__class__.get_grandpy_status_key(1)
     grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
     grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
     display_grandpy_status(chat_session, grandpy_response)
+
+
+# def display_grandpy_status_code_to_user_question(chat_session):
+#     chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
+#         chat_session.__class__.get_grandpy_status_key(2)
+#     grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
+#     grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
+#     return grandpy_response
 
 
 def display_grandpy_status_code_to_response(chat_session):
@@ -38,9 +46,11 @@ def display_grandpy_status_code_to_tired(chat_session):
 def display_grandpy_status_code_to_incomprehension(chat_session):
     chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] = \
         chat_session.__class__.get_grandpy_status_key(4)
+    print('incomprehension (display) = '
+          f'{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(2)]}')
     grandpy_status = chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)]
     grandpy_response = chat_session.__class__.read_grandpy_answer(grandpy_status)
-    return grandpy_response
+    display_grandpy_status(chat_session, grandpy_response)
 
 
 def display_grandpy_status_code_to_mannerless(chat_session):
@@ -112,12 +122,38 @@ def display_correct_user_request_1_to_X9(chat_session, response_grandpy):
 
 
 def Display_last_user_request(chat_session, response_grandpy):
+    """display of the last user's request before a 24 hours break"""
     print(f'Utilisateur : {chat_session.user_entry}')
     print(f'Réponse de Grandpy : {response_grandpy}')
     print(f'Réponse de Grandpy : {display_grandpy_status_code_to_exhausted(chat_session)}')
-    # fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
-    fatigue_quotas_of_grandpy = chat_session.__class__.get_user_behavior_key(3)
-    data_expiration(fatigue_quotas_of_grandpy, chat_session.db_number)
+    # has_fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
+    data_expiration(chat_session.__class__.get_user_behavior_key(3), chat_session.db_number)
+
+
+def display_behaviour_user_request(chat_session, response_grandpy):
+    """display of the user's understanding"""
+    # if user_behavior['number_of_user_entries'] == 1 to 9
+    if 1 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 9:
+        display_correct_user_request_1_to_X9(chat_session, response_grandpy)
+    # if user_behavior['has_user_indecency_status'] == True
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]:
+        print(f'Utilisateur 2 : {chat_session.user_entry}')
+        print(f'Réponse de grandpy (indecency): {response_grandpy}')
+    # if user_behavior['has_user_incomprehension_status'] == True
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(2)]:
+        print(f'Utilisateur 3 : {chat_session.user_entry}')
+        print(f'Réponse de grandpy (incomprehension): {response_grandpy}')
+    # if user_behavior['has_user_incivility_status'] == True
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
+        print(f'Utilisateur 1: {chat_session.user_entry}')
+        print(f'Réponse de Grandpy (incivility): {response_grandpy}')
+    # if user_behavior['grandpy_status_code'] == 'benevolent'
+    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+            chat_session.__class__.get_grandpy_status_key(1):
+        print(f'Utilisateur : {chat_session.user_entry}')
+        print(f'Réponse de Grandpy (benevolent): {response_grandpy}')
+    # print("Réponse de grandpy (question) = "
+    #       f"{display_grandpy_status_code_to_user_question(chat_session)}")
 
 
 def display_grandpy_status(chat_session, response_grandpy, following_billing=True):
@@ -125,24 +161,18 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
     # Termination of user requests (for 24H00)
     if not following_billing:
         chat_session.set_has_fatigue_quotas_of_grandpy(True)
+        print("user_behavior['has_fatigue_quotas_of_grandpy'] display_status = "
+              f"{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(3)]}")
         Display_last_user_request(chat_session, response_grandpy)
     # Continue user queries
     elif following_billing:
         chat_session.set_has_fatigue_quotas_of_grandpy(False)
-        # if user_behavior['number_of_user_entries'] == 1 to 9
-        if 1 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] <= 9:
-            display_correct_user_request_1_to_X9(chat_session, response_grandpy)
-        else:
-            if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
-                print(f'Utilisateur 2: {chat_session.user_entry}')
-                print(f'Réponse de Grandpy (incivility): {response_grandpy}')
-            elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]:
-                # print(f'Utilisateur : {chat_session.user_entry}')
-                print(f'Réponse de grandpy (indecency): {response_grandpy}')
-            else:
-                # user_behavior['grandpy_status_code']= 'home'
-                print(f'Accueil de Grandpy (home): {response_grandpy}')
-                # if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
-                #         chat_session.__class__.get_grandpy_status_key(0):
-                #     # print(f'Utilisateur 1 : {chat_session.user_entry}')
-                #     pass
+        display_behaviour_user_request(chat_session, response_grandpy)
+
+        # else:
+        #     # user_behavior['grandpy_status_code']= 'home'
+        #     print(f'Accueil de Grandpy (home): {response_grandpy}')
+        #     # if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+        #     #         chat_session.__class__.get_grandpy_status_key(0):
+        #     #     # print(f'Utilisateur 1 : {chat_session.user_entry}')
+        #     #     pass

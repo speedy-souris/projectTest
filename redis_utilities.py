@@ -7,11 +7,7 @@ def get_database_access(db_number=0):
     """method for data_connection to the database
        db_number arg = 0 ==> Redis connect 'dev'
        db_number arg = 1 ==> Redis connect 'test'"""
-    redis_connect = redis.Redis(
-        host='localhost',
-        port=6379,
-        db=db_number
-    )
+    redis_connect = redis.Redis(host='localhost', port=6379, db=db_number)
     return redis_connect
 
 
@@ -59,12 +55,12 @@ def erasing_data(db_number):
         db_redis.delete(key)
 
 
-def data_expiration(fatigue_quotas_of_grandpy, db_number):
+def data_expiration(has_fatigue_quotas_of_grandpy, db_number):
     """expiration of the fatigue_quotas_of_grandpy data for a theoretical duration of 24h00
     which simulates the well-deserved rest of grandpy ==> real duration for the tests 120 seconds"""
     db_redis = get_database_access(db_number)
-    db_redis.expire(fatigue_quotas_of_grandpy, 120)
+    db_redis.expire(has_fatigue_quotas_of_grandpy, 120)
 
 
 if __name__ == '__main__':
-    pass
+    data_expiration('has_fatigue_quotas_of_grandpy', 1)
