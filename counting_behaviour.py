@@ -31,11 +31,7 @@ def user_incivility_count(chat_session):
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
         # if user_behavior['number_of_user_incivility'] = 1 to 2
         if 0 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)] <= 2:
-            print("4) user_behavior['number_of_user_incivility'] avant incr (incivility_count) = "
-                  f"{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)]}")
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)] += 1
-            print("5) user_behavior['number_of_user_incivility'] apres incr (incivility_count) = "
-                  f"{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(5)]}")
             # user_behavior['grandpy_status_code'] = 'mannerless'
             display_grandpy_status_code_to_mannerless(chat_session)
         # if user_behavior['number_of_user_incivility'] == 3
@@ -44,9 +40,8 @@ def user_incivility_count(chat_session):
             # user_behavior['grandpy_status_code'] = 'incivility_limit'
             display_grandpy_status_code_to_limit_incivility(chat_session)
     # if user_behavior['has_user_incivility_status'] = False
-    elif not chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)]:
-        if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 0:
-            display_grandpy_status_code_to_benevolent(chat_session)
+    else:
+        display_grandpy_status_code_to_benevolent(chat_session)
 
 
 # DONE create a behaviour of indecency for the user
@@ -56,16 +51,21 @@ def user_indecency_count(chat_session):
     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]:
         display_grandpy_status_code_to_disrespectful(chat_session)
         # if user_behavior['number_of_user_indecency'] 1 to 2
-        if 0 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] < 3:
+        if 0 <= chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] <= 2:
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] += 1
         # if user_behavior['number_of_user_indecency'] == 3
         elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] >= 3:
             chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(6)] = 3
             # user_behavior['grandpy_status_code'] = 'indecency_limit'
             display_grandpy_status_code_to_limit_indecency(chat_session)
-    # if user_behavior['has_user_indecency_status'] = False
+        # if user_behavior['has_user_indecency_status'] = False
+        print("user_behavior['has__user_indecency_status'] indecency_count == "
+              f"{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]}")
+        print("user_behavior['number_of_user_entries'] indecency_count == "
+              f"{chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)]}")
     # elif not chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(1)]:
-    #     display_grandpy_status_code_to_response(chat_session)
+    #     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] > 0:
+    #         display_grandpy_status_code_to_response(chat_session)
 
 
 def user_incomprehension_count(chat_session):

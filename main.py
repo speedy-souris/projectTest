@@ -4,6 +4,7 @@ from conversation import Conversation
 # from redis_utilities import erasing_data
 from counting_behaviour import user_question_answer_count
 from display_behaviour import display_grandpy_status_code_to_home
+from display_behaviour import display_grandpy_status_code_to_benevolent
 
 
 def conversation_between_user_and_grandpy(user_request, db_number):
@@ -52,6 +53,8 @@ def user_presentation_management(chat_session):
     elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] ==\
             chat_session.__class__.get_grandpy_status_key(4):
         chat_session.calculate_the_incomprehension()
+    else:
+        display_grandpy_status_code_to_benevolent(chat_session)
 
 
 def main(user_request, db_number=0):
@@ -60,11 +63,16 @@ def main(user_request, db_number=0):
     # 8) DONE correct query creation X1
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
     # if user_behavior['grandpy_status_code'] = 'home'
-    if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] ==\
-            chat_session.__class__.get_grandpy_status_key(0):
+    if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(0)] == 0:
         user_presentation_management(chat_session)
-    elif chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 0:
-        user_presentation_management(chat_session)
+        if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(4)] == \
+                chat_session.__class__.get_grandpy_status_key(1):
+            chat_session.calculate_the_indecency()
+            user_question_answer_count(chat_session)
+    elif chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key(4)] != 'benevolent':
+        if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 0:
+            user_presentation_management(chat_session)
     # if user_behavior['grandpy_status_code'] = 'benevolent'
     # elif chat_session.user_behavior[chat_session.get_user_behavior_key(4)] ==\
     #         chat_session.get_grandpy_status_key(1):
