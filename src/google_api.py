@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """google api config management menu"""
 import os
 import requests

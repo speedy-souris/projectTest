@@ -1,8 +1,7 @@
-#!/usr/bin/env python
-import requests
-from mock_api import get_mockreturn
-import google_api
-import pytest
+from . import requests
+from . import pytest
+from . import get_mockreturn
+from . import google_api
 
 
 # @pytest.mark.skip()
@@ -12,12 +11,9 @@ class TestGoogleMapAPI:
             'candidates': [{
                 'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
             'status': 'OK'}
-        mock_result = expected_result
-        mockreturn = get_mockreturn(mock_result)
-        monkeypatch.setattr(requests, 'get', mockreturn)
-        place_id = google_api.get_placeid_from_address('openClassrooms')
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
 
-        assert expected_result == place_id
+        assert expected_result == google_api.get_placeid_from_address('openClassrooms')
 
     def test_get_address_api_from_placeid(self, monkeypatch):
         expected_result = {
@@ -30,9 +26,7 @@ class TestGoogleMapAPI:
                         'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
-        mock_result = expected_result
-        mockreturn = get_mockreturn(mock_result)
-        monkeypatch.setattr(requests, 'get', mockreturn)
-        address_placeid = google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
 
-        assert expected_result == address_placeid
+        assert expected_result == \
+               google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')
