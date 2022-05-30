@@ -28,5 +28,5 @@ class TestGoogleMapAPI:
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
 
-        assert expected_result == \
-               google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')
+        assert expected_result\
+               == google_api.get_address_api_from_placeid('ChIJIZX8lhRu5kcRGwYk8Ce3Vc8')

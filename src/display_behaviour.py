@@ -172,4 +172,3 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
     elif following_billing:
         chat_session.set_has_fatigue_quotas_of_grandpy(False)
         display_behaviour_user_request(chat_session, response_grandpy)
-

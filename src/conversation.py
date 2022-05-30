@@ -1,8 +1,9 @@
 """conversation management module between grandpyRobot and a user"""
 from collections import OrderedDict
 from frozenordereddict import FrozenOrderedDict
-from . import google_api
-from . import redis_utilities
+from src.google_api import get_placeid_from_address
+from src.redis_utilities import write_access_conversation_data, read_access_conversation_data
+from src.redis_utilities import erasing_data, value_to_string_conversion
 # from counting_behaviour import user_incivility_count, user_indecency_count
 # from counting_behaviour import user_incomprehension_count
 
@@ -13,12 +14,16 @@ class Conversation:
     USER_BEHAVIOR_DEFAULT_DATA = FrozenOrderedDict({
         'has_user_incivility_status': False,
         'has_user_indecency_status': False,
+        'has_user_indecency_status2': False,
         'has_user_incomprehension_status': False,
+        'has_user_incomprehension_status2': False,
         'has_fatigue_quotas_of_grandpy': False,
         'grandpy_status_code': 'home',
         'number_of_user_incivility': 0,
         'number_of_user_indecency': 0,
+        'number_of_user_indecency2': 0,
         'number_of_user_incomprehension': 0,
+        'number_of_user_incomprehension2': 0,
         'number_of_user_entries': 0})
     USER_BEHAVIOR_DEFAULT_DATA_KEYS = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
 
@@ -140,13 +145,17 @@ class Conversation:
         behavior_key = {
             'has_user_incivility_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[0],
             'has_user_indecency_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[1],
-            'has_user_incomprehension_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[2],
-            'has_fatigue_quotas_of_grandpy': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[3],
-            'grandpy_status_code': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[4],
-            'number_of_user_incivility': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[5],
-            'number_of_user_indecency': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[6],
-            'number_of_user_incomprehension': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[7],
-            'number_of_user_entries': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[8]
+            'has_user_indecency_status2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[2],
+            'has_user_incomprehension_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[3],
+            'has_user_incomprehension_status2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[4],
+            'has_fatigue_quotas_of_grandpy': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[5],
+            'grandpy_status_code': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[6],
+            'number_of_user_incivility': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[7],
+            'number_of_user_indecency': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[8],
+            'number_of_user_indecency2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[9],
+            'number_of_user_incomprehension': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[10],
+            'number_of_user_incomprehension2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[11],
+            'number_of_user_entries': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[12]
         }
         return behavior_key.get(name_position)
 
@@ -183,37 +192,64 @@ class Conversation:
         response = cls.GRANDPY_STATUS_DATA[cls.get_grandpy_status_key(grandpy_status)]
         return response
 
+    def level_user_name(self, level, behavior_level) -> str:
+        """returns the name of has_user_indecency_status , has_incomprehension_status attributes
+        during user's presentation/chat_session args --> level = presentation / chat_session
+        --> behavior_level = indecency / incomprehension
+        ==> behavior_name = has_user_incivility_user / has_user_incivility_status2 /
+            has_user_incomprehension_status / has_user_incomprehension_status2"""
+        behavior_name = {
+            'presentation': {
+                'indecency': self.__class__.get_user_behavior_key('has_user_indecency_status'),
+                'incomprehension':
+                    self.__class__.get_user_behavior_key('has_user_incomprehension_status')},
+            'chat_session': {
+                'indecency':
+                    self.__class__.get_user_behavior_key('has_user_indecency_status2'),
+                'incomprehension':
+                    self.__class__.get_user_behavior_key('has_user_incomprehension_status2')}}
+        return behavior_name[level][behavior_level]
+
+    def level_status(self, level, behavior_level, behavior_status) -> None:
+        """determines the value of has_user_indecency_status , has_incomprehension_status attributes
+        during user's presentation/chat_session args==> level = presentation/chat_session
+        ==> user_behavior = has_user_incivility_user / has_user_incivility_status2 /
+            has_user_incomprehension_status / has_user_incomprehension_status2
+        ==> behavior_status = True / False """
+        self.user_behavior[self.level_user_name(level, behavior_level)] = behavior_status
+
     def database_init_ordered(self) -> dict:
         """initialization of redis database
         with a key, its value and the ID of the redis database
         example :
         redis_utilities.write_access_conversation_data ('grandpy_status_code', 'home', 0)"""
-        list_attributs_names, list_attributs_values = list(), list()
+        list_attributs_names, list_attributs_values = [], []
         for (name, value) in self.__class__.USER_BEHAVIOR_DEFAULT_DATA.items():
             list_attributs_names.append(name)
             list_attributs_values.append(value)
         behavioral_data = OrderedDict(zip(list_attributs_names, list_attributs_values))
 
         for (name, value) in behavioral_data.items():
-            redis_utilities.write_access_conversation_data(
+            write_access_conversation_data(
                 name, value, self.db_number
             )
         return behavioral_data
 
     def user_behavior_init_ordered(self) -> dict:
         """user behavior initialization parameter"""
-        if not redis_utilities.read_access_conversation_data(self.__class__.get_user_behavior_key(
+        if not read_access_conversation_data(self.__class__.get_user_behavior_key(
                 'has_fatigue_quotas_of_grandpy'), self.db_number):
-            list_attributs_names, list_attributs_values = list(), list()
+            list_attributs_names, list_attributs_values = [], []
             for name in self.__class__.USER_BEHAVIOR_DEFAULT_DATA_KEYS:
                 list_attributs_names.append(name)
-                list_attributs_values.append(redis_utilities.read_access_conversation_data(name, self.db_number))
+                list_attributs_values.append(
+                    read_access_conversation_data(name, self.db_number))
             behavioral_data = OrderedDict(zip(list_attributs_names, list_attributs_values))
         else:
             #  deletion of data from database 1 ==> database for Test
-            redis_utilities.erasing_data(1)
+            erasing_data(1)
             # deletion of data from database 0 ==> database for prod
-            redis_utilities.erasing_data(0)
+            erasing_data(0)
             behavioral_data = self.database_init_ordered()
         return behavioral_data
 
@@ -222,16 +258,13 @@ class Conversation:
         self.user_behavior[
             self.__class__.get_user_behavior_key('has_user_incivility_status')] = incivility_value
 
-    def set_has_user_indecency_status(self, indecency_value) -> None:
-        """determine user incivility status in the conversation"""
-        self.user_behavior[
-            self.__class__.get_user_behavior_key('has_user_indecency_status')] = indecency_value
-
-    def set_has_user_incomprehension_status(self, incomprehension_value) -> None:
-        """determine user incivility status in the conversation"""
-        self.user_behavior[
-            self.__class__.get_user_behavior_key('has_user_incomprehension_status')]\
-            = incomprehension_value
+    def set_has_user_status(self, level, behavior_level, behavior_status) -> None:
+        """determine user incivility status / user indecency status in the conversation
+        args ==> level = presentation / chat_session,
+             ==> behavior_status = has_user_indecency_status / has_user_indecency_status2
+                / has_user_incomprehension_status / has_user_incomprehension_status2
+             ==> status_value = True / False """
+        self.level_status(level, behavior_level, behavior_status)
 
     def set_has_fatigue_quotas_of_grandpy(self, quotas_value) -> None:
         """determine fatigue quotas in the conversation"""
@@ -257,10 +290,18 @@ class Conversation:
             self.__class__.get_user_behavior_key('has_user_indecency_status'):
                 self.user_behavior[
                 self.__class__.get_user_behavior_key('has_user_indecency_status')],
+            # has_user_indecency_status2
+            self.__class__.get_user_behavior_key('has_user_indecency_status2'):
+                self.user_behavior[
+                    self.__class__.get_user_behavior_key('has_user_indecency_status2')],
             # has_user_incomprehension_status
             self.__class__.get_user_behavior_key('has_user_incomprehension_status'):
                 self.user_behavior[
                 self.__class__.get_user_behavior_key('has_user_incomprehension_status')],
+            # has_user_incomprehension_status2
+            self.__class__.get_user_behavior_key('has_user_incomprehension_status2'):
+                self.user_behavior[
+                    self.__class__.get_user_behavior_key('has_user_incomprehension_status2')],
             # has_fatigue_quotas_of_grandpy
             self.__class__.get_user_behavior_key('has_fatigue_quotas_of_grandpy'):
                 self.user_behavior[
@@ -274,19 +315,29 @@ class Conversation:
                 self.__class__.get_user_behavior_key('number_of_user_incivility')],
             # number_of_user_indecency
             self.__class__.get_user_behavior_key('number_of_user_indecency'):
-                self.user_behavior[self.__class__.get_user_behavior_key('number_of_user_indecency')],
+                self.user_behavior[
+                    self.__class__.get_user_behavior_key('number_of_user_indecency')],
+            # number_of_user_indecency2
+            self.__class__.get_user_behavior_key('number_of_user_indecency2'):
+                self.user_behavior[
+                    self.__class__.get_user_behavior_key('number_of_user_indecency2')],
             # number_of_user_incomprehension
             self.__class__.get_user_behavior_key('number_of_user_incomprehension'):
                 self.user_behavior[
                 self.__class__.get_user_behavior_key('number_of_user_incomprehension')],
+            # number_of_user_incomprehension2
+            self.__class__.get_user_behavior_key('number_of_user_incomprehension2'):
+                self.user_behavior[
+                    self.__class__.get_user_behavior_key('number_of_user_incomprehension2')],
             # number_of_user_entries
             self.__class__.get_user_behavior_key('number_of_user_entries'):
                 self.user_behavior[self.__class__.get_user_behavior_key('number_of_user_entries')]
         }
         # (in database redis) writing all
         for (name_attribut, value_attribut) in chat_session_attribut_value.items():
-            redis_utilities.write_access_conversation_data(
-                name_attribut, redis_utilities.value_to_string_conversion(value_attribut), self.db_number)
+            write_access_conversation_data(
+                name_attribut, value_to_string_conversion(value_attribut),
+                self.db_number)
 
     def calculate_the_incivility_status(self) -> None:
         """update the attribut has_user_incivility_status since INCIVILITY_SET_DATA set"""
@@ -294,24 +345,27 @@ class Conversation:
         incivility_set_data = self.__class__.INCIVILITY_SET_DATA
         self.set_has_user_incivility_status(incivility_set_data.isdisjoint(user_entry_lowercase))
 
-    def calculate_the_indecency_status(self) -> None:
+    def calculate_the_indecency_status(self, level, behavior_level) -> None:
         """update the attribut has_user_indecency_status since INDECENCY_SET_DATA set"""
         user_entry_lowercase = self.lower_and_split_user_entry()
         indecency_set_data = self.__class__.INDECENCY_SET_DATA
-        self.set_has_user_indecency_status(not indecency_set_data.isdisjoint(user_entry_lowercase))
+        indecency_status = not indecency_set_data.isdisjoint(user_entry_lowercase)
+        self.set_has_user_status(level, behavior_level, indecency_status)
 
     # DONE create a behaviour incomprehension for the user
-    def calculate_the_incomprehension_status(self) -> None:
+    def calculate_the_incomprehension_status(self, level, behavior_level) -> None:
         """update the attribut has_user_indecency_status since GoogleMap API"""
-        result_api = google_api.get_placeid_from_address(self.user_entry)
+        incomprehension_status = None
+        result_api = get_placeid_from_address(self.user_entry)
         if result_api in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
                 {'candidates': [], 'status': 'INVALID_REQUEST'}):
-            self.set_has_user_incomprehension_status(True)
+            incomprehension_status = True
         elif result_api not in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
                 {'candidates': [], 'status': 'INVALID_REQUEST'}):
-            self.set_has_user_incomprehension_status(False)
+            incomprehension_status = False
+        self.set_has_user_status(level, behavior_level, incomprehension_status)
 
     def get_user_request_parser(self) -> None:
         """recover the keywords of the user request
@@ -326,4 +380,5 @@ class Conversation:
 
 
 if __name__ == '__main__':
-    pass
+    chat_session = Conversation('', 1)
+    print(chat_session.level_user_name('presentation', 'indecency'))

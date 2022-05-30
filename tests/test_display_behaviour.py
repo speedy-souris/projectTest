@@ -1,7 +1,7 @@
 from . import pytest
 from . import erasing_data
 from . import Conversation
-from . import display_behaviour
+from ..src import display_behaviour
 from ..src.redis_utilities import get_database_access
 
 

@@ -1,7 +1,9 @@
 import pytest
-from . import read_access_conversation_data, erasing_data
+from ..src.redis_utilities import read_access_conversation_data
+from . import erasing_data
 from . import Conversation
-from . import user_incivility_count
+from ..src.counting_behaviour import user_incivility_count
+from . import get_user_presentation_management
 
 
 # @pytest.mark.skip()
@@ -12,8 +14,7 @@ class TestWritingRedis:
 
     def test_redis_writing(self):
         chat_session = Conversation('bonjour', 1)
-        chat_session.calculate_the_incivility_status()
-        user_incivility_count(chat_session)
+        get_user_presentation_management(chat_session, 'presentation', 'indecency')
 
         assert chat_session.user_behavior[
             chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\

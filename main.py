@@ -2,12 +2,16 @@
 """main module"""
 from . import Conversation
 from . import display_grandpy_status_code_to_home
+from . import display_grandpy_status_code_to_benevolent
+from . import display_grandpy_status_code_to_mannerless
+from . import display_grandpy_status_code_to_disrespectful
+from . import display_grandpy_status_code_to_incomprehension
+from . import display_grandpy_status_code_to_response
 from . import user_incivility_count
 from . import user_indecency_count
 from . import user_incomprehension_count
 # from . import user_question_answer_count
 # from . import display_grandpy_status_code_to_response
-# from . import display_grandpy_status_code_to_benevolent
 
 
 def conversation_between_user_and_grandpy(user_request, db_number):
@@ -35,38 +39,137 @@ def search_address_to_wiki():
     pass
 
 
+# --------------------------
+# -- PRESENTATION OF USER --
+# --------------------------
+def get_presentation_management(chat_session, level, behavior_level):
+    """management of user behavior during presentation"""
+    # if user_behavior['grandpy_status_code'] = 'home'
+    if chat_session.user_behavior[
+        chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('home'):
+        get_user_presentation_management(chat_session, level, behavior_level)
+    # if user_behavior['has_user_incivility_status'] = 'mannerless'
+    elif chat_session.user_behavior[
+        chat_session.__class__.get_user_behavior_key('has_user_incivility_status')]\
+            == chat_session.__class__.get_grandpy_status_key('mannerless'):
+        get_user_presentation_management(chat_session, level, behavior_level)
+    # if user_behavior['has_user_indecency_status'] = 'disrespectful'
+    elif chat_session.user_behavior[
+        chat_session.__class__.get_user_behavior_key('has_user_indecency_status')]\
+            == chat_session.__class__.get_grandpy_status_key('disrespectful'):
+        get_user_presentation_management(chat_session, level, behavior_level)
+    # if user_behavior['has_user_incomprehension_status'] = 'incomprehension'
+    elif chat_session.user_behavior[
+        chat_session.__class__.get_user_behavior_key('has_user_incomprehension_status')]\
+            == chat_session.__class__.get_grandpy_status_key('incomprehension'):
+        get_user_presentation_management(chat_session, level, behavior_level)
+    elif chat_session.user_behavior[
+        chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('benevolent'):
+        display_grandpy_status_code_to_benevolent(chat_session)
+
+
 # ---------------------------
-def user_presentation_management(chat_session):
+def get_user_presentation_management(chat_session, level, behavior_level):
     """management of the presentation of the user"""
     display_grandpy_status_code_to_home(chat_session)
     chat_session.calculate_the_incivility_status()
-    user_incivility_count(chat_session)
-    chat_session.calculate_the_indecency_status()
-    user_indecency_count(chat_session)
-    chat_session.calculate_the_incomprehension_status()
-    user_incomprehension_count(chat_session)
+    # if user_behavior['has_user_incivility_status'] = True
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('has_user_incivility_status')]:
+        display_grandpy_status_code_to_mannerless(chat_session)
+        get_behavior_presentation_management(chat_session, level, behavior_level)
+    chat_session.calculate_the_indecency_status(level, behavior_level)
+    # if user_behavior['has_user_indecency_status'] = True
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('has_user_indecency_status')]:
+        display_grandpy_status_code_to_disrespectful(chat_session)
+        get_behavior_presentation_management(chat_session, level, behavior_level)
+    behavior_level = 'incomprehension'
+    chat_session.calculate_the_incomprehension_status(level, behavior_level)
+    # if user_behavior['has_user_incomprehension_status'] = True
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('has_user_incomprehension_status')]:
+        display_grandpy_status_code_to_incomprehension(chat_session)
+        get_behavior_presentation_management(chat_session, level, behavior_level)
+    # if user_behavior['grandpy_status_code'] = 'home'
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('home'):
+        chat_session.user_behavior['grandpy_status_code']\
+            = chat_session.__class__.get_grandpy_status_key('benevolent')
+# ------------------------------------
+
+
+def get_behavior_presentation_management(chat_session, level, behavior_level):
+    """management of the behavioral user in presentation"""
     # if user_behavior['grandpy_status_code'] = 'mannerless'
     if chat_session.user_behavior[
             chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
             == chat_session.__class__.get_grandpy_status_key('mannerless'):
-        user_presentation_management(chat_session)
+        user_incivility_count(chat_session)
     # if user_behavior['grandpy_status_code'] = 'disrespectful'
     elif chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('disrespectful'):
+        user_indecency_count(chat_session, level, behavior_level)
+    # if user_behavior['grandpy_status_code'] = 'incomprehension'
+    elif chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('incomprehension'):
+        user_incomprehension_count(chat_session, level, behavior_level)
+# --------------------------
+# --         END          --
+# -- PRESENTATION OF USER --
+# --------------------------
+
+
+# ------------------
+# -- CHAT SESSION --
+# ------------------
+
+# -----------------------------------
+def get_user_chat_session_management(chat_session):
+    """session_chat management between user and grandpy"""
+    display_grandpy_status_code_to_benevolent(chat_session)
+    chat_session.calculate_the_indecency_status()
+    # if user_behavior['has_user_indecency_status'] = True
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('has_user_indecency_status')]:
+        display_grandpy_status_code_to_disrespectful(chat_session)
+        get_behavior_chat_session_management(chat_session)
+    chat_session.calculate_the_incomprehension_status()
+    # if user_behavior['has_user_incomprehension_status'] = True
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('has_user_incomprehension_status')]:
+        display_grandpy_status_code_to_incomprehension(chat_session)
+        get_behavior_chat_session_management(chat_session)
+    # if user_behavior['grandpy_status_code'] = 'benevolent'
+    if chat_session.user_behavior[
+            chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('benevolent'):
+        chat_session.user_behavior['grandpy_status_code']\
+            = chat_session.__class__.get_grandpy_status_key('response')
+# -----------------------------------
+
+
+def get_behavior_chat_session_management(chat_session):
+    """management of the behavioral user in chat_session"""
+    # if user_behavior['grandpy_status_code'] = 'disrespectful'
+    if chat_session.user_behavior[
         chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
             == chat_session.__class__.get_grandpy_status_key('disrespectful'):
-        user_presentation_management(chat_session)
+        user_indecency_count(chat_session)
     # if user_behavior['grandpy_status_code'] = 'incomprehension'
     elif chat_session.user_behavior[
         chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
             == chat_session.__class__.get_grandpy_status_key('incomprehension'):
-        user_presentation_management(chat_session)
-    else:
-        print("status benevolent (main) avant = "
-              f"{chat_session.user_behavior['grandpy_status_code']}")
-        chat_session.user_behavior['grandpy_status_code']\
-            = chat_session.__class__.get_grandpy_status_key('benevolent')
-        print("status benevolent (main) apres = "
-              f"{chat_session.user_behavior['grandpy_status_code']}")
+        user_incomprehension_count(chat_session)
+# ------------------
+# --    END       --
+# -- CHAT SESSION --
+# ------------------
 
 
 def main(user_request, db_number=0):
@@ -74,45 +177,25 @@ def main(user_request, db_number=0):
     # 6) DONE Create test_main.py module
     # 8) DONE correct query creation X1
     chat_session = conversation_between_user_and_grandpy(user_request, db_number=db_number)
-    # if user_behavior['grandpy_status_code'] = 'home'
+    get_presentation_management(chat_session, 'presentation', 'indecency')
     if chat_session.user_behavior[
             chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
-            == chat_session.__class__.get_grandpy_status_key('home'):
-        user_presentation_management(chat_session)
-
+            == chat_session.__class__.get_grandpy_status_key('benevolent'):
+        get_user_chat_session_management(chat_session)
+    # # if user_behavior['grandpy_status_code'] = 'disrespectful'
     # elif chat_session.user_behavior[
     #         chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
-    #         == chat_session.__class__.get_grandpy_status_key('benevolent'):
-    #     display_grandpy_status_code_to_benevolent(chat_session)
-    #     user_presentation_management(chat_session)
-    # if user_behavior['number_of_user_entries'] = 1 to 4
-    # elif 1 <= chat_session.user_behavior[
-    #         chat_session.__class__.get_user_behavior_key('nb_entries')] <= 10:
-    #     chat_session.get_request_parser()
-    #     user_question_answer_count(chat_session)
-    #     chat_session.calculate_the_indecency()
-    #     user_question_answer_count(chat_session)
+    #         == chat_session.__class__.get_grandpy_status_key('disrespectful'):
+    #     get_user_chat_session_management(chat_session)
+    # # if user_behavior['grandpy_status_code'] = 'incomprehension'
     # elif chat_session.user_behavior[
-    #         chat_session.__class__.get_user_behavior_key(4)] != 'benevolent':
-    #     if chat_session.user_behavior[chat_session.__class__.get_user_behavior_key(8)] == 0:
-    #         user_presentation_management(chat_session)
-    # if user_behavior['grandpy_status_code'] = 'benevolent'
-    # elif chat_session.user_behavior[chat_session.get_user_behavior_key(4)] ==\
-    #         chat_session.get_grandpy_status_key(1):
-    #     chat_session.calculate_the_indecency()
-    #     print('je suis ici')
-
-    # TODO create the beginning of tired for grandpy
-    # 10) TODO correct query creation X10
-    # 12) TODO incivility query creation X1
-    # 14) TODO incivility query creation X3
-    # 16) TODO indecency query creation X1
-    # 18) TODO indecency query creation X3
-    # 20) TODO incomprehension query creation X1
-    # 22) TODO incomprehension query creation X3
-    # 24) TODO Add incivility conditional statements
-    # 26) TODO Add indecency conditional statements
-    # 28) TODO Add incomprehension conditional statements
+    #     chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+    #         == chat_session.__class__.get_grandpy_status_key('incomprehension'):
+    #     get_user_chat_session_management(chat_session)
+    # elif chat_session.user_behavior[
+    #     chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+    #         == chat_session.__class__.get_grandpy_status_key('response'):
+    #     display_grandpy_status_code_to_response(chat_session)
     chat_session.update_database()
     return chat_session
 

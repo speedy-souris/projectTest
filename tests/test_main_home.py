@@ -5,7 +5,7 @@ from . import get_mockreturn
 from . import main
 
 
-@pytest.mark.skip()
+# @pytest.mark.skip()
 class TestHomeMain:
     @staticmethod
     def setup_method():
@@ -98,7 +98,7 @@ class TestHomeMain:
             == 0
 
     # 13) DONE incivility query X3
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_incorrect_presentation_user_to_X3(self):
         # incorrect presentation of the user X3 ==> question without ('bonjour'...)
         main('ou se trouve openClassrooms', db_number=1)
@@ -121,7 +121,7 @@ class TestHomeMain:
                 'number_of_user_incivility')] == 3
 
     # 15) DONE indecency query (home) 1 to X2
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_indecency_request_user_to_X1(self):
         # incorrect request of the user X1 ==> indecency presentation without ('bonjour'....)
         presentation_user_indecency = main('dinosaure', db_number=1)
@@ -163,7 +163,7 @@ class TestHomeMain:
             presentation_user_indecency.__class__.get_user_behavior_key('number_of_user_entries')]\
             == 0
 
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_indecency_request_user_to_X2(self):
         # incorrect request of the user X2 ==> indecency presentation without ('bonjour'....)
         main('vieux', db_number=1)
@@ -189,10 +189,10 @@ class TestHomeMain:
         assert presentation_user_indecency.user_behavior[
             presentation_user_indecency.__class__.get_user_behavior_key('grandpy_status_code')]\
             == 'disrespectful'
-        # user_behavior['number_of_user_incivility'] = 1
+        # user_behavior['number_of_user_incivility'] = 2
         assert presentation_user_indecency.user_behavior[
             presentation_user_indecency.__class__.get_user_behavior_key(
-                'number_of_user_incivility')] == 1
+                'number_of_user_incivility')] == 2
         # user_behavior['number_of_user_indecency'] = 2
         assert presentation_user_indecency.user_behavior[
             presentation_user_indecency.__class__.get_user_behavior_key(
@@ -207,7 +207,7 @@ class TestHomeMain:
             == 0
 
     # 17) DONE indecency query (home) X3
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_indecency_request_user_to_X3(self):
         # incorrect request of the user X3 ==> indecency presentation without ('bonjour'....)
         main('dinosaure', db_number=1)
@@ -230,13 +230,11 @@ class TestHomeMain:
                 'number_of_user_indecency')] == 3
 
     # 19) DONE incomprehension query (home) 1 to X2
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_incomprehension_request_user_to_X1(self, monkeypatch):
         # incomprehension presentation of the user X1 ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
-        monkeypatch.setattr(
-            requests, 'get',
-            get_mockreturn(expected_mock_result))
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_mock_result))
         presentation_user_incomprehension = main('', db_number=1)
 
         # user_behavior['has_user_incivility_status'] = True
@@ -276,13 +274,11 @@ class TestHomeMain:
             presentation_user_incomprehension.__class__.get_user_behavior_key(
                 'number_of_user_entries')] == 0
 
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_incomprehension_request_user_to_X2(self, monkeypatch):
         # incomprehension presentation of the user X2 ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
-        monkeypatch.setattr(
-            requests, 'get',
-            get_mockreturn(expected_mock_result))
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_mock_result))
         main('', db_number=1)
         presentation_user_incomprehension = main('', db_number=1)
 
@@ -306,10 +302,10 @@ class TestHomeMain:
         assert presentation_user_incomprehension.user_behavior[
             presentation_user_incomprehension.__class__.get_user_behavior_key(
                 'grandpy_status_code')] == 'incomprehension'
-        # user_behavior['number_of_user_incivility'] = 1
+        # user_behavior['number_of_user_incivility'] = 2
         assert presentation_user_incomprehension.user_behavior[
             presentation_user_incomprehension.__class__.get_user_behavior_key(
-                'number_of_user_incivility')] == 1
+                'number_of_user_incivility')] == 2
         # user_behavior['number_of_user_indecency'] = 0
         assert presentation_user_incomprehension.user_behavior[
             presentation_user_incomprehension.__class__.get_user_behavior_key(
@@ -324,13 +320,11 @@ class TestHomeMain:
                 'number_of_user_entries')] == 0
 
     # 21) DONE incomprehension query X3
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_incomprehension_request_user_to_X3(self, monkeypatch):
         # incomprehension presentation of the user ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
-        monkeypatch.setattr(
-            requests, 'get',
-            get_mockreturn(expected_mock_result))
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_mock_result))
         main('', db_number=1)
         main('', db_number=1)
         main('', db_number=1)
@@ -351,7 +345,7 @@ class TestHomeMain:
                 'number_of_user_incomprehension')] == 3
 
     # # 7) DONE correct query X1
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_correct_presentation_user(self):
         # correct presentation of the user ==> ('bonjour'....)
         dialogue_of_presentation = main('bonjour', db_number=1)

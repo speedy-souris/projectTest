@@ -34,8 +34,14 @@ class TestBehavior:
                 self.chat_session.__class__.get_user_behavior_key('has_user_incivility_status'),
             'has_user_indecency_status':
                 self.chat_session.__class__.get_user_behavior_key('has_user_indecency_status'),
-            'has_user_incomprehension_status': self.chat_session.__class__.get_user_behavior_key(
-                'has_user_incomprehension_status'),
+            'has_user_indecency_status2':
+                self.chat_session.__class__.get_user_behavior_key('has_user_indecency_status2'),
+            'has_user_incomprehension_status':
+                self.chat_session.__class__.get_user_behavior_key(
+                    'has_user_incomprehension_status'),
+            'has_user_incomprehension_status2':
+                self.chat_session.__class__.get_user_behavior_key(
+                    'has_user_incomprehension_status2'),
             'has_fatigue_quotas_of_grandpy':
                 self.chat_session.__class__.get_user_behavior_key('has_fatigue_quotas_of_grandpy'),
             'grandpy_status_code':
@@ -44,8 +50,13 @@ class TestBehavior:
                 self.chat_session.__class__.get_user_behavior_key('number_of_user_incivility'),
             'number_of_user_indecency':
                 self.chat_session.__class__.get_user_behavior_key('number_of_user_indecency'),
+            'number_of_user_indecency2':
+                self.chat_session.__class__.get_user_behavior_key('number_of_user_indecency2'),
             'number_of_user_incomprehension':
                 self.chat_session.__class__.get_user_behavior_key('number_of_user_incomprehension'),
+            'number_of_user_incomprehension2':
+                self.chat_session.__class__.get_user_behavior_key(
+                    'number_of_user_incomprehension2'),
             'number_of_user_entries':
                 self.chat_session.__class__.get_user_behavior_key('number_of_user_entries')
         }
@@ -55,9 +66,15 @@ class TestBehavior:
         user_indecency_value\
             = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
                 user_behavior['has_user_indecency_status']]
+        user_indecency_value2\
+            = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
+                user_behavior['has_user_indecency_status2']]
         user_incomprehension_value\
             = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
                 user_behavior['has_user_incomprehension_status']]
+        user_incomprehension_value2\
+            = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
+                user_behavior['has_user_incomprehension_status2']]
         fatigue_quotas_value\
             = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
                 user_behavior['has_fatigue_quotas_of_grandpy']]
@@ -70,31 +87,45 @@ class TestBehavior:
         number_indecency_value\
             = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
                 user_behavior['has_user_indecency_status']]
+        number_indecency_value2\
+            = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
+                user_behavior['has_user_indecency_status2']]
         number_incomprehension_value\
             = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
                 user_behavior['has_user_incomprehension_status']]
+        number_incomprehension_value2\
+            = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
+                user_behavior['has_user_incomprehension_status2']]
         number_entries_value\
             = self.chat_session.__class__.USER_BEHAVIOR_DEFAULT_DATA[
                 user_behavior['number_of_user_entries']]
 
         assert (user_behavior['has_user_incivility_status'], user_incivility_value)\
-               == ('has_user_incivility_status', False)
+            == ('has_user_incivility_status', False)
         assert (user_behavior['has_user_indecency_status'], user_indecency_value)\
-               == ('has_user_indecency_status', False)
+            == ('has_user_indecency_status', False)
+        assert (user_behavior['has_user_indecency_status2'], user_indecency_value2) \
+            == ('has_user_indecency_status2', False)
         assert (user_behavior['has_user_incomprehension_status'], user_incomprehension_value)\
-               == ('has_user_incomprehension_status', False)
+            == ('has_user_incomprehension_status', False)
+        assert (user_behavior['has_user_incomprehension_status2'], user_incomprehension_value2)\
+            == ('has_user_incomprehension_status2', False)
         assert (user_behavior['has_fatigue_quotas_of_grandpy'], fatigue_quotas_value)\
-               == ('has_fatigue_quotas_of_grandpy', False)
+            == ('has_fatigue_quotas_of_grandpy', False)
         assert (user_behavior['grandpy_status_code'], grandpy_status_value)\
-               == ('grandpy_status_code', 'home')
+            == ('grandpy_status_code', 'home')
         assert (user_behavior['number_of_user_incivility'], number_incivility_value)\
-               == ('number_of_user_incivility', 0)
+            == ('number_of_user_incivility', 0)
         assert (user_behavior['number_of_user_indecency'], number_indecency_value)\
-               == ('number_of_user_indecency', 0)
+            == ('number_of_user_indecency', 0)
+        assert (user_behavior['number_of_user_indecency2'], number_indecency_value2)\
+            == ('number_of_user_indecency2', 0)
         assert (user_behavior['number_of_user_incomprehension'], number_incomprehension_value)\
-               == ('number_of_user_incomprehension', 0)
+            == ('number_of_user_incomprehension', 0)
+        assert (user_behavior['number_of_user_incomprehension2'], number_incomprehension_value) \
+            == ('number_of_user_incomprehension2', 0)
         assert (user_behavior['number_of_user_entries'], number_entries_value)\
-               == ('number_of_user_entries', 0)
+            == ('number_of_user_entries', 0)
 
     # @pytest.mark.skip()
     def test_get_grandpy_status_key(self):
@@ -124,28 +155,28 @@ class TestBehavior:
             = self.chat_session.__class__.GRANDPY_STATUS_DATA[self.grandpy_status['exhausted']]
 
         assert (self.grandpy_status['home'], home_value)\
-               == ('home', "Bonjour Mon petit, en quoi puis-je t'aider ?")
+            == ('home', "Bonjour Mon petit, en quoi puis-je t'aider ?")
         assert (self.grandpy_status['benevolent'], benevolent_value)\
-               == ('benevolent', "Ok, c'est très bien mon petit !")
+            == ('benevolent', "Ok, c'est très bien mon petit !")
         assert (self.grandpy_status['response'], response_value)\
-               == ('response', 'Voici la réponse à tas question !')
+            == ('response', 'Voici la réponse à tas question !')
         assert (self.grandpy_status['tired'], tired_value)\
-               == ('tired', 'Houla, maintenant ma memoire commence à fatiguée !')
+            == ('tired', 'Houla, maintenant ma memoire commence à fatiguée !')
         assert (self.grandpy_status['incomprehension'], incomprehension_value)\
-               == ('incomprehension', "Ha, je ne comprends pas, essaye d'être plus précis ... !")
+            == ('incomprehension', "Ha, je ne comprends pas, essaye d'être plus précis ... !")
         assert (self.grandpy_status['mannerless'], mannerless_value)\
-               == ('mannerless', "S'il te plait, reformule ta question en étant plus polis ... !")
+            == ('mannerless', "S'il te plait, reformule ta question en étant plus polis ... !")
         assert (self.grandpy_status['disrespectful'], disrespectful_value)\
-               == (
+            == (
                'disrespectful', "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !")
         assert (self.grandpy_status['incivility_limit'], incivility_limit_value)\
-               == ('incivility_limit', 'Cette impolitesse me FATIGUE ... !')
+            == ('incivility_limit', 'Cette impolitesse me FATIGUE ... !')
         assert (self.grandpy_status['indecency_limit'], indecency_limit_value)\
-               == ('indecency_limit', 'Cette grossièreté me FATIGUE ... !')
+            == ('indecency_limit', 'Cette grossièreté me FATIGUE ... !')
         assert (self.grandpy_status['incomprehension_limit'], incomprehension_limit_value)\
-               == ('incomprehension_limit', 'Cette incomprehension me FATIGUE ... !')
+            == ('incomprehension_limit', 'Cette incomprehension me FATIGUE ... !')
         assert (self.grandpy_status['exhausted'], exhausted_value)\
-               == ('exhausted', 'Je suis fatigué reviens me voir demain !')
+            == ('exhausted', 'Je suis fatigué reviens me voir demain !')
 
     def test_read_grandpy_answer(self):
         home_status = self.chat_session.__class__.GRANDPY_STATUS_DATA[self.grandpy_status['home']]
@@ -222,30 +253,53 @@ class TestBehavior:
                 self.chat_session.__class__.get_user_behavior_key('has_user_incivility_status')]
         assert not user_incivility
 
-    def test_set_has_user_indecency_status(self):
-        self.chat_session.set_has_user_indecency_status(True)
+    def test_set_has_user_status(self):
+        self.chat_session.set_has_user_status('presentation', 'indecency', True)
         user_indecency\
             = self.chat_session.user_behavior[
                 self.chat_session.__class__.get_user_behavior_key('has_user_indecency_status')]
         assert user_indecency
 
-        self.chat_session.set_has_user_indecency_status(False)
+        self.chat_session.set_has_user_status('presentation', 'indecency', False)
         user_indecency\
             = self.chat_session.user_behavior[
                 self.chat_session.__class__.get_user_behavior_key('has_user_indecency_status')]
         assert not user_indecency
 
-    def test_set_has_user_incomprehension_status(self):
-        self.chat_session.set_has_user_incomprehension_status(True)
+        self.chat_session.set_has_user_status('presentation', 'incomprehension', True)
         user_incomprehension\
             = self.chat_session.user_behavior[self.chat_session.__class__.get_user_behavior_key(
                 'has_user_incomprehension_status')]
         assert user_incomprehension
 
-        self.chat_session.set_has_user_incomprehension_status(False)
+        self.chat_session.set_has_user_status('presentation', 'incomprehension', False)
         user_incomprehension\
             = self.chat_session.user_behavior[self.chat_session.__class__.get_user_behavior_key(
                 'has_user_incomprehension_status')]
+        assert not user_incomprehension
+
+        self.chat_session.set_has_user_status('chat_session', 'indecency', True)
+        user_indecency \
+            = self.chat_session.user_behavior[
+                self.chat_session.__class__.get_user_behavior_key('has_user_indecency_status2')]
+        assert user_indecency
+
+        self.chat_session.set_has_user_status('chat_session', 'indecency', False)
+        user_indecency \
+            = self.chat_session.user_behavior[
+                self.chat_session.__class__.get_user_behavior_key('has_user_indecency_status2')]
+        assert not user_indecency
+
+        self.chat_session.set_has_user_status('chat_session', 'incomprehension', True)
+        user_incomprehension \
+            = self.chat_session.user_behavior[self.chat_session.__class__.get_user_behavior_key(
+                'has_user_incomprehension_status2')]
+        assert user_incomprehension
+
+        self.chat_session.set_has_user_status('chat_session', 'incomprehension', False)
+        user_incomprehension \
+            = self.chat_session.user_behavior[self.chat_session.__class__.get_user_behavior_key(
+                'has_user_incomprehension_status2')]
         assert not user_incomprehension
 
     def test_set_has_fatigue_quotas_of_grandpy(self):
