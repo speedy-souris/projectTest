@@ -1,5 +1,5 @@
-"""module of pisplay of the behaviour of the user """
-from . import redis_utilities
+"""module of display of the user behavior  """
+from . import data_expiration
 
 
 def display_grandpy_status_code_to_home(chat_session):
@@ -39,12 +39,12 @@ def display_grandpy_status_code_to_tired(chat_session):
     display_grandpy_status(chat_session, grandpy_response)
 
 
-def display_grandpy_status_code_to_incomprehension(chat_session):
+def display_grandpy_status_code_to_inconsistency(chat_session):
     """billing of answers of grandpy for status incomprehension"""
-    # user_behavior['grandpy_status_code'] = 'incomprehension
+    # user_behavior['grandpy_status_code'] = 'inconsistency'
     chat_session.user_behavior[chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
-        = chat_session.__class__.get_grandpy_status_key('incomprehension')
-    grandpy_response = chat_session.__class__.read_grandpy_answer('incomprehension')
+        = chat_session.__class__.get_grandpy_status_key('inconsistency')
+    grandpy_response = chat_session.__class__.read_grandpy_answer('inconsistency')
     display_grandpy_status(chat_session, grandpy_response)
 
 
@@ -89,7 +89,6 @@ def display_grandpy_status_code_to_incomprehension_limit(chat_session):
     # user_behavior['grandpy_status_code'] = 'incomprehension_limit'
     chat_session.user_behavior[chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
         = chat_session.__class__.get_grandpy_status_key('incomprehension_limit')
-
     grandpy_response = chat_session.__class__.read_grandpy_answer('incomprehension_limit')
     display_grandpy_status(chat_session, grandpy_response, following_billing=False)
 
@@ -101,7 +100,7 @@ def display_grandpy_status_code_to_exhausted(chat_session):
     return grandpy_response
 
 
-def display_correct_user_request_1_to_X9(chat_session, response_grandpy):
+def display_correct_user_request_1_to_9(chat_session, response_grandpy):
     """billing of answers of grandpy X9 answer correct"""
     # user_behavior['number_of_user_entries'] == 1 to 4
     if 1 <= chat_session.user_behavior[
@@ -128,17 +127,17 @@ def display_last_user_request(chat_session, response_grandpy):
     print(f'Réponse de Grandpy pre_fin: {response_grandpy}')
     print(f'Réponse de Grandpy fin: {display_grandpy_status_code_to_exhausted(chat_session)}')
     # has_fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
-    redis_utilities.data_expiration(
+    data_expiration(
         chat_session.__class__.get_user_behavior_key(
             'has_fatigue_quotas_of_grandpy'), chat_session.db_number)
 
 
-def display_behaviour_user_request(chat_session, response_grandpy):
+def display_behavior_user_request(chat_session, response_grandpy):
     """display of the user's understanding"""
     # if user_behavior['number_of_user_entries'] == 1 to 9
     if 1 <= chat_session.user_behavior[
             chat_session.__class__.get_user_behavior_key('number_of_user_entries')] <= 9:
-        display_correct_user_request_1_to_X9(chat_session, response_grandpy)
+        display_correct_user_request_1_to_9(chat_session, response_grandpy)
     # if user_behavior['has_user_indecency_status'] == True
     elif chat_session.user_behavior[
             chat_session.__class__.get_user_behavior_key('has_user_indecency_status')]:
@@ -156,8 +155,8 @@ def display_behaviour_user_request(chat_session, response_grandpy):
         print(f'Réponse de Grandpy (incivility): {response_grandpy}')
     # if user_behavior['grandpy_status_code'] == 'benevolent'
     elif chat_session.user_behavior[
-            chat_session.__class__.get_user_behavior_key('grandpy_status_code')] == \
-            chat_session.__class__.get_grandpy_status_key('good'):
+        chat_session.__class__.get_user_behavior_key('grandpy_status_code')]\
+            == chat_session.__class__.get_grandpy_status_key('benevolent'):
         print(f'Utilisateur : {chat_session.user_entry}')
         print(f'Réponse de Grandpy (benevolent): {response_grandpy}')
 
@@ -171,4 +170,4 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
     # Continue user queries
     elif following_billing:
         chat_session.set_has_fatigue_quotas_of_grandpy(False)
-        display_behaviour_user_request(chat_session, response_grandpy)
+        display_behavior_user_request(chat_session, response_grandpy)

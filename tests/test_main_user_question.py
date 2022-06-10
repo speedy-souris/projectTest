@@ -3,7 +3,7 @@ from . import get_place_id_googleMap_api_mockreturn
 from . import get_address_googleMap_api_mockreturn
 from . import google_api
 from . import main
-from . import get_user_presentation_management
+# from . import get_behavior_value_management
 from . import erasing_data
 
 
@@ -14,7 +14,7 @@ class TestQuestionMain:
         erasing_data(1)
 
     # @pytest.mark.skip()
-    def test_correct_user_request_to_X1(self, monkeypatch):
+    def test_correct_user_request_to_1(self, monkeypatch):
         # correct presentation of the user ==> question with ('bonjour'...)
         # level 1
         expected_result1 = {
@@ -40,19 +40,20 @@ class TestQuestionMain:
         monkeypatch.setattr(
             google_api, 'get_address_api_from_placeid',
             get_address_googleMap_api_mockreturn(expected_result2))
-        main('bonjour', db_number=1)
-        first_request = main('ou se trouve openClassrooms', db_number=1)
-        get_user_presentation_management(first_request)
+        main.main('bonjour', db_number=1)
+        first_request = main.main('ou se trouve openClassrooms', db_number=1)
+        get_user_session_management(
+            first_request, 'chat_session', 'has_user_indecency_status2')
 
         # has_user_incivility_status == False
         assert not first_request.user_behavior[
             first_request.__class__.get_user_behavior_key('has_user_incivility_status')]
-        # has_user_indecency_status == False
+        # has_user_indecency_status2 == False
         assert not first_request.user_behavior[
-            first_request.__class__.get_user_behavior_key('has_user_indecency_status')]
-        # has_user_incomprehension_status == False
+            first_request.__class__.get_user_behavior_key('has_user_indecency_status2')]
+        # has_user_incomprehension_status2 == False
         assert not first_request.user_behavior[
-            first_request.__class__.get_user_behavior_key('has_user_incomprehension_status')]
+            first_request.__class__.get_user_behavior_key('has_user_incomprehension_status2')]
         # has_fatigue_quotas_of_grandpy == False
         assert not first_request.user_behavior[
             first_request.__class__.get_user_behavior_key('has_fatigue_quotas_of_grandpy')]
@@ -62,17 +63,17 @@ class TestQuestionMain:
         # number_of_user_incivility == 0
         assert first_request.user_behavior[
             first_request.__class__.get_user_behavior_key('number_of_user_incivility')] == 0
-        # number_of_user_indecency == 0
+        # number_of_user_indecency2 == 0
         assert first_request.user_behavior[
-            first_request.__class__.get_user_behavior_key('number_of_user_indecency')] == 0
-        # number_of_user_incomprehension == 0
+            first_request.__class__.get_user_behavior_key('number_of_user_indecency2')] == 0
+        # number_of_user_incomprehension2 == 0
         assert first_request.user_behavior[
-            first_request.__class__.get_user_behavior_key('number_of_user_incomprehension')] == 0
+            first_request.__class__.get_user_behavior_key('number_of_user_incomprehension2')] == 0
         # number_of_user_entries == 1
         assert first_request.user_behavior[
             first_request.__class__.get_user_behavior_key('number_of_user_entries')] == 1
 
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_correct_user_request_X5(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
         main('bonjour', db_number=1)
@@ -103,18 +104,19 @@ class TestQuestionMain:
         main('ou se trouve openClassrooms', db_number=1)
         main('ou se trouve openClassrooms', db_number=1)
         request_to_X5 = main('ou se trouve openClassrooms', db_number=1)
-        request_to_X5.calculate_the_indecency_status()
-        request_to_X5.calculate_the_incomprehension_status()
+        request_to_X5.calculate_the_indecency_status('chat_session', 'has_user_indecency_status2')
+        request_to_X5.calculate_the_incomprehension_status(
+            'chat_session', 'has_user_incomprehension_status2')
 
         # has_user_incivility_status == False
         assert not request_to_X5.user_behavior[
             request_to_X5.__class__.get_user_behavior_key('has_user_incivility_status')]
         # has_user_indecency_status == False
         assert not request_to_X5.user_behavior[
-            request_to_X5.__class__.get_user_behavior_key('has_user_indecency_status')]
+            request_to_X5.__class__.get_user_behavior_key('has_user_indecency_status2')]
         # has_user_incomprehension_status == False
         assert not request_to_X5.user_behavior[
-            request_to_X5.__class__.get_user_behavior_key('has_user_incomprehension_status')]
+            request_to_X5.__class__.get_user_behavior_key('has_user_incomprehension_status2')]
         # has_fatigue_quotas_of_grandpy == False
         assert not request_to_X5.user_behavior[
             request_to_X5.__class__.get_user_behavior_key('has_fatigue_quotas_of_grandpy')]
@@ -126,15 +128,15 @@ class TestQuestionMain:
             request_to_X5.__class__.get_user_behavior_key('number_of_user_incivility')] == 0
         # number_of_user_indecency == 0
         assert request_to_X5.user_behavior[
-            request_to_X5.__class__.get_user_behavior_key('number_of_user_indecency')] == 0
+            request_to_X5.__class__.get_user_behavior_key('number_of_user_indecency2')] == 0
         # number_of_user_incomprehension == 0
         assert request_to_X5.user_behavior[
-            request_to_X5.__class__.get_user_behavior_key('number_of_user_incomprehension')] == 0
+            request_to_X5.__class__.get_user_behavior_key('number_of_user_incomprehension2')] == 0
         # number_of_user_entries == 5
         assert request_to_X5.user_behavior[
             request_to_X5.__class__.get_user_behavior_key('number_of_user_entries')] == 5
 
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_correct_user_request_X9(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
         main('bonjour', db_number=1)
@@ -169,18 +171,19 @@ class TestQuestionMain:
         main('ou se trouve openClassrooms', db_number=1)
         main('ou se trouve openClassrooms', db_number=1)
         request_to_X9 = main('ou se trouve openClassrooms', db_number=1)
-        request_to_X9.calculate_the_indecency_status()
-        request_to_X9.calculate_the_incomprehension_status()
+        request_to_X9.calculate_the_indecency_status('chat_session', 'has_user_indecency_status2')
+        request_to_X9.calculate_the_incomprehension_status(
+            'chat_session', 'has_user_incomprehension_status2')
 
         # has_user_incivility_status == False
         assert not request_to_X9.user_behavior[
             request_to_X9.__class__.get_user_behavior_key('has_user_incivility_status')]
-        # has_user_indecency_status == False
+        # has_user_indecency_status2 == False
         assert not request_to_X9.user_behavior[
-            request_to_X9.__class__.get_user_behavior_key('has_user_indecency_status')]
-        # has_user_incomprehension_status == False
+            request_to_X9.__class__.get_user_behavior_key('has_user_indecency_status2')]
+        # has_user_incomprehension_status2 == False
         assert not request_to_X9.user_behavior[
-            request_to_X9.__class__.get_user_behavior_key('has_user_incomprehension_status')]
+            request_to_X9.__class__.get_user_behavior_key('has_user_incomprehension_status2')]
         # has_fatigue_quotas_of_grandpy == False
         assert not request_to_X9.user_behavior[
             request_to_X9.__class__.get_user_behavior_key('has_fatigue_quotas_of_grandpy')]
@@ -190,12 +193,12 @@ class TestQuestionMain:
         # number_of_user_incivility == 0
         assert request_to_X9.user_behavior[
             request_to_X9.__class__.get_user_behavior_key('number_of_user_incivility')] == 0
-        # number_of_user_indecency == 0
+        # number_of_user_indecency2 == 0
         assert request_to_X9.user_behavior[
-            request_to_X9.__class__.get_user_behavior_key('number_of_user_indecency')] == 0
-        # number_of_user_incomprehension == 0
+            request_to_X9.__class__.get_user_behavior_key('number_of_user_indecency2')] == 0
+        # number_of_user_incomprehension2 == 0
         assert request_to_X9.user_behavior[
-            request_to_X9.__class__.get_user_behavior_key('number_of_user_incomprehension')] == 0
+            request_to_X9.__class__.get_user_behavior_key('number_of_user_incomprehension2')] == 0
         # number_of_user_entries == 9
         assert request_to_X9.user_behavior[
             request_to_X9.__class__.get_user_behavior_key('number_of_user_entries')] == 9
