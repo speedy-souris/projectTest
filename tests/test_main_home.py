@@ -10,10 +10,11 @@ from . import BehaviorParams
 class TestHomeMain:
     @staticmethod
     def setup_method():
+        print("setup_method")
         erasing_data(1)
 
     # 11) DONE incivility query X1
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_incorrect_presentation_user_to_1(self):
         # incorrect presentation of the user X1 ==> question without ('bonjour'...)
         presentation_user = main.main('ou se trouve openClassrooms', db_number=1)
@@ -48,7 +49,7 @@ class TestHomeMain:
         assert presentation_user.user_behavior[
             presentation_user.__class__.get_user_behavior_key('number_of_user_entries')] == 0
 
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_incorrect_presentation_user_to_2(self):
         # incorrect presentation of the user X2 ==> question without ('bonjour'...)
         main.main('ou se trouve openClassrooms', db_number=1)
@@ -92,7 +93,7 @@ class TestHomeMain:
             == 0
 
     # 13) DONE incivility query X3
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_incorrect_presentation_user_to_3(self):
         # incorrect presentation of the user X3 ==> question without ('bonjour'...)
         main.main('ou se trouve openClassrooms', db_number=1)
@@ -128,7 +129,7 @@ class TestHomeMain:
                 'number_of_user_incivility')] == 3
 
     # 15) DONE indecency query (home) 1 to X2
-    @pytest.mark.skip()
+    # @pytest.mark.skip()
     def test_indecency_request_user_to_1(self):
         # incorrect request of the user X1 ==> indecency presentation without ('bonjour'....)
         presentation_user_indecency = main.main('dinosaure', db_number=1)
@@ -405,9 +406,10 @@ class TestHomeMain:
         assert dialogue_of_presentation.user_behavior[
             dialogue_of_presentation.__class__.get_user_behavior_key('number_of_user_entries')] == 0
 
+    @pytest.mark.skip()
     @pytest.mark.parametrize(
         "behavior_status_returned, behavior_status",
-        [(BehaviorParams('', 1).user_behavior['has_user_incivility_status'], True),
+        [(main.main('ou se trouve openClassrooms', db_number=1).user_behavior['has_user_incivility_status'], True),
          (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
          (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
          (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
@@ -422,7 +424,7 @@ class TestHomeMain:
          (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
          (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
     def test_main_incivility(self, behavior_status_returned, behavior_status):
-        main.main('ou se trouve openClassrooms', db_number=1)
+
         assert behavior_status_returned == behavior_status
 
     @pytest.mark.skip()
@@ -465,6 +467,7 @@ class TestHomeMain:
          (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
          (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
     def test_main_incivility_to_3(self, behavior_status_returned, behavior_status):
+        main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)

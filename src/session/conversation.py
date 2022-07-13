@@ -5,23 +5,54 @@ from . import write_access_conversation_data, read_access_conversation_data
 from . import erasing_data, value_to_string_conversion
 
 
-class Conversation:
+class ConversationParameters:
+    def __init__(self, **args):
+        self.level = args.get('behavior_level', 1)
+        self.has_user_incivility_status = args.get('has_user_incivility_status', False)
+        self.has_user_indecency_status = args.get('has_user_indecency_status', False)
+        self.has_user_incomprehension_status = args.get('has_user_incomprehension_status', False)
+        self.number_of_user_incivility = args.get('number_of_user_incivility', 0)
+        self.number_of_user_indecency = args.get('number_of_user_indecency', 0)
+        self.number_of_user_incomprehension = args.get('number_of_user_incomprehension', 0)
+
+    def __str__(self):
+        text = ''
+        if self.level == 1:
+            text = f'Niveau : {self.level}, incivility / indecency / incomprehension'
+        elif self.level == 2:
+            text = f'Niveau : {self.level}, indecency / incomprehension'
+        return text
+
+    def incivility_incrementation(self):
+        self.has_user_incivility_status = True
+        self.number_of_user_incivility += 1
+
+    def indecency_incrementation(self):
+        self.has_user_indecency_status = True
+        self.number_of_user_indecency += 1
+
+    def incomprehension_incrementation(self):
+        self.has_user_incomprehension_status = True
+        self.number_of_user_incomprehension += 1
+
+
+class Conversation(ConversationParameters):
     """conversation setting class"""
     # database initialization behavior parameter
     USER_BEHAVIOR_DEFAULT_DATA = FrozenOrderedDict({
-        'has_user_incivility_status': False,
-        'has_user_indecency_status': False,
-        'has_user_indecency_status2': False,
-        'has_user_incomprehension_status': False,
-        'has_user_incomprehension_status2': False,
+        # 'has_user_incivility_status': False,
+        # 'has_user_indecency_status': False,
+        # 'has_user_indecency_status2': False,
+        # 'has_user_incomprehension_status': False,
+        # 'has_user_incomprehension_status2': False,
         'has_fatigue_quotas_of_grandpy': False,
         'grandpy_status_code': 'home',
         'behavior_level': 'presentation',
-        'number_of_user_incivility': 0,
-        'number_of_user_indecency': 0,
-        'number_of_user_indecency2': 0,
-        'number_of_user_incomprehension': 0,
-        'number_of_user_incomprehension2': 0,
+        # 'number_of_user_incivility': 0,
+        # 'number_of_user_indecency': 0,
+        # 'number_of_user_indecency2': 0,
+        # 'number_of_user_incomprehension': 0,
+        # 'number_of_user_incomprehension2': 0,
         'number_of_user_entries': 0})
     USER_BEHAVIOR_DEFAULT_DATA_KEYS = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
 
@@ -128,7 +159,8 @@ class Conversation:
         'étaient', 'étais', 'était', 'étant', 'été', 'être', 'ô', ',', ';', '.', '?', '!',
         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'})
 
-    def __init__(self, user_entry, db_number):
+    def __init__(self, user_entry, db_number, **args):
+        super().__init__(**args)
         self.user_entry = user_entry
         self.db_number = db_number
         self.user_behavior = self.user_behavior_init_ordered()
