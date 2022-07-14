@@ -5,7 +5,7 @@ from . import write_access_conversation_data, read_access_conversation_data
 from . import erasing_data, value_to_string_conversion
 
 
-class ConversationParameters:
+class LevelConversationParameters:
     def __init__(self, **args):
         self.level = args.get('behavior_level', 1)
         self.has_user_incivility_status = args.get('has_user_incivility_status', False)
@@ -23,6 +23,22 @@ class ConversationParameters:
             text = f'Niveau : {self.level}, indecency / incomprehension'
         return text
 
+    def get_level_user_behavior(self, name_behavior_data):
+        """returns a value in behavior_data dictionary
+        with name_behavior_data which takes one of the following values:
+            has_user_incivility_status, has_user_indecency_status, has_user_incomprehension_status,
+            behavior_level, number_of_user_incivility, number_of_user_indecency,
+            number_of_user_incomprehension """
+        behavior_data = {
+            'has_user_incivility_status': self.has_user_incivility_status,
+            'has_user_indecency_status': self.has_user_indecency_status,
+            'has_user_incomprehension_status': self.has_user_incomprehension_status,
+            'behavior_level': self.level,
+            'number_of_user_incivility': self.number_of_user_incivility,
+            'number_of_user_indecency': self.number_of_user_indecency,
+            'number_of_user_incomprehension': self.number_of_user_incomprehension}
+        return behavior_data[name_behavior_data]
+
     def incivility_incrementation(self):
         self.has_user_incivility_status = True
         self.number_of_user_incivility += 1
@@ -36,25 +52,25 @@ class ConversationParameters:
         self.number_of_user_incomprehension += 1
 
 
-class Conversation(ConversationParameters):
+class Conversation:
     """conversation setting class"""
     # database initialization behavior parameter
-    USER_BEHAVIOR_DEFAULT_DATA = FrozenOrderedDict({
-        # 'has_user_incivility_status': False,
-        # 'has_user_indecency_status': False,
-        # 'has_user_indecency_status2': False,
-        # 'has_user_incomprehension_status': False,
-        # 'has_user_incomprehension_status2': False,
-        'has_fatigue_quotas_of_grandpy': False,
-        'grandpy_status_code': 'home',
-        'behavior_level': 'presentation',
-        # 'number_of_user_incivility': 0,
-        # 'number_of_user_indecency': 0,
-        # 'number_of_user_indecency2': 0,
-        # 'number_of_user_incomprehension': 0,
-        # 'number_of_user_incomprehension2': 0,
-        'number_of_user_entries': 0})
-    USER_BEHAVIOR_DEFAULT_DATA_KEYS = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
+    # USER_BEHAVIOR_DEFAULT_DATA = FrozenOrderedDict({
+    #     # 'has_user_incivility_status': False,
+    #     # 'has_user_indecency_status': False,
+    #     # 'has_user_indecency_status2': False,
+    #     # 'has_user_incomprehension_status': False,
+    #     # 'has_user_incomprehension_status2': False,
+    #     'has_fatigue_quotas_of_grandpy': False,
+    #     'grandpy_status_code': 'home',
+    #     'behavior_level': 'presentation',
+    #     # 'number_of_user_incivility': 0,
+    #     # 'number_of_user_indecency': 0,
+    #     # 'number_of_user_indecency2': 0,
+    #     # 'number_of_user_incomprehension': 0,
+    #     # 'number_of_user_incomprehension2': 0,
+    #     'number_of_user_entries': 0})
+    # USER_BEHAVIOR_DEFAULT_DATA_KEYS = tuple(USER_BEHAVIOR_DEFAULT_DATA.keys())
 
     # data grandpy satus values
     GRANDPY_STATUS_DATA = FrozenOrderedDict({
@@ -160,58 +176,44 @@ class Conversation(ConversationParameters):
         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'})
 
     def __init__(self, user_entry, db_number, **args):
-        super().__init__(**args)
         self.user_entry = user_entry
         self.db_number = db_number
+        self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
+        self.grandpy_status_code = args.get('grandpy_status_code', 'home')
+        self.number_of_user_entries = args.get('number_of_user_entries', 0)
         self.user_behavior = self.user_behavior_init_ordered()
 
-    @classmethod
-    def get_user_behavior_key(cls, name_position) -> str:
-        """returns a key in USER_BEHAVIOR_DEFAULT_DATA dictionary
-        with name_position which takes one of the following values:
-        has_user_incivility_status, has_user_indecency_status, has_user_incomprehension_status,
-        has_fatigue_quotas_of_grandpy, grandpy_status_code, number_of_user_incivility,
-        number_of_user_indecency, number_of_user_incomprehension and number_of_user_entries"""
-        behavior_key = {
-            'has_user_incivility_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[0],
-            'has_user_indecency_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[1],
-            'has_user_indecency_status2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[2],
-            'has_user_incomprehension_status': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[3],
-            'has_user_incomprehension_status2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[4],
-            'has_fatigue_quotas_of_grandpy': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[5],
-            'grandpy_status_code': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[6],
-            'behavior_level': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[7],
-            'number_of_user_incivility': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[8],
-            'number_of_user_indecency': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[9],
-            'number_of_user_indecency2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[10],
-            'number_of_user_incomprehension': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[11],
-            'number_of_user_incomprehension2': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[12],
-            'number_of_user_entries': cls.USER_BEHAVIOR_DEFAULT_DATA_KEYS[13]
-        }
-        return behavior_key.get(name_position)
+    def get_user_behavior(self, name_behavior_data) -> str:
+        """returns a value in behavior_data dictionary
+        with name_behavior_data which takes one of the following values:
+        has_fatigue_quotas_of_grandpy, grandpy_status_code, number_of_user_entries"""
+        behavior_data = {
+            'has_fatigue_quotas_of_grandpy': self.has_fatigue_quotas_of_grandpy,
+            'grandpy_status_code': self.grandpy_status_code,
+            'number_of_user_entries': self.number_of_user_entries}
+        return behavior_data[name_behavior_data]
 
     # 1) DONE Create class method to read grandpy status
-    @classmethod
-    def get_grandpy_status_key(cls, name_position) -> str:
+    @staticmethod
+    def get_grandpy_status(name_behavior_data) -> str:
         """returns a key in GRANDPY_STATUS_DATA dictionary
         with name_position which takes one of the following values:
         home, benevolent, response, tired, incomprehension, mannerless, disrespectful,
         incivility_limit, indecency_limit, incomprehension_limit , response_limit and exhausted"""
         status_key = {
-            'home': cls.GRANDPY_STATUS_DATA_KEYS[0],
-            'benevolent': cls.GRANDPY_STATUS_DATA_KEYS[1],
-            'response': cls.GRANDPY_STATUS_DATA_KEYS[2],
-            'tired': cls.GRANDPY_STATUS_DATA_KEYS[3],
-            'inconsistency': cls.GRANDPY_STATUS_DATA_KEYS[4],
-            'mannerless': cls.GRANDPY_STATUS_DATA_KEYS[5],
-            'disrespectful': cls.GRANDPY_STATUS_DATA_KEYS[6],
-            'incivility_limit': cls.GRANDPY_STATUS_DATA_KEYS[7],
-            'indecency_limit': cls.GRANDPY_STATUS_DATA_KEYS[8],
-            'incomprehension_limit': cls.GRANDPY_STATUS_DATA_KEYS[9],
-            'response_limit': cls.GRANDPY_STATUS_DATA_KEYS[10],
-            'exhausted': cls.GRANDPY_STATUS_DATA_KEYS[11]
-        }
-        return status_key.get(name_position)
+            'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
+            'benevolent': "Ok, c'est très bien mon petit !",
+            'response': 'Voici la réponse à tas question !',
+            'tired': 'Houla, maintenant ma memoire commence à fatiguée !',
+            'incomprehension': "Ha, je ne comprends pas, essaye d'être plus précis ... !",
+            'mannerless': "S'il te plait, reformule ta question en étant plus polis ... !",
+            'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
+            'incivility_limit': 'Cette impolitesse me FATIGUE ... !',
+            'indecency_limit': 'Cette grossièreté me FATIGUE ... !',
+            'incomprehension_limit': 'Cette incomprehension me FATIGUE ... !',
+            'response_limit': 'HEY ! CA SUFFIT mon petit, ma mémoire est saturé ... !',
+            'exhausted': 'Je suis fatigué reviens me voir demain !'}
+        return status_key.get(name_behavior_data)
 
     # 2) DONE Create class method to read grandpy answer
     @classmethod
