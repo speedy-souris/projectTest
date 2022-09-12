@@ -1,99 +1,69 @@
 from . import requests
 from . import pytest
+from . import get_database_access
 from . import erasing_data
 from . import get_mockreturn
-from . import main
-from . import BehaviorParams
+from .. import main
+# from . import BehaviorParams
 
 
 # @pytest.mark.skip()
 class TestHomeMain:
     @staticmethod
     def setup_method():
-        print("setup_method")
-        erasing_data(1)
+        db_session = get_database_access(1)
+        erasing_data(db_session)
 
     # 11) DONE incivility query X1
     # @pytest.mark.skip()
     def test_incorrect_presentation_user_to_1(self):
         # incorrect presentation of the user X1 ==> question without ('bonjour'...)
         presentation_user = main.main('ou se trouve openClassrooms', db_number=1)
+        # has_user_incivility_status = True
+        assert presentation_user.has_user_incivility_status
+        # has_user_indecency_status = False
+        assert not presentation_user.has_user_indecency_status
+        # has_user_incomprehension_status = False
+        assert not presentation_user.has_user_incomprehension_status
+        # has_fatigue_quotas_of_grandpy = False
+        assert not presentation_user.has_fatigue_quotas_of_grandpy
+        # grandpy_status_code = 'mannerless'
+        assert presentation_user.grandpy_status_code == 'mannerless'
+        # number_of_user_incivility = 1
+        assert presentation_user.number_of_user_incivility == 1
+        # number_of_user_indecency = 0
+        assert presentation_user.number_of_user_indecency == 0
+        # number_of_user_incomprehension = 0
+        assert presentation_user.number_of_user_incomprehension == 0
+        # number_of_user_entries = 0
+        assert presentation_user.number_of_user_entries == 0
 
-        # user_behavior['has_user_incivility_status'] = True
-        assert presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('has_user_incivility_status')]
-        # user_behavior['has_user_indecency_status'] = False
-        assert not presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('has_user_indecency_status')]
-        # user_behavior['has_user_incomprehension_status'] = False
-        assert not presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('has_user_incomprehension_status')]
-        # user_behavior['has_fatigue_quotas_of_grandpy'] = False
-        assert not presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('has_fatigue_quotas_of_grandpy')]
-        # user_behavior['grandpy_status_code'] = 'mannerless'
-        assert presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('grandpy_status_code')]\
-            == 'mannerless'
-        # user_behavior['number_of_user_incivility'] = 1
-        assert presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('number_of_user_incivility')] == 1
-        # user_behavior['number_of_user_indecency'] = 0
-        assert presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('number_of_user_indecency')] == 0
-        # user_behavior['number_of_user_incomprehension'] = 0
-        assert presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('number_of_user_incomprehension')]\
-            == 0
-        # user_behavior['number_of_user_entries'] = 0
-        assert presentation_user.user_behavior[
-            presentation_user.__class__.get_user_behavior_key('number_of_user_entries')] == 0
-
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_incorrect_presentation_user_to_2(self):
         # incorrect presentation of the user X2 ==> question without ('bonjour'...)
         main.main('ou se trouve openClassrooms', db_number=1)
         presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
-
-        # user_behavior['has_user_incivility_status'] = True
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'has_user_incivility_status')]
-        # user_behavior['has_user_indecency_status'] = False
-        assert not presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'has_user_indecency_status')]
-        # user_behavior['has_user_incomprehension_status'] = False
-        assert not presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'has_user_incomprehension_status')]
-        # user_behavior['has_fatigue_quotas_of_grandpy'] = False
-        assert not presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'has_fatigue_quotas_of_grandpy')]
-        # user_behavior['grandpy_status_code'] = 'mannerless'
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key('grandpy_status_code')]\
-            == 'mannerless'
-        # user_behavior['number_of_user_incivility'] = 2
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'number_of_user_incivility')] == 2
-        # user_behavior['number_of_user_indecency'] = 0
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'number_of_user_indecency')] == 0
-        # user_behavior['number_of_user_incomprehension'] = 0
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'number_of_user_incomprehension')] == 0
-        # user_behavior['number_of_user_entries'] = 0
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key('number_of_user_entries')]\
-            == 0
+        # has_user_incivility_status = True
+        assert presentation_user_incivility.has_user_incivility_status
+        # has_user_indecency_status = False
+        assert not presentation_user_incivility.has_user_indecency_status
+        # has_user_incomprehension_status = False
+        assert not presentation_user_incivility.has_user_incomprehension_status
+        # has_fatigue_quotas_of_grandpy = False
+        assert not presentation_user_incivility.has_fatigue_quotas_of_grandpy
+        # grandpy_status_code = 'mannerless'
+        assert presentation_user_incivility.grandpy_status_code == 'mannerless'
+        # number_of_user_incivility = 2
+        assert presentation_user_incivility.number_of_user_incivility == 2
+        # number_of_user_indecency = 0
+        assert presentation_user_incivility.number_of_user_indecency == 0
+        # number_of_user_incomprehension = 0
+        assert presentation_user_incivility.number_of_user_incomprehension == 0
+        # number_of_user_entries = 0
+        assert presentation_user_incivility.number_of_user_entries == 0
 
     # 13) DONE incivility query X3
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_incorrect_presentation_user_to_3(self):
         # incorrect presentation of the user X3 ==> question without ('bonjour'...)
         main.main('ou se trouve openClassrooms', db_number=1)
@@ -101,35 +71,28 @@ class TestHomeMain:
         # incorrect presentation of the user ==> question without ('bonjour'...)
         presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
 
-        # user_behavior['has_fatigue_quotas_of_grandpy'] = False
-        assert not presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'has_fatigue_quotas_of_grandpy')]
-        # user_behavior['grandpy_status_code'] = 'mannerless'
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key('grandpy_status_code')]\
-            == 'mannerless'
-        # user_behavior['number_of_user_incivility'] = 3
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'number_of_user_incivility')] == 3
+        # grandpy_status_code = 'mannerless'
+        assert presentation_user_incivility.grandpy_status_code == 'incivility_limit'
+        # number_of_user_incivility = 3
+        assert presentation_user_incivility.number_of_user_incivility == 3
+        # has_fatigue_quotas_of_grandpy = True
+        assert presentation_user_incivility.has_fatigue_quotas_of_grandpy
 
         presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
-        # user_behavior['has_fatigue_quotas_of_grandpy'] = True
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'has_fatigue_quotas_of_grandpy')]
-        # user_behavior['grandpy_status_code'] = 'incivility_limit'
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key('grandpy_status_code')]\
-            == 'incivility_limit'
-        # user_behavior['number_of_user_incivility'] = 3
-        assert presentation_user_incivility.user_behavior[
-            presentation_user_incivility.__class__.get_user_behavior_key(
-                'number_of_user_incivility')] == 3
+        # has_fatigue_quotas_of_grandpy = True
+        assert not presentation_user_incivility.has_fatigue_quotas_of_grandpy
+        # grandpy_status_code = 'incivility_limit'
+        assert presentation_user_incivility.grandpy_status_code == 'incivility_limit'
+        # number_of_user_incivility = 3
+        assert presentation_user_incivility.number_of_user_incivility == 3
+        presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
+        # grandpy_status_code = 'incivility_limit'
+        assert presentation_user_incivility.grandpy_status_code == 'incivility_limit'
+        # number_of_user_incivility = 3
+        assert presentation_user_incivility.number_of_user_incivility == 3
 
     # 15) DONE indecency query (home) 1 to X2
-    # @pytest.mark.skip()
+    @pytest.mark.skip()
     def test_indecency_request_user_to_1(self):
         # incorrect request of the user X1 ==> indecency presentation without ('bonjour'....)
         presentation_user_indecency = main.main('dinosaure', db_number=1)
@@ -406,73 +369,73 @@ class TestHomeMain:
         assert dialogue_of_presentation.user_behavior[
             dialogue_of_presentation.__class__.get_user_behavior_key('number_of_user_entries')] == 0
 
-    @pytest.mark.skip()
-    @pytest.mark.parametrize(
-        "behavior_status_returned, behavior_status",
-        [(main.main('ou se trouve openClassrooms', db_number=1).user_behavior['has_user_incivility_status'], True),
-         (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status2'], False),
-         (BehaviorParams('', 1).user_behavior['has_fatigue_quotas_of_grandpy'], False),
-         (BehaviorParams('', 1).user_behavior['grandpy_status_code'], 'mannerless'),
-         (BehaviorParams('', 1).user_behavior['behavior_level'], 'presentation'),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incivility'], 1),
-         (BehaviorParams('', 1).user_behavior['number_of_user_indecency'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_indecency2'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
-    def test_main_incivility(self, behavior_status_returned, behavior_status):
+    # @pytest.mark.skip()
+    # @pytest.mark.parametrize(
+    #     "behavior_status_returned, behavior_status",
+    #     [(main.main('ou se trouve openClassrooms', db_number=1).user_behavior['has_user_incivility_status'], True),
+    #      (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status2'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_fatigue_quotas_of_grandpy'], False),
+    #      (BehaviorParams('', 1).user_behavior['grandpy_status_code'], 'mannerless'),
+    #      (BehaviorParams('', 1).user_behavior['behavior_level'], 'presentation'),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incivility'], 1),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_indecency'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_indecency2'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
+    # def test_main_incivility(self, behavior_status_returned, behavior_status):
+    #
+    #     assert behavior_status_returned == behavior_status
 
-        assert behavior_status_returned == behavior_status
-
-    @pytest.mark.skip()
-    @pytest.mark.parametrize(
-        "behavior_status_returned, behavior_status",
-        [(BehaviorParams('', 1).user_behavior['has_user_incivility_status'], True),
-         (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status2'], False),
-         (BehaviorParams('', 1).user_behavior['has_fatigue_quotas_of_grandpy'], False),
-         (BehaviorParams('', 1).user_behavior['grandpy_status_code'], 'mannerless'),
-         (BehaviorParams('', 1).user_behavior['behavior_level'], 'presentation'),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incivility'], 2),
-         (BehaviorParams('', 1).user_behavior['number_of_user_indecency'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_indecency2'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
-    def test_main_incivility_to_2(self, behavior_status_returned, behavior_status):
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        assert behavior_status_returned == behavior_status
-
-    @pytest.mark.skip()
-    @pytest.mark.parametrize(
-        "behavior_status_returned, behavior_status",
-        [(BehaviorParams('', 1).user_behavior['has_user_incivility_status'], True),
-         (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
-         (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status2'], False),
-         (BehaviorParams('', 1).user_behavior['has_fatigue_quotas_of_grandpy'], True),
-         (BehaviorParams('', 1).user_behavior['grandpy_status_code'], 'incivility_limit'),
-         (BehaviorParams('', 1).user_behavior['behavior_level'], 'presentation'),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incivility'], 3),
-         (BehaviorParams('', 1).user_behavior['number_of_user_indecency'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_indecency2'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
-         (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
-    def test_main_incivility_to_3(self, behavior_status_returned, behavior_status):
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        assert behavior_status_returned == behavior_status
+    # @pytest.mark.skip()
+    # @pytest.mark.parametrize(
+    #     "behavior_status_returned, behavior_status",
+    #     [(BehaviorParams('', 1).user_behavior['has_user_incivility_status'], True),
+    #      (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status2'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_fatigue_quotas_of_grandpy'], False),
+    #      (BehaviorParams('', 1).user_behavior['grandpy_status_code'], 'mannerless'),
+    #      (BehaviorParams('', 1).user_behavior['behavior_level'], 'presentation'),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incivility'], 2),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_indecency'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_indecency2'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
+    # def test_main_incivility_to_2(self, behavior_status_returned, behavior_status):
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     assert behavior_status_returned == behavior_status
+    #
+    # @pytest.mark.skip()
+    # @pytest.mark.parametrize(
+    #     "behavior_status_returned, behavior_status",
+    #     [(BehaviorParams('', 1).user_behavior['has_user_incivility_status'], True),
+    #      (BehaviorParams('', 1).user_behavior['has_user_indecency_status'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_indecency_status2'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_user_incomprehension_status2'], False),
+    #      (BehaviorParams('', 1).user_behavior['has_fatigue_quotas_of_grandpy'], True),
+    #      (BehaviorParams('', 1).user_behavior['grandpy_status_code'], 'incivility_limit'),
+    #      (BehaviorParams('', 1).user_behavior['behavior_level'], 'presentation'),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incivility'], 3),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_indecency'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_indecency2'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_incomprehension2'], 0),
+    #      (BehaviorParams('', 1).user_behavior['number_of_user_entries'], 0)])
+    # def test_main_incivility_to_3(self, behavior_status_returned, behavior_status):
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     main.main('ou se trouve openClassrooms', db_number=1)
+    #     assert behavior_status_returned == behavior_status
 
     @pytest.mark.skip()
     def test_main_indecency(self):
