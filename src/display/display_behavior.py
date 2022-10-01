@@ -1,5 +1,5 @@
 """module of display of the user behavior  """
-from src.redis_utilities import data_expiration
+# from src.redis_utilities import data_expiration
 
 
 # def read_grandpy_answer(chat_session, grandpy_code) -> str:
@@ -51,7 +51,7 @@ def display_grandpy_status_code_to_mannerless(chat_session):
     """billing of answers of grandpy for status mannerless"""
     # grandpy_status_code = 'mannerless'
     chat_session.grandpy_status_code = 'mannerless'
-    grandpy_response = chat_session.__class__.mannerless
+    grandpy_response = chat_session.__class__.grandpy_status_code_value['mannerless']
     display_grandpy_status(chat_session, grandpy_response)
 
 

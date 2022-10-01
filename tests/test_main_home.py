@@ -1,7 +1,6 @@
 from . import requests
 from . import pytest
-from . import get_database_access
-from . import erasing_data
+from . import RedisDataManagement
 from . import get_mockreturn
 from .. import main
 # from . import BehaviorParams
@@ -11,8 +10,9 @@ from .. import main
 class TestHomeMain:
     @staticmethod
     def setup_method():
-        db_session = get_database_access(1)
-        erasing_data(db_session)
+        db_session = RedisDataManagement(db_number=1)
+        db_session.get_database_access(1)
+        db_session.erasing_data()
 
     # 11) DONE incivility query X1
     # @pytest.mark.skip()
