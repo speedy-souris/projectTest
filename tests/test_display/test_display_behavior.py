@@ -1,6 +1,6 @@
 from . import pytest
-from . import erasing_data
-from . import BehaviorParams
+from . import RedisDataManagement
+from . import Conversation
 from . import display_behavior
 from src.redis_utilities import get_database_access
 
@@ -8,8 +8,9 @@ from src.redis_utilities import get_database_access
 # @pytest.mark.skip()
 class TestDisplay:
     def setup_method(self):
-        erasing_data(1)
-        self.chat_session = BehaviorParams('', 1)
+        self.db_session = RedisDataManagement(db_number=1)
+        self.db_session.erasing_data()
+        self.chat_session = Conversation('', self.db_session)
 
     # @pytest.mark.skip()
     def test_display_grandpy_status_code_to_home(self):

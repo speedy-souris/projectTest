@@ -2,11 +2,11 @@ from . import requests
 from . import pytest
 from . import RedisDataManagement
 from . import get_mockreturn
-from .. import main
+from . import main
 # from . import BehaviorParams
 
 
-# @pytest.mark.skip()
+@pytest.mark.skip()
 class TestHomeMain:
     @staticmethod
     def setup_method():

@@ -1,5 +1,5 @@
 """module of display of the user behavior  """
-# from src.redis_utilities import data_expiration
+from . import RedisDataManagement
 
 
 # def read_grandpy_answer(chat_session, grandpy_code) -> str:
@@ -155,8 +155,9 @@ def display_behavior_user_request(chat_session, response_grandpy):
     print(f"[display_incivility hors condition] = {number_of_user_incivility}")
 
 
-def display_grandpy_status(chat_session, response_grandpy, following_billing=True):
+def display_grandpy_status(chat_session, response_grandpy, following_billing=True, db_number=0):
     """billing of status of grandpy just before its repose of 24 h 00"""
+    db_session = RedisDataManagement(bd_number=db_number)
     # Termination of user requests (for 24H00)
     if not following_billing:
         print(f"display status = {chat_session.user_behavior['grandpy_status_code']}")
@@ -165,7 +166,7 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
         print(f'Réponse de Grandpy pre_fin: {response_grandpy}')
         print(f'Réponse de Grandpy fin: {display_grandpy_status_code_to_exhausted(chat_session)}')
         # has_fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
-        data_expiration('has_fatigue_quotas_of_grandpy', chat_session.db_number)
+        db_session.data_expiration('has_fatigue_quotas_of_grandpy')
     # Continue user queries
     elif following_billing:
         print(f"number incivility [display_behavior] = {chat_session.number_of_user_incivility}")

@@ -1,7 +1,5 @@
 """conversation management module between grandpyRobot and a user"""
-from src.display import display_behavior
 from . import google_api
-# from . import RedisDataManagement
 
 
 class Conversation:
