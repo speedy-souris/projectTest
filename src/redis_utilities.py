@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """module for managing the Redis database"""
 import redis
 

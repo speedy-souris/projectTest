@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """main module"""
 from . import Conversation
 from . import counting_behavior
