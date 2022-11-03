@@ -158,9 +158,12 @@ class Conversation:
         """update the attribut has_user_indecency_status since GoogleMap API"""
         incomprehension_status = None
         result_api = google_api.get_placeid_from_address(self.user_entry)
+        print(f'user_entry = {self.user_entry}')
+        print(f'google_api = {result_api}')
         if result_api in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
-                {'candidates': [], 'status': 'INVALID_REQUEST'}):
+                {'candidates': [], 'status': 'INVALID_REQUEST'},
+                {'candidates': [], 'error_message': 'The provided API key is invalid.', 'status': 'REQUEST_DENIED'}):
             incomprehension_status = True
         elif result_api not in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},

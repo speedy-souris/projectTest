@@ -24,6 +24,7 @@ def get_url_from_json(url, params):
     """conversion of the address found in JSON format"""
     request = requests.get(url, params)
     url_json = request.json()
+    print(f'{url_json} = url_json')
     return url_json
 
 
@@ -38,6 +39,7 @@ def get_settings_for_address_api(placeid):
     """determining the localized address for the found placeid"""
     key = google_api_keys()[0]
     parameters = {'placeid': f'{placeid}', 'fields': 'formatted_address,geometry', 'key': f'{key}'}
+    print(f'[google_api] = {parameters}')
     return parameters
 
 

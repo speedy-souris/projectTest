@@ -17,7 +17,7 @@ def get_mockreturn(result):
 # ------------------------
 def get_place_id_googleMap_api_mockreturn(result):
     """mock template call"""
-    def mock_get(address):
+    def mock_get(address, params):
         """Mock function on api object"""
         class JsonResponse:
             """mock result in JSON format"""
@@ -31,7 +31,7 @@ def get_place_id_googleMap_api_mockreturn(result):
 
 def get_address_googleMap_api_mockreturn(result):
     """mock template call"""
-    def mock_get(placeid):
+    def mock_get(placeid, params):
         """Mock function on api object"""
         class JsonResponse:
             """mock result in JSON format"""

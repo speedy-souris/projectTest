@@ -1,7 +1,9 @@
-# from . import requests
+import requests
 from . import pytest
 from . import RedisDataManagement
 from . import Conversation
+from . import google_api
+from . import get_mockreturn
 # from . import BehaviorParams
 
 
@@ -13,8 +15,7 @@ class TestBehaviorParams:
         self.conversation = Conversation('', self.db_session)
 
     def test_calculate_the_incivility_status(self):
-        user_behavior_data_incivility =\
-            Conversation('Ou se trouve OpenClassrooms', self.db_session)
+        user_behavior_data_incivility = Conversation('Ou se trouve OpenClassrooms', self.db_session)
         user_behavior_data_incivility.calculate_the_incivility_status()
         expected_result_data_incivility = user_behavior_data_incivility.has_user_incivility_status
         assert expected_result_data_incivility
@@ -25,8 +26,7 @@ class TestBehaviorParams:
         assert not expected_result_data
 
     def test_calculate_the_indecency_status(self):
-        user_behavior_data_indecency =\
-            Conversation("hello le vieux", self.db_session)
+        user_behavior_data_indecency = Conversation("hello le vieux", self.db_session)
         user_behavior_data_indecency.calculate_the_indecency_status()
         expected_result_data_indecency = user_behavior_data_indecency.has_user_indecency_status
 
@@ -37,18 +37,13 @@ class TestBehaviorParams:
         expected_result_data = user_behavior_data.has_user_indecency_status
         assert not expected_result_data
 
-    def test_calculate_the_incomprehension_status(self):
-        user_behavior_data_incomprehension = \
-            Conversation('', self.db_session)
-        user_behavior_data_incomprehension.calculate_the_incomprehension_status()
-        expected_result_data_incomprehension =\
-            user_behavior_data_incomprehension.has_user_incomprehension_status
-        assert expected_result_data_incomprehension
+    def test_calculate_the_incomprehension_status(self, monkeypatch):
+        expected_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
 
-        user_behavior_data = Conversation('Bonjour', self.db_session)
-        user_behavior_data.calculate_the_incomprehension_status()
-        expected_result_data = user_behavior_data.has_user_incomprehension_status
-        assert not expected_result_data
+        assert expected_result == google_api.get_placeid_from_address('hsdfklhdsfklh')
+        assert expected_result == google_api.get_placeid_from_address('')
+        assert expected_result == google_api.get_placeid_from_address('Bonjour')
 
     def test_set_attributes_from_database(self):
         self.db_session.write_database_encoding('number_of_user_entries', b'5')
