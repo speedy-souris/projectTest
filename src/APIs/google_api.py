@@ -24,7 +24,6 @@ def get_url_from_json(url, params):
     """conversion of the address found in JSON format"""
     request = requests.get(url, params)
     url_json = request.json()
-    print(f'{url_json} = url_json')
     return url_json
 
 

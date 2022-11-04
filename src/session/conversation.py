@@ -1,6 +1,6 @@
 """conversation management module between grandpyRobot and a user"""
 from . import google_api
-
+from . import RedisDataManagement
 
 class Conversation:
     """conversation setting class"""
@@ -106,9 +106,9 @@ class Conversation:
         'étaient', 'étais', 'était', 'étant', 'été', 'être', 'ô', ',', ';', '.', '?', '!',
         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'})
 
-    def __init__(self, user_entry, db_session, **args):
+    def __init__(self, user_entry, db_number, **args):
         self.user_entry = user_entry
-        self.db_session = db_session
+        self.db_session = RedisDataManagement(db_number=db_number)
         self.level = args.get('level', 1)
         # Leve1 1 --> Presentation
         self.has_user_incivility_status = args.get('has_user_incivility_status', False)

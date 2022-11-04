@@ -8,7 +8,7 @@ class TestWritingRedis:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
         self.db_session.erasing_data()
-        self.conversation = Conversation('', self.db_session)
+        self.conversation = Conversation('')
         # self.chat_session = main('', db_number=1)
 
     def test_byte_to_int_conversion(self):
