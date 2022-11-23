@@ -1,1 +1,1 @@
-from src.redis_utilities import RedisDataManagement
+from ..redis_utilities import RedisDataManagement

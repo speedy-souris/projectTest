@@ -7,9 +7,9 @@ def user_incivility_count(chat_session):
     """discount of user's discourtesy - counting up to 3 user incivilities"""
     # if grandpy_status_code = 'mannerless'
     if chat_session.grandpy_status_code == 'mannerless':
-        if chat_session.number_of_user_incivility >= 3:
+        if chat_session.number_of_user_incivility > 3:
             chat_session.number_of_user_incivility = 3
-        else:
+        elif chat_session.number_of_user_incivility < 3:
             chat_session.number_of_user_incivility += 1
 
 
@@ -41,9 +41,13 @@ def user_question_answer_count(chat_session):
     """grandpy receives the user politely, the user answers politely then he asks a question
      has grandpy. Grandpy answers him with one address of googleMap and a review of the quarter
     on Wikipedia"""
-    # if grandpy_status_code == 'incomprehension'
-    if chat_session.grandpy_status_code == 'benevolent':
-        if chat_session.number_of_user_entries >= 10:
-            chat_session.number_of_user_entries = 10
-        else:
-            chat_session.number_of_user_entries += 1
+    # if grandpy_status_code == 'response'
+    print(f'[counting] number_entries = {chat_session.number_of_user_entries}')
+    print(f'[counting] status_code = {chat_session.grandpy_status_code}')
+    print(f'[counting] previous_status_code = {chat_session.previous_grandpy_status_code}')
+    # ~ if chat_session.number_of_user_entries != 5 or chat_session.grandpy_status_code == 'response':
+    if not (chat_session.grandpy_status_code == 'tired' and chat_session.previous_grandpy_status_code == 'response' and chat_session.number_of_user_entries == 5):
+        chat_session.number_of_user_entries += 1
+    if chat_session.number_of_user_entries >= 10:
+        chat_session.number_of_user_entries = 10
+

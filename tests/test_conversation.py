@@ -45,12 +45,6 @@ class TestBehaviorParams:
         assert expected_result == google_api.get_placeid_from_address('')
         assert expected_result == google_api.get_placeid_from_address('Bonjour')
 
-    def test_set_attributes_from_database(self):
-        self.db_session.write_database_encoding('number_of_user_entries', b'5')
-        self.conversation.set_attributes_from_database()
-        expected_result = self.conversation.number_of_user_entries
-        assert expected_result == 5
-
     #@pytest.mark.skip()
     def test_database_init_by_default(self):
         self.conversation.database_init_by_default()

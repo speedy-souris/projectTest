@@ -38,7 +38,6 @@ def get_settings_for_address_api(placeid):
     """determining the localized address for the found placeid"""
     key = google_api_keys()[0]
     parameters = {'placeid': f'{placeid}', 'fields': 'formatted_address,geometry', 'key': f'{key}'}
-    print(f'[google_api] = {parameters}')
     return parameters
 
 

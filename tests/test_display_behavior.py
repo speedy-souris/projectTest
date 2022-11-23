@@ -31,7 +31,7 @@ class TestDisplay:
         display_behavior.display_grandpy_status_code_to_response(self.chat_session)
         assert self.chat_session.grandpy_status_code == 'response'
         assert self.chat_session.__class__.grandpy_status_code_value[self.chat_session.grandpy_status_code] ==\
-            "Voici la reponse à tas questions !"
+            "Voici la reponse à t'as questions !"
 
     #@pytest.mark.skip()
     def test_display_grandpy_status_code_to_tired(self):

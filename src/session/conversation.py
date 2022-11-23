@@ -8,7 +8,7 @@ class Conversation:
     grandpy_status_code_value = {
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
         'benevolent': "Ok, c'est tres bien mon petit !",
-        'response': 'Voici la reponse à tas questions !',
+        'response': "Voici la reponse à t'as questions !",
         'tired': 'Houla, maintenant ma memoire commence à fatiguée !',
         'incomprehension': "Ha, je ne comprends pas, essaye d'être plus précis ... !",
         'mannerless': "S'il te plait, reformule ta question en étant plus polis ... !",
@@ -106,7 +106,7 @@ class Conversation:
         'étaient', 'étais', 'était', 'étant', 'été', 'être', 'ô', ',', ';', '.', '?', '!',
         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'})
 
-    def __init__(self, user_entry, db_number, **args):
+    def __init__(self, user_entry, db_number=0, **args):
         self.user_entry = user_entry
         self.db_session = RedisDataManagement(db_number=db_number)
         self.level = args.get('level', 1)
@@ -123,6 +123,7 @@ class Conversation:
         self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
         self.grandpy_status_code =\
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
+        self.previous_grandpy_status_code = self.grandpy_status_code
         # self.database_init_ordered()
 
     def __str__(self):
@@ -137,6 +138,8 @@ class Conversation:
     def from_level1_to_level2(self):
         """transition method from level 1 (Presentation) to level 2 (chat_session)"""
         self.level = 2
+        self.has_user_incivility_status = False
+        self.number_of_user_incivility = 0
         self.has_user_indecency_status = False
         self.number_of_user_indecency = 0
         self.has_user_incomprehension_status = False
@@ -158,53 +161,49 @@ class Conversation:
         """update the attribut has_user_indecency_status since GoogleMap API"""
         incomprehension_status = None
         result_api = google_api.get_placeid_from_address(self.user_entry)
-        print(f'user_entry = {self.user_entry}')
-        print(f'google_api = {result_api}')
         if result_api in (
                 {'candidates': [], 'status': 'ZERO_RESULTS'},
                 {'candidates': [], 'status': 'INVALID_REQUEST'},
                 {'candidates': [], 'error_message': 'The provided API key is invalid.', 'status': 'REQUEST_DENIED'}):
             incomprehension_status = True
-        elif result_api not in (
-                {'candidates': [], 'status': 'ZERO_RESULTS'},
-                {'candidates': [], 'status': 'INVALID_REQUEST'}):
+        else:
             incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
 
-    def set_attributes_from_database(self) -> None:
-        """initialization of attributes from the redis database"""
-        print('Initialisation Attribut')
-        has_user_incivility_status = self.db_session.byte_to_boolean_conversion(
-            self.db_session.read_access_conversation_data('has_user_incivility_status'))
-        has_user_indecency_status = self.db_session.byte_to_boolean_conversion(
-            self.db_session.read_access_conversation_data('has_user_indecency_status'))
-        has_user_incomprehension_status = self.db_session.byte_to_boolean_conversion(
-            self.db_session.read_access_conversation_data('has_user_incomprehension_status'))
-        has_fatigue_quotas_of_grandpy = self.db_session.byte_to_boolean_conversion(
-            self.db_session.read_access_conversation_data('has_fatigue_quotas_of_grandpy'))
-        level = self.db_session.byte_to_boolean_conversion(
-            self.db_session.read_access_conversation_data('level'))
-        number_of_user_incivility = self.db_session.byte_to_int_conversion(
-            self.db_session.read_access_conversation_data('number_of_user_incivility'))
-        number_of_user_indecency = self.db_session.byte_to_int_conversion(
-            self.db_session.read_access_conversation_data('number_of_user_indecency'))
-        number_of_user_incomprehension = self.db_session.byte_to_int_conversion(
-            self.db_session.read_access_conversation_data('number_of_user_incomprehension'))
-        number_of_user_entries = self.db_session.byte_to_int_conversion(
-            self.db_session.read_access_conversation_data('number_of_user_entries'))
-        grandpy_status_code = self.db_session.byte_to_string_conversion(
-            self.db_session.read_access_conversation_data('grandpy_status_code'))
+    # ~ def set_attributes_from_database(self) -> None:
+        # ~ """initialization of attributes from the redis database"""
+        # ~ print('Initialisation Attribut')
+        # ~ has_user_incivility_status = self.db_session.byte_to_boolean_conversion(
+            # ~ self.db_session.read_access_conversation_data('has_user_incivility_status'))
+        # ~ has_user_indecency_status = self.db_session.byte_to_boolean_conversion(
+            # ~ self.db_session.read_access_conversation_data('has_user_indecency_status'))
+        # ~ has_user_incomprehension_status = self.db_session.byte_to_boolean_conversion(
+            # ~ self.db_session.read_access_conversation_data('has_user_incomprehension_status'))
+        # ~ has_fatigue_quotas_of_grandpy = self.db_session.byte_to_boolean_conversion(
+            # ~ self.db_session.read_access_conversation_data('has_fatigue_quotas_of_grandpy'))
+        # ~ level = self.db_session.byte_to_boolean_conversion(
+            # ~ self.db_session.read_access_conversation_data('level'))
+        # ~ number_of_user_incivility = self.db_session.byte_to_int_conversion(
+            # ~ self.db_session.read_access_conversation_data('number_of_user_incivility'))
+        # ~ number_of_user_indecency = self.db_session.byte_to_int_conversion(
+            # ~ self.db_session.read_access_conversation_data('number_of_user_indecency'))
+        # ~ number_of_user_incomprehension = self.db_session.byte_to_int_conversion(
+            # ~ self.db_session.read_access_conversation_data('number_of_user_incomprehension'))
+        # ~ number_of_user_entries = self.db_session.byte_to_int_conversion(
+            # ~ self.db_session.read_access_conversation_data('number_of_user_entries'))
+        # ~ grandpy_status_code = self.db_session.byte_to_string_conversion(
+            # ~ self.db_session.read_access_conversation_data('grandpy_status_code'))
 
-        self.has_user_incivility_status = has_user_incivility_status
-        self.has_user_indecency_status = has_user_indecency_status
-        self.has_user_incomprehension_status = has_user_incomprehension_status
-        self.has_fatigue_quotas_of_grandpy = has_fatigue_quotas_of_grandpy
-        self.level = level
-        self.number_of_user_incivility = number_of_user_incivility
-        self.number_of_user_indecency = number_of_user_indecency
-        self.number_of_user_incomprehension = number_of_user_incomprehension
-        self.number_of_user_entries = number_of_user_entries
-        self.grandpy_status_code = grandpy_status_code
+        # ~ self.has_user_incivility_status = has_user_incivility_status
+        # ~ self.has_user_indecency_status = has_user_indecency_status
+        # ~ self.has_user_incomprehension_status = has_user_incomprehension_status
+        # ~ self.has_fatigue_quotas_of_grandpy = has_fatigue_quotas_of_grandpy
+        # ~ self.level = level
+        # ~ self.number_of_user_incivility = number_of_user_incivility
+        # ~ self.number_of_user_indecency = number_of_user_indecency
+        # ~ self.number_of_user_incomprehension = number_of_user_incomprehension
+        # ~ self.number_of_user_entries = number_of_user_entries
+        # ~ self.grandpy_status_code = grandpy_status_code
 
     def database_init_by_default(self) -> None:
         """initialization of redis database
