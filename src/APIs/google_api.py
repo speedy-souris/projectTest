@@ -37,14 +37,17 @@ def get_settings_for_placeid_api(address):
 def get_settings_for_address_api(placeid):
     """determining the localized address for the found placeid"""
     key = google_api_keys()[0]
-    parameters = {'placeid': f'{placeid}', 'fields': 'formatted_address,geometry', 'key': f'{key}'}
+    parameters ={
+        'placeid': f'{placeid}', 
+        'fields': 'formatted_address,geometry', 'key': f'{key}'}
     return parameters
 
 
 def get_settings_for_map_static_api(address, localization):
     """determination of the static map for the address found"""
     key = google_api_keys()[1]
-    markers_data = f"color:red|label:A|{localization['lat']},{localization['lng']}"
+    markers_data =\
+     f"color:red|label:A|{localization['lat']},{localization['lng']}"
     parameters = {
         'center': f'{address}', 'zoom': '18.5',
         'size': '600x300', 'maptype': 'roadmap',
@@ -64,7 +67,8 @@ def get_placeid_from_address(address):
            ],
            'status' : 'OK'
         }"""
-    url_api = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json'
+    url_api =\
+     'https://maps.googleapis.com/maps/api/place/findplacefromtext/json'
     parameter_data = get_settings_for_placeid_api(address)
     placeid_value = get_url_from_json(url_api, parameter_data)
     return placeid_value
@@ -96,3 +100,10 @@ def get_static_map_from_address_api(address, localization):
     parameter_data = get_settings_for_map_static_api(address, localization)
     map_static_api = requests.get(url=url_api, params=parameter_data)
     return map_static_api
+
+
+if __name__ == '__main__':
+    pla_id = get_placeid_from_address('vieux')
+    print(f'pla_id = {pla_id}')
+    test = get_address_api_from_placeid(pla_id['candidates'][0]['place_id'])
+    print(f'test = {test}')

@@ -6,7 +6,7 @@ from . import get_mockreturn
 from . import google_api
 
 
-# @pytest.mark.skip()
+# ~ @pytest.mark.skip()
 class TestGoogleMapAPI:
     def test_get_placeid(self, monkeypatch):
         expected_result = {

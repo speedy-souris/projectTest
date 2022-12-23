@@ -1,8 +1,10 @@
 """main module"""
-from . import RedisDataManagement
-from . import Conversation
-from . import counting_behavior
-from . import display_behavior
+from src.redis_utilities import RedisDataManagement
+from src.session.conversation import Conversation
+from src.display import counting_behavior
+from src.display import display_behavior
+from src.APIs import google_api
+from src.APIs import wikipedia_api
 
 
 def conversation_between_user_and_grandpy(user_request, db_number):
@@ -52,20 +54,29 @@ def conversation_between_user_and_grandpy(user_request, db_number):
 
 # ---------------------------
 # 4) DONE management of the call to the GoogleMap API
-def search_address_to_gMap(chat_session, user_request_parsed):
+def search_address_to_gMap(user_request):
     # DONE GoogleMap API calling
     """call of the GoogleMap APIs according to the user's request"""
-    gmap_api_placeid_value = chat_session.get_placeid_from_address(user_request_parsed)
-    gmap_api_address_value = chat_session.get_address_api_from_placeid(gmap_api_placeid_value)
-    return gmap_api_address_value
+    gmap_api_placeid_value = google_api.get_placeid_from_address(user_request)
+    place_id = gmap_api_placeid_value['candidates'][0]['place_id']
+    googleMap_data = google_api.get_address_api_from_placeid(place_id)
+    return googleMap_data
 
 
 # 5) TODO management of the call to the WikiPedia API
-def search_address_to_wiki():
+def search_address_to_wiki(user_request_parsed):
     # DONE WIKIPEDIA API calling
     """call of the WikiPedia APIs according to the user's request"""
-    pass
-
+    googleMap_data = search_address_to_gMap(user_request_parsed)
+    latitude = \
+        googleMap_data['result']['geometry']['location']['lat']
+    longitude = \
+        googleMap_data['result']['geometry']['location']['lng']
+    wiki_pages= wikipedia_api.get_address_url(latitude, longitude)
+    for title in wiki_pages['query']['geosearch'][0]['title']:
+        if title in googleMap_data['result']['formatted_address']:
+            wiki_result = wikipedia_api.get_page_url(user_request_parsed)
+    return wiki_result
 
 def main(user_request, db_number=0):
     """question answer between user and Grandpy"""
@@ -104,7 +115,6 @@ def main(user_request, db_number=0):
         display_behavior.display_grandpy_status_code_to_benevolent(chat_session)
         chat_session.calculate_the_indecency_status()
         chat_session.calculate_the_incomprehension_status()
-        print(f'[main] number_entries1 = {chat_session.number_of_user_entries}')
         if chat_session.has_user_indecency_status:
             if chat_session.number_of_user_indecency < 3:
                 display_behavior.display_grandpy_status_code_to_disrespectful(chat_session)
@@ -117,8 +127,9 @@ def main(user_request, db_number=0):
                 counting_behavior.user_incomprehension_count(chat_session)
             else:
                 display_behavior.display_grandpy_status_code_to_incomprehension_limit(chat_session)
-        if not chat_session.has_user_indecency_status and not chat_session.has_user_incomprehension_status:
-            print(f'[main] number_entries2 = {chat_session.number_of_user_entries}')
+        if not (
+            chat_session.has_user_indecency_status and\
+            chat_session.has_user_incomprehension_status):
             if chat_session.number_of_user_entries == 5:
                 display_behavior.display_grandpy_status_code_to_tired(chat_session)
             elif chat_session.number_of_user_entries == 9:
@@ -126,10 +137,16 @@ def main(user_request, db_number=0):
             else:
                 display_behavior.display_grandpy_status_code_to_response(chat_session)
             counting_behavior.user_question_answer_count(chat_session)
+            chat_session.get_user_request_parser()
     chat_session.update_database()
-    print(f'[main] number_entries3 = {chat_session.number_of_user_entries}')
+    # ~ googlemap_address = search_address_to_gMap(user_request)
+    # ~ wikipedia = search_address_to_wiki(user_request)
     return chat_session
 
 
 if __name__ == '__main__':
-    pass
+    user_request = 'Tour Eiffel'
+    api_google = search_address_to_gMap(user_request)
+    print(f'api_google = {api_google}')
+    api_wikipedia = search_address_to_wiki(user_request)
+    print(f'api_wikipedia = {api_wikipedia}')
