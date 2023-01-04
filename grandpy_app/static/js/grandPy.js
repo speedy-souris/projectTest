@@ -16,8 +16,13 @@ function response_quotas_reached(){
     document.getElementById('quotas').style.display = 'inline'};
  
 function random_grandpy_answer(){
-    var list_answers = ['gp_reply3', 'gp_reply4', 'gp_reply5', 'gp_reply6', 'gp_reply7'];
+    const list_answers = ['gp_reply3', 'gp_reply4', 'gp_reply5', 'gp_reply6', 'gp_reply7'];
     var random_choice = Math.floor(Math.random()*list_answers.length);
+    document.getElementById('gp_reply3').style.display = 'none';
+    document.getElementById('gp_reply4').style.display = 'none';
+    document.getElementById('gp_reply5').style.display = 'none';
+    document.getElementById('gp_reply6').style.display = 'none';
+    document.getElementById('gp_reply7').style.display = 'none';
     document.getElementById(list_answers[random_choice]).style.display = 'inline'; 
     document.getElementById("ask").style.display = 'none';
     document.getElementById('answer').style.display = 'inline';
@@ -32,66 +37,47 @@ function beginning_of_fatigue(){
     document.getElementById('answer').style.display = 'inline';
     document.getElementById('other').style.display = 'inline'};
     
-var data_send = {
-    'grandpy_response_quotas': false,
-    'nb_incivility': 0,
-    'nb_indecency': 0,
-    'nb_incomprehension': 0,
-    'nb_request': 0,
- 
-    'incr_request': function(){
-        this.nb_request += 1 
-        if (this.nb_request == 5){
-            return beginning_of_fatigue()}
-        else{
-            return random_grandpy_answer()}},
- 
-    'incr_incivility': function(){
-        this.nb_incivility += 1
-        if (this.nb_incivility >= 3){
-            this.nb_incivility = 3
-            this.grandpy_response_quotas = true
-            return response_quotas_reached}
-        else{
-            return message_of_meanness()}},
 
-    'incr_indecency': function(){
-        this.nb_indecency += 1
-        if (this.nb_indecency >= 3){
-            this.nb_indecency = 3
-            this.grandpy_response_quotas = true
-            return response_quotas_reached}
-        else{
-            return rude_message()}},
-
-    'incr_incomprehension': function(){
-        this.nb_incomprehension += 1
-        if (this.nb_incomprehension >= 3){
-            this.nb_incomprehension = 3
-            this.grandpy_response_quotas = true
-            return response_quotas_reached}
-        else{
-            return incomprehension_message()}}
+function gp_answer(grandpy_code){
+    var response_json = JSON.parse(grandpy_code);
+    switch(grandpy_code){
+        case 'home':
+            welcome_message();
+            break;
+        case 'tired':
+            beginning_of_fatigue();
+            break;
+        case 'mannerless':
+            rude_message();
+            break;
+        case 'disrespectful':
+            message_of_meanness();
+            break;
+        case 'incomprehension':
+            incomprehension_message();
+            break;
+        case 'response':
+            random_grandpy_answer();
+            break;
+        default :
+            response_quotas_reached();}
 }
 
-var response_json = JSON.parse(data_send)
-if (!response_json['grandpy_response_quotas'] ){
-    if (response_json['nb_incivility'] == 0 || (response_json['nb_incivility']< 3){
-        data_send.incr_request()}
-    else{
-        data_send.incr_incility()}
-        
-    if (response_json['nb_indecency'] == 0) || (response_json['nb_indecency'] < 3){
-        data_send.incr_request()}
-    else{
-        data_send.incr_indecency()}
-        
-    if (response_json['nb_incomprehension'] == 0) || 
-        (response_json['nb_incomprehension']< 3){
-        data_send.incr_request()}
-    else{
-        data_send.incr_incomprehensuion()}        
-}
+const send_request = document.getElementById('submit2');
+send_request.addEventListener('click', function(){
+    fetch("/index/2/+ document.getElementById('question')")
+    .then(function(res){
+        if (res.ok){
+            return res.json();}
+    })
+    .then(function(value){
+        gp_answer(value);
+    })
+    .catch(function(err){
+        alert('Une erreur est levé');
+    })
+});
+
 //document.getElementById("question").text = "";
 //document.getElementById("answer").style.display = 'none';
 //document.getElementById("other").style.display = 'none';

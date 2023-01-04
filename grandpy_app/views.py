@@ -49,13 +49,8 @@ def answer_gp(reflection, question):
     dataDiscussion = main(question)
     # sending parameters
     data_send = {
-        'grandpy_response': dataDiscussion.grandpy_status_code_value,
-        'grandpy_code': dataDiscussion.grandpy_status_code,
-        'incivility': dataDiscussion.has_user_incivility_status,
-        'indecency': dataDiscussion.has_user_indecency_status,
-        'nb_request': dataDiscussion.number_of_user_entries
-        
-        # ~ 'map_status': {
+       'grandpy_code': dataDiscussion.grandpy_status_code,
+            # ~ 'map_status': {
             # ~ 'address': dataDiscussion.get('address', ''),
             # ~ 'map': dataDiscussion.get('map', ''),
             # ~ 'history': dataDiscussion.get('history', '')
