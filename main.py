@@ -81,7 +81,7 @@ def search_address_to_wiki(user_request_parsed):
 
 def management_of_incivility_behavior(chat_session):
     chat_session.calculate_the_incivility_status()
-     if chat_session.has_user_incivility_status:
+    if chat_session.has_user_incivility_status:
         if chat_session.number_of_user_incivility < 3:
             display_behavior.display_grandpy_status_code_to_mannerless(chat_session)
             counting_behavior.user_incivility_count(chat_session)
@@ -115,8 +115,10 @@ def management_of_correct_behavior(chat_session):
     if not (
         chat_session.has_user_indecency_status and\
         chat_session.has_user_incomprehension_status):
+        print(f'number user_entries [main-correct_behavior] = {chat_session.number_of_user_entries}')
         if chat_session.number_of_user_entries == 5:
             display_behavior.display_grandpy_status_code_to_tired(chat_session)
+            counting_behavior.user_question_answer_count(chat_session)
         elif chat_session.number_of_user_entries == 10:
             display_behavior.display_grandpy_status_code_to_response_limit(chat_session)
         else:

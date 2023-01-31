@@ -46,8 +46,9 @@ def user_question_answer_count(chat_session):
     print(f'[counting] status_code = {chat_session.grandpy_status_code}')
     print(f'[counting] previous_status_code = {chat_session.previous_grandpy_status_code}')
     # ~ if chat_session.number_of_user_entries != 5 or chat_session.grandpy_status_code == 'response':
-    if not (chat_session.grandpy_status_code == 'tired' and chat_session.previous_grandpy_status_code == 'response' and chat_session.number_of_user_entries == 5):
+    # ~ if not (chat_session.grandpy_status_code == 'tired' and chat_session.previous_grandpy_status_code == 'response' and chat_session.number_of_user_entries == 5):
+    if chat_session.number_of_user_entries < 10:
         chat_session.number_of_user_entries += 1
-    if chat_session.number_of_user_entries >= 10:
-        chat_session.number_of_user_entries = 10
+        if chat_session.number_of_user_entries >= 10:
+            chat_session.number_of_user_entries = 10
 

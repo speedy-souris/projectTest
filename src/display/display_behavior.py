@@ -114,7 +114,7 @@ def display_correct_user_request_1_to_9(chat_session, response_grandpy):
         print(f'Utilisateur correct: {chat_session.user_entry}')
         print(f'Réponse de Grandpy faiblesse: {response_grandpy}')
     # if number_of_entries == 6 to 9
-    elif 6 <= number_of_user_entries <= 9:
+    elif 6 <= number_of_user_entries <= 10:
         # grandpy_status_code= 'response'
         print(f'Utilisateur correct: {chat_session.user_entry}')
         # ~ print('Réponse de Grandpy (6-9) : '
@@ -171,7 +171,6 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
         # has_fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
         chat_session.db_session.data_expiration('has_fatigue_quotas_of_grandpy')
     # Continue user queries
-    else:
-        following_billing
+    elif following_billing:
         chat_session.has_fatigue_quotas_of_grandpy = False
         display_behavior_user_request(chat_session, response_grandpy)

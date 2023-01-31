@@ -374,7 +374,7 @@ class TestHomeMain:
         # number_of_user_incomprehension == 0
         assert dialogue_of_presentation.number_of_user_incomprehension == 0
         # number_of_user_entries == 5
-        assert dialogue_of_presentation.number_of_user_entries == 5
+        assert dialogue_of_presentation.number_of_user_entries == 6
 
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX10(self, monkeypatch):
@@ -391,6 +391,7 @@ class TestHomeMain:
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
         main.main('bonjour', db_number=1)
+        main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
