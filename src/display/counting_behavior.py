@@ -7,7 +7,7 @@ def user_incivility_count(chat_session):
     """discount of user's discourtesy - counting up to 3 user incivilities"""
     # if grandpy_status_code = 'mannerless'
     if chat_session.grandpy_status_code == 'mannerless':
-        if chat_session.number_of_user_incivility > 3:
+        if chat_session.number_of_user_incivility >= 3:
             chat_session.number_of_user_incivility = 3
         elif chat_session.number_of_user_incivility < 3:
             chat_session.number_of_user_incivility += 1
