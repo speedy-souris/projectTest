@@ -65,10 +65,9 @@ function gp_answer(grandpy_code){
 
 const send_request = document.getElementById('submit2');
 send_request.addEventListener('click', function(){
-    fetch("/index/2/",document.getElementById('question'))
+    fetch("/index/2/" )+ document.getElementById('question')
     .then(function(res){
         if (res.ok){
-            console.log(res.json());
             return res.json();}
     });
     .then(function(value){
