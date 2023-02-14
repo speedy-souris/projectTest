@@ -86,7 +86,6 @@ def management_of_incivility_behavior(chat_session):
             display_behavior.display_grandpy_status_code_to_mannerless(chat_session)
             counting_behavior.user_incivility_count(chat_session)
         else:
-            print('je suis arrivez la')
             display_behavior.display_grandpy_status_code_to_incivility_limit(chat_session)
     else:
         chat_session.level = 2

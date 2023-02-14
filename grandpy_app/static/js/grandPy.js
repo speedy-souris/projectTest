@@ -1,4 +1,5 @@
 function welcome_message(){
+    console.log("je suis ici")
     document.getElementById("word_of_welcome").style.display = 'inline'};
 
 function reflection_message(){
@@ -39,7 +40,8 @@ function beginning_of_fatigue(){
     
 
 function gp_answer(grandpy_code){
-    var response_json = JSON.parse(grandpy_code);
+    //~ var response_json = JSON.parse(grandpy_code);
+    var response_json = grandpy_code
     switch(grandpy_code){
         case 'home':
             welcome_message();
@@ -64,17 +66,19 @@ function gp_answer(grandpy_code){
 }
 
 const send_request = document.getElementById('submit2');
-send_request.addEventListener('click', function(){
-    fetch("/index/2/" )+ document.getElementById('question')
+send_request.addEventListener('submit', function(e){
+    fetch("/index/2/" + document.getElementById('question').value) 
     .then(function(res){
         if (res.ok){
             return res.json();}
-    });
+    })
     .then(function(value){
         gp_answer(value);
-    });
+    })
     .catch(function(err){
-        alert('Une erreur est levé')})
+        console.log('Une erreur est levé');
+        console.log(err);})
+    e.preventDefault();
 });
 
 //document.getElementById("question").text = "";
