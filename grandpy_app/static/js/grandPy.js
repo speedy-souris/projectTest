@@ -1,5 +1,5 @@
 function welcome_message(){
-    console.log("je suis ici")
+    document.getElementById("question").value = '';
     document.getElementById("word_of_welcome").style.display = 'inline'};
 
 function reflection_message(){
@@ -7,18 +7,36 @@ function reflection_message(){
     document.getElementById("gp_reflection").style.display = 'inline'}; 
 
 function message_of_meanness(){
+    document.getElementById('gp_reply1').style.display = 'none';
+    document.getElementById('gp_reply2').style.display = 'none';
+    document.getElementById('comprehension').style.display = 'none';
+    document.getElementById("question").value = '';
     document.getElementById("gp_reply2").style.display = 'inline'};
 
 function rude_message(){
+    document.getElementById('gp_reply1').style.display = 'none';
+    document.getElementById('gp_reply2').style.display = 'none';
+    document.getElementById('comprehension').style.display = 'none';
+    document.getElementById("question").value = '';
     document.getElementById("gp_reply1").style.display = 'inline'};
 
 function response_quotas_reached(){
+    document.getElementById('gp_reply1').style.display = 'none';
+    document.getElementById('gp_reply2').style.display = 'none';
+    document.getElementById('gp_reply3').style.display = 'none';
+    document.getElementById('gp_reply4').style.display = 'none';
+    document.getElementById('gp_reply5').style.display = 'none';
+    document.getElementById('gp_reply6').style.display = 'none';
+    document.getElementById('gp_reply7').style.display = 'none';
     document.getElementById("ask").style.display = 'none';
     document.getElementById('quotas').style.display = 'inline'};
  
 function random_grandpy_answer(){
     const list_answers = ['gp_reply3', 'gp_reply4', 'gp_reply5', 'gp_reply6', 'gp_reply7'];
     var random_choice = Math.floor(Math.random()*list_answers.length);
+    //~ document.getElementById('word_of_welcome').style.display = 'none';
+    document.getElementById('gp_reply1').style.display = 'none';
+    document.getElementById('gp_reply2').style.display = 'none';
     document.getElementById('gp_reply3').style.display = 'none';
     document.getElementById('gp_reply4').style.display = 'none';
     document.getElementById('gp_reply5').style.display = 'none';
@@ -30,6 +48,9 @@ function random_grandpy_answer(){
     document.getElementById('other').style.display = 'inline'};
 
 function incomprehension_message(){
+    document.getElementById('gp_reply1').style.display = 'none';
+    document.getElementById('gp_reply2').style.display = 'none';
+    document.getElementById("question").value = '';
     document.getElementById('comprehension').style.display = 'inline'};
 
 function beginning_of_fatigue(){
@@ -37,12 +58,12 @@ function beginning_of_fatigue(){
     document.getElementById("ask").style.display = 'none';
     document.getElementById('answer').style.display = 'inline';
     document.getElementById('other').style.display = 'inline'};
-    
 
-function gp_answer(grandpy_code){
+function gp_answer(grandpy_status_code){
     //~ var response_json = JSON.parse(grandpy_code);
-    var response_json = grandpy_code
-    switch(grandpy_code){
+    //~ var response_json = grandpy_status_code;
+    //~ console.log(response_json.grandpy_code);
+    switch(grandpy_status_code.grandpy_code){
         case 'home':
             welcome_message();
             break;

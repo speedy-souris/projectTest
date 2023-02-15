@@ -14,7 +14,8 @@ def index():
         single home page
     """
     return render_template('index.html')
-    
+
+
 # initialization DataRedis
 @app.route('/init')
 def init():
@@ -24,7 +25,8 @@ def init():
     data = Conversation('')
     data.database_init_by_default()
     return 'DataRedis initialized'
-    
+
+
 # Initialization of general parameters
 @app.route('/index/<reflection>/<question>')
 def answer_gp(reflection, question):

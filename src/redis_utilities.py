@@ -56,11 +56,11 @@ class RedisDataManagement:
         """data erasure redis"""
         self.db_session.flushall()
 
-    def data_expiration(self, has_fatigue_quotas_of_grandpy) -> None:
+    def data_expiration(self) -> None:
         """expiration of the fatigue_quotas_of_grandpy data for a theoretical duration of 24h00
         which simulates the well-deserved rest of grandpy
         ==> real duration for the tests 120 seconds"""
-        self.db_session.expire(has_fatigue_quotas_of_grandpy, 120)
+        self.db_session.expire('has_fatigue_quotas_of_grandpy', 120)
 
     def scan_database_redis(self) -> list:
         """scan all values of the redis database"""
@@ -78,4 +78,5 @@ class RedisDataManagement:
 
 
 if __name__ == '__main__':
-    pass
+    redis = RedisDataManagement()
+    redis.data_expiration()
