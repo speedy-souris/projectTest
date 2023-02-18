@@ -19,6 +19,7 @@ class Conversation:
         'response_limit': 'HEY ! CA SUFFIT mon petit, ma mémoire est saturé ... !',
         'exhausted': 'Je suis fatigué reviens me voir demain !'}
     # -------------------------
+    balance_value = False
     # Data for check incivility user behavior
     INCIVILITY_SET_DATA = frozenset({'bonjour', 'bonsoir', 'salut', 'hello', 'hi'})
     # Data for check indecency user behavior
@@ -120,7 +121,11 @@ class Conversation:
         self.number_of_user_incomprehension = args.get('number_of_user_incomprehension', 0)
         self.number_of_user_entries = args.get('number_of_user_entries', 0)
         # without Level
-        self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
+        if self.has_fatigue_quotas_of_grandpy == self.__class__.balance_value:
+            try:
+                self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
+            except :
+                database_init_by_default()
         self.grandpy_status_code =\
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code

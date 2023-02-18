@@ -170,7 +170,6 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
         print(f'Réponse de Grandpy fin: {display_grandpy_status_code_to_exhausted(chat_session)}')
         # has_fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
         chat_session.db_session.data_expiration()
-        print(f'has_fatigue_quotas_of_grandpy = {chat_session.has_fatigue_quotas_of_grandpy}')
     # Continue user queries
     elif following_billing:
         # ~ chat_session.has_fatigue_quotas_of_grandpy = False
