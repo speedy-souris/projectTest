@@ -18,8 +18,7 @@ class Conversation:
         'incomprehension_limit': 'Cette incomprehension me FATIGUE ... !',
         'response_limit': 'HEY ! CA SUFFIT mon petit, ma mémoire est saturé ... !',
         'exhausted': 'Je suis fatigué reviens me voir demain !'}
-    # -------------------------
-    balance_value = False
+    # -------------------------------
     # Data for check incivility user behavior
     INCIVILITY_SET_DATA = frozenset({'bonjour', 'bonsoir', 'salut', 'hello', 'hi'})
     # Data for check indecency user behavior
@@ -116,16 +115,13 @@ class Conversation:
         self.number_of_user_incivility = args.get('number_of_user_incivility', 0)
         # Level 1 --> Presentation and Level 2 --> Chat_session
         self.has_user_indecency_status = args.get('has_user_indecency_status', False)
-        self.has_user_incomprehension_status = args.get('has_user_incomprehension_status', False)
+        self.has_user_incomprehension_status = \
+            args.get('has_user_incomprehension_status', False)
         self.number_of_user_indecency = args.get('number_of_user_indecency', 0)
         self.number_of_user_incomprehension = args.get('number_of_user_incomprehension', 0)
         self.number_of_user_entries = args.get('number_of_user_entries', 0)
-        # without Level
-        if self.has_fatigue_quotas_of_grandpy == self.__class__.balance_value:
-            try:
-                self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
-            except :
-                database_init_by_default()
+        self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
+        self.previous_has_fatigue_quotas_of_grandpy = self.has_fatigue_quotas_of_grandpy
         self.grandpy_status_code =\
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
@@ -228,7 +224,6 @@ class Conversation:
             'has_user_incivility_status': has_user_incivility_status,
             'has_user_indecency_status': has_user_indecency_status,
             'has_user_incomprehension_status': has_user_incomprehension_status,
-            'has_fatigue_quotas_of_grandpy': has_fatigue_quotas_of_grandpy,
             'grandpy_status_code': grandpy_status_code,
             'level': level,
             'number_of_user_incivility': number_of_user_incivility,
@@ -237,7 +232,9 @@ class Conversation:
             'number_of_user_entries': number_of_user_entries}
         for name_update, data_update in attribut_value.items():
             self.db_session.write_database_encoding(name_update, data_update)
-
+        if self.previous_has_fatigue_quotas_of_grandpy !=  self.has_fatigue_quotas_of_grandpy:
+            self.db_session.write_database_encoding(
+                'has_fatigue_quotas_of_grandpy', self.has_fatigue_quotas_of_grandpy)
     def get_user_request_parser(self) -> None:
         """recover the keywords of the user request
         by abolishing word contained in UNNECESSARY_SET_DATA set"""

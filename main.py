@@ -12,30 +12,33 @@ def conversation_between_user_and_grandpy(user_request, db_number):
     """creation of the chat_session conversation object according to the user's request"""
     chat_session = Conversation(user_request, db_number=db_number)
     db_session = RedisDataManagement(db_number=db_number)
-    if not db_session.scan_database_redis():
+    
         # ~ chat_session = Conversation(user_request, db_number=db_number)
-        chat_session.database_init_by_default()
+        # ~ chat_session.database_init_by_default()
         # ~ print(f'grandpy_home [main] = {chat_session.grandpy_status_code}')
-    else:
-        level = db_session.byte_to_int_conversion(db_session.read_access_conversation_data('level'))
+    if True:
+        level = db_session.byte_to_int_conversion(
+            db_session.read_access_conversation_data('level',b'1'))
         has_user_incivility_status = db_session.byte_to_boolean_conversion(
-            db_session.read_access_conversation_data('has_user_incivility_status'))
+            db_session.read_access_conversation_data('has_user_incivility_status',b'False'))
         number_of_user_incivility = db_session.byte_to_int_conversion(
-            db_session.read_access_conversation_data('number_of_user_incivility'))
+            db_session.read_access_conversation_data('number_of_user_incivility',b'0'))
         has_user_indecency_status = db_session.byte_to_boolean_conversion(
-            db_session.read_access_conversation_data('has_user_indecency_status'))
+            db_session.read_access_conversation_data('has_user_indecency_status',b'False'))
         number_of_user_indecency = db_session.byte_to_int_conversion(
-            db_session.read_access_conversation_data('number_of_user_indecency'))
+            db_session.read_access_conversation_data('number_of_user_indecency',b'0'))
         has_user_incomprehension_status = db_session.byte_to_boolean_conversion(
-            db_session.read_access_conversation_data('has_user_incomprehension_status'))
+            db_session.read_access_conversation_data(
+                'has_user_incomprehension_status',b'False'))
         number_of_user_incomprehension = db_session.byte_to_int_conversion(
-            db_session.read_access_conversation_data('number_of_user_incomprehension'))
+            db_session.read_access_conversation_data('number_of_user_incomprehension',b'0'))
         number_of_user_entries = db_session.byte_to_int_conversion(
-            db_session.read_access_conversation_data('number_of_user_entries'))
+            db_session.read_access_conversation_data('number_of_user_entries',b'0'))
         has_fatigue_quotas_of_grandpy = db_session.byte_to_boolean_conversion(
-            db_session.read_access_conversation_data('has_fatigue_quotas_of_grandpy'))
+            db_session.read_access_conversation_data(
+                'has_fatigue_quotas_of_grandpy',b'False'))
         grandpy_status_code = db_session.byte_to_string_conversion(
-            db_session.read_access_conversation_data('grandpy_status_code'))
+            db_session.read_access_conversation_data('grandpy_status_code',b'home'))
 
         args = {
             'level': level,
