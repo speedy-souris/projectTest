@@ -164,7 +164,7 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
     # Termination of user requests (for 24H00)
     if not following_billing:
         print(f'limite atteinte = {chat_session.grandpy_status_code}')
-        # ~ chat_session.has_fatigue_quotas_of_grandpy = True
+        chat_session.has_fatigue_quotas_of_grandpy = True
         print(f'Utilisateur fin: {chat_session.user_entry}')
         print(f'Réponse de Grandpy pre_fin: {response_grandpy}')
         print(f'Réponse de Grandpy fin: {display_grandpy_status_code_to_exhausted(chat_session)}')

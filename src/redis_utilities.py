@@ -71,7 +71,8 @@ class RedisDataManagement:
         """Write data encoded in the database """
         self.db_session.set(key_value, data_value)
 
-    def read_access_conversation_data(self, name_user_behavior, default_value=None) -> dict:
+    def read_access_conversation_data(
+        self, name_user_behavior, default_value=None) -> dict:
         """reading data from the database"""
         try:
             value_user_behavior = self.db_session.get(name_user_behavior)
@@ -81,5 +82,4 @@ class RedisDataManagement:
 
 
 if __name__ == '__main__':
-    redis = RedisDataManagement()
-    redis.data_expiration()
+    pass

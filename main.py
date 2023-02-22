@@ -12,11 +12,12 @@ def conversation_between_user_and_grandpy(user_request, db_number):
     """creation of the chat_session conversation object according to the user's request"""
     chat_session = Conversation(user_request, db_number=db_number)
     db_session = RedisDataManagement(db_number=db_number)
-    
+    if db_session.byte_to_boolean_conversion(db_session.read_access_conversation_data(
+        "has_fatigue_quotas_of_grandpy")) == '':
         # ~ chat_session = Conversation(user_request, db_number=db_number)
-        # ~ chat_session.database_init_by_default()
+        chat_session.database_init_by_default()
         # ~ print(f'grandpy_home [main] = {chat_session.grandpy_status_code}')
-    if True:
+    else:
         level = db_session.byte_to_int_conversion(
             db_session.read_access_conversation_data('level',b'1'))
         has_user_incivility_status = db_session.byte_to_boolean_conversion(
@@ -133,6 +134,7 @@ def management_of_correct_behavior(chat_session):
 def main(user_request, db_number=0):
     """question answer between user and Grandpy"""
     chat_session = conversation_between_user_and_grandpy(user_request, db_number)
+    print (chat_session)
     # management level 1
     if chat_session.level == 1:
         management_of_incivility_behavior(chat_session)

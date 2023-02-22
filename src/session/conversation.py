@@ -234,7 +234,9 @@ class Conversation:
             self.db_session.write_database_encoding(name_update, data_update)
         if self.previous_has_fatigue_quotas_of_grandpy !=  self.has_fatigue_quotas_of_grandpy:
             self.db_session.write_database_encoding(
-                'has_fatigue_quotas_of_grandpy', self.has_fatigue_quotas_of_grandpy)
+                'has_fatigue_quotas_of_grandpy', self.db_session.decode_string_to_byte(
+                    self.has_fatigue_quotas_of_grandpy))
+
     def get_user_request_parser(self) -> None:
         """recover the keywords of the user request
         by abolishing word contained in UNNECESSARY_SET_DATA set"""
