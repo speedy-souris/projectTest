@@ -60,7 +60,8 @@ class RedisDataManagement:
         """expiration of the fatigue_quotas_of_grandpy data for a theoretical duration of 24h00
         which simulates the well-deserved rest of grandpy
         ==> real duration for the tests 120 seconds"""
-        self.db_session.expire('has_fatigue_quotas_of_grandpy', 120)
+        if self.db_session.ttl('has_fatigue_quotas_of_grandpy') == -1:
+            self.db_session.expire('has_fatigue_quotas_of_grandpy', 120)
 
     def scan_database_redis(self) -> list:
         """scan all values of the redis database"""
