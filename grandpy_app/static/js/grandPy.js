@@ -84,7 +84,6 @@ function gp_answer(grandpy_status_code){
             break;
         default :
             response_quotas_reached();
-            //~ request_initialization();
 }}
 
 function request_execution(){
@@ -103,18 +102,4 @@ function request_execution(){
             console.log(err);})
         e.preventDefault();});}
 
-function request_initialization(){
-    fetch("/init") 
-    .then(function(res){
-        console.log(res)
-        if (res.ok){
-            return res.json();}
-    })
-    .catch(function(err){
-            console.log('Une erreur est levé');
-            console.log(err);})}
-
 request_execution()
-//document.getElementById("question").text = "";
-//document.getElementById("answer").style.display = 'none';
-//document.getElementById("other").style.display = 'none';
