@@ -8,10 +8,10 @@ from . import main
 
 #@pytest.mark.skip()
 class TestHomeMain:
-    @staticmethod
-    def setup_method():
-        db_session = RedisDataManagement(db_number=1)
-        db_session.erasing_data()
+    def setup_method(self):
+        self.db_session = RedisDataManagement(db_number=1)
+        self.db_session.erasing_data()
+        self.db_session.database_init_by_default()
 
     # 11) DONE incivility query X1
     # ~ @pytest.mark.skip()
@@ -101,6 +101,7 @@ class TestHomeMain:
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
+        main.main('ou se trouve openClassrooms', db_number=1)
         # incorrect presentation of the user ==> question without ('bonjour'...)
         presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
         # has_user_incivility_status = True
@@ -115,6 +116,8 @@ class TestHomeMain:
         assert presentation_user_incivility.number_of_user_incivility == 3
         # has_fatigue_quotas_of_grandpy = True
         assert presentation_user_incivility.has_fatigue_quotas_of_grandpy
+        # TTL has_fatigue_quotas_of_grandpy > 0
+        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # 15) DONE indecency query (home) 1 to X2
     # ~ @pytest.mark.skip()

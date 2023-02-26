@@ -46,10 +46,10 @@ class TestBehaviorParams:
         assert expected_result == google_api.get_placeid_from_address('Bonjour')
 
     #@pytest.mark.skip()
-    def test_database_init_by_default(self):
-        self.conversation.database_init_by_default()
-        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
-        assert expected_result == b'0'
+    # ~ def test_database_init_by_default(self):
+        # ~ self.conversation.database_init_by_default()
+        # ~ expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
+        # ~ assert expected_result == b'0'
 
     #@pytest.mark.skip()
     def test_lower_and_split_user_entry(self):

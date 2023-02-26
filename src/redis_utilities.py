@@ -52,6 +52,26 @@ class RedisDataManagement:
         byte_value = str(data_value).encode()
         return byte_value
 
+    def database_init_by_default(self) -> None:
+        """initialization of redis database
+        with a key, its value and the ID of the redis database
+        example :
+        redis_utilities.write_access_conversation_data ('grandpy_status_code', 'home', 0)"""
+        print("Initialisation REDIS")
+        init_data_redis = {
+            'has_user_incivility_status': self.decode_string_to_byte(False),
+            'has_user_indecency_status': self.decode_string_to_byte(False),
+            'has_user_incomprehension_status': self.decode_string_to_byte(False),
+            'has_fatigue_quotas_of_grandpy': self.decode_string_to_byte(False),
+            'level': self.decode_int_to_byte(1),
+            'number_of_user_incivility': self.decode_int_to_byte(0),
+            'number_of_user_indecency': self.decode_int_to_byte(0),
+            'number_of_user_incomprehension': self.decode_int_to_byte(0),
+            'number_of_user_entries': self.decode_int_to_byte(0),
+            'grandpy_status_code': self.decode_string_to_byte('home')}
+        for name_init, data_init in init_data_redis.items():
+            self.write_database_encoding(name_init, data_init)
+            
     def erasing_data(self) -> None:
         """data erasure redis"""
         self.db_session.flushall()

@@ -174,25 +174,25 @@ class Conversation:
                 incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
 
-    def database_init_by_default(self) -> None:
-        """initialization of redis database
-        with a key, its value and the ID of the redis database
-        example :
-        redis_utilities.write_access_conversation_data ('grandpy_status_code', 'home', 0)"""
-        print("Initialisation REDIS")
-        init_data_redis = {
-            'has_user_incivility_status': self.db_session.decode_string_to_byte(False),
-            'has_user_indecency_status': self.db_session.decode_string_to_byte(False),
-            'has_user_incomprehension_status': self.db_session.decode_string_to_byte(False),
-            'has_fatigue_quotas_of_grandpy': self.db_session.decode_string_to_byte(False),
-            'level': self.db_session.decode_int_to_byte(1),
-            'number_of_user_incivility': self.db_session.decode_int_to_byte(0),
-            'number_of_user_indecency': self.db_session.decode_int_to_byte(0),
-            'number_of_user_incomprehension': self.db_session.decode_int_to_byte(0),
-            'number_of_user_entries': self.db_session.decode_int_to_byte(0),
-            'grandpy_status_code': self.db_session.decode_string_to_byte('home')}
-        for name_init, data_init in init_data_redis.items():
-            self.db_session.write_database_encoding(name_init, data_init)
+    # ~ def database_init_by_default(self) -> None:
+        # ~ """initialization of redis database
+        # ~ with a key, its value and the ID of the redis database
+        # ~ example :
+        # ~ redis_utilities.write_access_conversation_data ('grandpy_status_code', 'home', 0)"""
+        # ~ print("Initialisation REDIS")
+        # ~ init_data_redis = {
+            # ~ 'has_user_incivility_status': self.db_session.decode_string_to_byte(False),
+            # ~ 'has_user_indecency_status': self.db_session.decode_string_to_byte(False),
+            # ~ 'has_user_incomprehension_status': self.db_session.decode_string_to_byte(False),
+            # ~ 'has_fatigue_quotas_of_grandpy': self.db_session.decode_string_to_byte(False),
+            # ~ 'level': self.db_session.decode_int_to_byte(1),
+            # ~ 'number_of_user_incivility': self.db_session.decode_int_to_byte(0),
+            # ~ 'number_of_user_indecency': self.db_session.decode_int_to_byte(0),
+            # ~ 'number_of_user_incomprehension': self.db_session.decode_int_to_byte(0),
+            # ~ 'number_of_user_entries': self.db_session.decode_int_to_byte(0),
+            # ~ 'grandpy_status_code': self.db_session.decode_string_to_byte('home')}
+        # ~ for name_init, data_init in init_data_redis.items():
+            # ~ self.db_session.write_database_encoding(name_init, data_init)
 
     def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""

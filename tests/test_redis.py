@@ -8,6 +8,7 @@ class TestWritingRedis:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
         self.db_session.erasing_data()
+        self.db_session.database_init_by_default()
         self.conversation = Conversation('')
         # self.chat_session = main('', db_number=1)
 
@@ -35,6 +36,11 @@ class TestWritingRedis:
         expected_result = self.db_session.decode_int_to_byte(2)
         assert expected_result == b'2'
 
+    #@pytest.mark.skip()
+    def test_database_init_by_default(self):
+        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
+        assert expected_result == b'0'
+        
     # @pytest.mark.skip()
     def test_read_write_database_encoding(self):
         self.db_session.write_database_encoding('has_user_incivility_status', b'True')

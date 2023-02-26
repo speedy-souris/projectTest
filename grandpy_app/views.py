@@ -1,7 +1,7 @@
 import time
 from . import Flask, render_template
 from main import main
-from src.session.conversation import Conversation
+from src.redis_utilities import RedisDataManagement
 
 
 app = Flask(__name__)
@@ -22,7 +22,7 @@ def init():
     """
         Initialization of the dataRedis
     """
-    data = Conversation('')
+    data = RedisDataManagement(db_number=0)
     data.database_init_by_default()
     return 'DataRedis initialized'
 
