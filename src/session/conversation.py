@@ -199,43 +199,44 @@ class Conversation:
         user_entry_lowercase = self.user_entry.lower()
         return user_entry_lowercase.split()
 
-    def update_database(self) -> None:
-        """after all data processing update redis database with local attributes"""
-        has_user_incivility_status = \
-            self.db_session.decode_string_to_byte(self.has_user_incivility_status)
-        has_user_indecency_status = \
-            self.db_session.decode_string_to_byte(self.has_user_indecency_status)
-        has_user_incomprehension_status = \
-            self.db_session.decode_string_to_byte(self.has_user_incomprehension_status)
-        has_fatigue_quotas_of_grandpy = \
-            self.db_session.decode_string_to_byte(self.has_fatigue_quotas_of_grandpy)
-        grandpy_status_code = self.db_session.decode_string_to_byte(self.grandpy_status_code)
-        level = self.db_session.decode_int_to_byte(self.level)
-        number_of_user_incivility = \
-            self.db_session.decode_int_to_byte(self.number_of_user_incivility)
-        number_of_user_indecency = \
-            self.db_session.decode_int_to_byte(self.number_of_user_indecency)
-        number_of_user_incomprehension = \
-            self.db_session.decode_int_to_byte(self.number_of_user_incomprehension)
-        number_of_user_entries = \
-            self.db_session.decode_int_to_byte(self.number_of_user_entries)
+    # ~ def update_database(self) -> None:
+        # ~ """after all data processing update redis database with local attributes"""
+        # ~ has_user_incivility_status = \
+            # ~ self.db_session.decode_string_to_byte(self.has_user_incivility_status)
+        # ~ has_user_indecency_status = \
+            # ~ self.db_session.decode_string_to_byte(self.has_user_indecency_status)
+        # ~ has_user_incomprehension_status = \
+            # ~ self.db_session.decode_string_to_byte(self.has_user_incomprehension_status)
+        # ~ has_fatigue_quotas_of_grandpy = \
+            # ~ self.db_session.decode_string_to_byte(self.has_fatigue_quotas_of_grandpy)
+        # ~ grandpy_status_code = self.db_session.decode_string_to_byte(self.grandpy_status_code)
+        # ~ level = self.db_session.decode_int_to_byte(self.level)
+        # ~ number_of_user_incivility = \
+            # ~ self.db_session.decode_int_to_byte(self.number_of_user_incivility)
+        # ~ number_of_user_indecency = \
+            # ~ self.db_session.decode_int_to_byte(self.number_of_user_indecency)
+        # ~ number_of_user_incomprehension = \
+            # ~ self.db_session.decode_int_to_byte(self.number_of_user_incomprehension)
+        # ~ number_of_user_entries = \
+            # ~ self.db_session.decode_int_to_byte(self.number_of_user_entries)
 
-        attribut_value = {
-            'has_user_incivility_status': has_user_incivility_status,
-            'has_user_indecency_status': has_user_indecency_status,
-            'has_user_incomprehension_status': has_user_incomprehension_status,
-            'grandpy_status_code': grandpy_status_code,
-            'level': level,
-            'number_of_user_incivility': number_of_user_incivility,
-            'number_of_user_indecency': number_of_user_indecency,
-            'number_of_user_incomprehension': number_of_user_incomprehension,
-            'number_of_user_entries': number_of_user_entries}
-        for name_update, data_update in attribut_value.items():
-            self.db_session.write_database_encoding(name_update, data_update)
-        if self.previous_has_fatigue_quotas_of_grandpy !=  self.has_fatigue_quotas_of_grandpy:
-            self.db_session.write_database_encoding(
-                'has_fatigue_quotas_of_grandpy', self.db_session.decode_string_to_byte(
-                    self.has_fatigue_quotas_of_grandpy))
+        # ~ attribut_value = {
+            # ~ 'has_user_incivility_status': has_user_incivility_status,
+            # ~ 'has_user_indecency_status': has_user_indecency_status,
+            # ~ 'has_user_incomprehension_status': has_user_incomprehension_status,
+            # ~ 'grandpy_status_code': grandpy_status_code,
+            # ~ 'level': level,
+            # ~ 'number_of_user_incivility': number_of_user_incivility,
+            # ~ 'number_of_user_indecency': number_of_user_indecency,
+            # ~ 'number_of_user_incomprehension': number_of_user_incomprehension,
+            # ~ 'number_of_user_entries': number_of_user_entries}
+        # ~ for name_update, data_update in attribut_value.items():
+            # ~ self.db_session.write_database_encoding(name_update, data_update)
+        # ~ if self.previous_has_fatigue_quotas_of_grandpy !=  self.has_fatigue_quotas_of_grandpy:
+            # ~ self.db_session.write_database_encoding(
+                # ~ 'has_fatigue_quotas_of_grandpy', self.db_session.decode_string_to_byte(
+                    # ~ self.has_fatigue_quotas_of_grandpy))
+            # ~ self.db_session.data_expiration()
 
     def get_user_request_parser(self) -> None:
         """recover the keywords of the user request

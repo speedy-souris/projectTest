@@ -58,11 +58,11 @@ class TestBehaviorParams:
         assert expected_result == ['bonjour']
 
     #@pytest.mark.skip()
-    def test_update_database(self):
-        self.conversation.number_of_user_entries = 7
-        self.conversation.update_database()
-        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
-        assert expected_result == b'7'
+    # ~ def test_update_database(self):
+        # ~ self.conversation.number_of_user_entries = 7
+        # ~ self.conversation.update_database()
+        # ~ expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
+        # ~ assert expected_result == b'7'
 
     #@pytest.mark.skip()
     def test_get_request_parser(self):

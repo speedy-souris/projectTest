@@ -53,7 +53,10 @@ def conversation_between_user_and_grandpy(user_request, db_number):
             'has_fatigue_quotas_of_grandpy': has_fatigue_quotas_of_grandpy,
             'grandpy_status_code': grandpy_status_code}
         chat_session = Conversation(user_request, db_number, **args)
-    return chat_session
+        session = {
+            'chat_session': chat_session,
+            'db_session': db_session}
+    return session
 
 
 # ---------------------------
@@ -133,20 +136,19 @@ def management_of_correct_behavior(chat_session):
 
 def main(user_request, db_number=0):
     """question answer between user and Grandpy"""
-    chat_session = conversation_between_user_and_grandpy(user_request, db_number)
-    print (chat_session)
+    session = conversation_between_user_and_grandpy(user_request, db_number)
     # management level 1
-    if chat_session.level == 1:
-        management_of_incivility_behavior(chat_session)
-        management_of_indecency_behavior(chat_session)
-        management_of_incomprehension_behavior(chat_session)
+    if session['chat_session'].level == 1:
+        management_of_incivility_behavior(session['chat_session'])
+        management_of_indecency_behavior(session['chat_session'])
+        management_of_incomprehension_behavior(session['chat_session'])
     # management level 2
-    elif chat_session.level == 2:
-        management_of_indecency_behavior(chat_session)
-        management_of_incomprehension_behavior(chat_session)
-        management_of_correct_behavior(chat_session)
-    chat_session.update_database()
-    return chat_session
+    elif session['chat_session'].level == 2:
+        management_of_indecency_behavior(session['chat_session'])
+        management_of_incomprehension_behavior(session['chat_session'])
+        management_of_correct_behavior(session['chat_session'])
+    session['db_session'].update_database(session['chat_session'])
+    return session['chat_session']
 
 def main_old(user_request, db_number=0):
     """question answer between user and Grandpy"""

@@ -101,7 +101,7 @@ class TestHomeMain:
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
         main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
+        # ~ main.main('ou se trouve openClassrooms', db_number=1)
         # incorrect presentation of the user ==> question without ('bonjour'...)
         presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
         # has_user_incivility_status = True
@@ -224,6 +224,8 @@ class TestHomeMain:
         assert presentation_user_indecency.grandpy_status_code == 'exhausted'
         # number_of_user_indecency = 3
         assert presentation_user_indecency.number_of_user_indecency == 3
+        # TTL has_fatigue_quotas_of_grandpy > 0
+        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # 19) DONE incomprehension query (home) 1 to X2
     # ~ @pytest.mark.skip()
@@ -297,6 +299,8 @@ class TestHomeMain:
         assert presentation_user_incomprehension.grandpy_status_code == 'exhausted'
         # user_behavior['number_of_user_incomprehension'] = 3
         assert presentation_user_incomprehension.number_of_user_incomprehension == 3
+        # TTL has_fatigue_quotas_of_grandpy > 0
+        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # # 7) DONE correct query X1
     # ~ @pytest.mark.skip()
@@ -428,3 +432,43 @@ class TestHomeMain:
         assert dialogue_of_presentation.number_of_user_incomprehension == 0
         # number_of_user_entries == 10
         assert dialogue_of_presentation.number_of_user_entries == 10
+        # TTL has_fatigue_quotas_of_grandpy > 0
+        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
+
+    @pytest.mark.skip()
+    def test_indecency_after_correct_presentation_user(self, monkeypatch):
+        # correct presentation of the user ==> ('bonjour'....)
+        expected_result = {
+            'html_attributions': [],
+            'result': {
+                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
+                'geometry': {
+                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
+                    'viewport': {
+                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
+                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
+            'status': 'OK'}
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        main.main('bonjour', db_number=1)
+        main.main('ou se trouve openClassrooms', db_number=1)
+        dialogue_of_presentation = main.main('vieux', db_number=1)
+        # level == 2
+        assert dialogue_of_presentation.level == 2
+        # has_user_incivility_status == False
+        assert not dialogue_of_presentation.has_user_incivility_status
+        # has_user_indecency_status == True
+        assert  dialogue_of_presentation.has_user_indecency_status
+        # has_user_incomprehension_status == False
+        assert not dialogue_of_presentation.has_user_incomprehension_status
+        # has_fatigue_quotas_of_grandpy == False
+        assert not dialogue_of_presentation.has_fatigue_quotas_of_grandpy
+        # grandpy_status_code == 'mannerless''
+        # ~ assert dialogue_of_presentation.grandpy_status_code == 'mannerless'
+        # number_of_user_incivility == 0
+        assert dialogue_of_presentation.number_of_user_incivility == 0
+        # number_of_user_indecency == 0
+        assert dialogue_of_presentation.number_of_user_indecency == 1
+        # number_of_user_incomprehension == 0
+        assert dialogue_of_presentation.number_of_user_incomprehension == 0
+        # number_of_user_entries == 5
+        assert dialogue_of_presentation.number_of_user_entries == 1

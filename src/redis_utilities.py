@@ -71,7 +71,47 @@ class RedisDataManagement:
             'grandpy_status_code': self.decode_string_to_byte('home')}
         for name_init, data_init in init_data_redis.items():
             self.write_database_encoding(name_init, data_init)
-            
+
+    def update_database(self, chat_session) -> None:
+        """after all data processing update redis database with local attributes"""
+        has_user_incivility_status = \
+            self.decode_string_to_byte(chat_session.has_user_incivility_status)
+        has_user_indecency_status = \
+            self.decode_string_to_byte(chat_session.has_user_indecency_status)
+        has_user_incomprehension_status = \
+            self.decode_string_to_byte(chat_session.has_user_incomprehension_status)
+        has_fatigue_quotas_of_grandpy = \
+            self.decode_string_to_byte(chat_session.has_fatigue_quotas_of_grandpy)
+        grandpy_status_code = self.decode_string_to_byte(chat_session.grandpy_status_code)
+        level = self.decode_int_to_byte(chat_session.level)
+        number_of_user_incivility = \
+            self.decode_int_to_byte(chat_session.number_of_user_incivility)
+        number_of_user_indecency = \
+            self.decode_int_to_byte(chat_session.number_of_user_indecency)
+        number_of_user_incomprehension = \
+            self.decode_int_to_byte(chat_session.number_of_user_incomprehension)
+        number_of_user_entries = \
+            self.decode_int_to_byte(chat_session.number_of_user_entries)
+
+        attribut_value = {
+            'has_user_incivility_status': has_user_incivility_status,
+            'has_user_indecency_status': has_user_indecency_status,
+            'has_user_incomprehension_status': has_user_incomprehension_status,
+            'grandpy_status_code': grandpy_status_code,
+            'level': level,
+            'number_of_user_incivility': number_of_user_incivility,
+            'number_of_user_indecency': number_of_user_indecency,
+            'number_of_user_incomprehension': number_of_user_incomprehension,
+            'number_of_user_entries': number_of_user_entries}
+        for name_update, data_update in attribut_value.items():
+            self.write_database_encoding(name_update, data_update)
+        if chat_session.previous_has_fatigue_quotas_of_grandpy != \
+            chat_session.has_fatigue_quotas_of_grandpy:
+            self.write_database_encoding(
+                'has_fatigue_quotas_of_grandpy', self.decode_string_to_byte(
+                    chat_session.has_fatigue_quotas_of_grandpy))
+            self.data_expiration()
+
     def erasing_data(self) -> None:
         """data erasure redis"""
         self.db_session.flushall()

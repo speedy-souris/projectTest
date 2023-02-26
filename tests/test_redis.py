@@ -40,7 +40,14 @@ class TestWritingRedis:
     def test_database_init_by_default(self):
         expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
         assert expected_result == b'0'
-        
+
+    #@pytest.mark.skip()
+    def test_update_database(self):
+        self.conversation.number_of_user_entries = 7
+        self.db_session.update_database(self.conversation)
+        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
+        assert expected_result == b'7'
+
     # @pytest.mark.skip()
     def test_read_write_database_encoding(self):
         self.db_session.write_database_encoding('has_user_incivility_status', b'True')
