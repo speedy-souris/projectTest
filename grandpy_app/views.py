@@ -30,8 +30,7 @@ def init():
 # Initialization of general parameters
 @app.route('/index/<reflection>/<question>')
 def answer_gp(reflection, question):
-    """
-        grandpy's response display function
+    """grandpy's response display function
         setting the parameter for grandpy's responses
         general variable to count grandpy's responses
         and the state of civility in the questions
@@ -43,8 +42,7 @@ def answer_gp(reflection, question):
             - comprehension
             - address (answer and data map)
             - history
-            - location
-    """
+            - location"""
     # grandpy's reflection time to answer questions
     time_reflection = time.sleep(int(reflection))
     # exchange between the user and grandpy

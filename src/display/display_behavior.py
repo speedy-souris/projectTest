@@ -2,11 +2,6 @@
 from . import RedisDataManagement
 
 
-# def read_grandpy_answer(chat_session, grandpy_code) -> str:
-#     grandpy_answer = chat_session.grandpy_code
-#     return grandpy_answer
-
-
 def display_grandpy_status_code_to_home(chat_session):
     """billing of answers of grandpy for status home"""
     # grandpy_status_code = 'home'
@@ -21,7 +16,8 @@ def display_grandpy_status_code_to_benevolent(chat_session):
     chat_session.grandpy_status_code = 'benevolent'
     chat_session.level = 2
     grandpy_response = \
-        display_grandpy_status(chat_session, chat_session.__class__.grandpy_status_code_value['benevolent'])
+        display_grandpy_status(
+            chat_session, chat_session.__class__.grandpy_status_code_value['benevolent'])
 
 
 def display_grandpy_status_code_to_response(chat_session):
@@ -37,7 +33,8 @@ def display_grandpy_status_code_to_tired(chat_session):
     # grandpy_status_code = 'tired'
     chat_session.grandpy_status_code = 'tired'
     grandpy_response = \
-        display_grandpy_status(chat_session, chat_session.__class__.grandpy_status_code_value['tired'])
+        display_grandpy_status(
+            chat_session, chat_session.__class__.grandpy_status_code_value['tired'])
 
 
 def display_grandpy_status_code_to_response_limit(chat_session):
@@ -51,7 +48,8 @@ def display_grandpy_status_code_to_incomprehension(chat_session):
     # grandpy_status_code = 'incomprehension'
     chat_session.grandpy_status_code = 'incomprehension'
     grandpy_response = \
-        display_grandpy_status(chat_session, chat_session.__class__.grandpy_status_code_value['incomprehension'])
+        display_grandpy_status(
+            chat_session, chat_session.__class__.grandpy_status_code_value['incomprehension'])
 
 
 def display_grandpy_status_code_to_mannerless(chat_session):
@@ -90,7 +88,8 @@ def display_grandpy_status_code_to_incomprehension_limit(chat_session):
     """billing of answers of grandpy for status limit_incomprehension"""
     # grandpy_status_code = 'incomprehension_limit'
     chat_session.grandpy_status_code = 'incomprehension_limit'
-    grandpy_response = chat_session.__class__.grandpy_status_code_value['incomprehension_limit']
+    grandpy_response = \
+        chat_session.__class__.grandpy_status_code_value['incomprehension_limit']
     display_grandpy_status(chat_session, grandpy_response, following_billing=False)
 
 
@@ -117,19 +116,6 @@ def display_correct_user_request_1_to_9(chat_session, response_grandpy):
     elif 6 <= number_of_user_entries <= 10:
         # grandpy_status_code= 'response'
         print(f'Utilisateur correct: {chat_session.user_entry}')
-        # ~ print('Réponse de Grandpy (6-9) : '
-              # ~ f'{display_grandpy_status_code_to_response(chat_session)}')
-
-
-# def display_last_user_request(chat_session, response_grandpy):
-#     """display of the last user's request before a 24 hours break"""
-#     print(f'Utilisateur fin: {chat_session.user_entry}')
-#     print(f'Réponse de Grandpy pre_fin: {response_grandpy}')
-#     print(f'Réponse de Grandpy fin: {display_grandpy_status_code_to_exhausted(chat_session)}')
-#     # has_fatigue_quotas_of_grandpy expire to 120 secondes (in theory 24h00)
-#     data_expiration(
-#         chat_session.__class__.get_user_behavior_key(
-#             'has_fatigue_quotas_of_grandpy'), chat_session.db_number)
 
 
 def display_behavior_user_request(chat_session, response_grandpy):

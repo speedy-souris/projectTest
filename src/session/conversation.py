@@ -125,7 +125,6 @@ class Conversation:
         self.grandpy_status_code =\
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
-        # self.database_init_ordered()
 
     def __str__(self):
         text = ''
@@ -174,69 +173,10 @@ class Conversation:
                 incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
 
-    # ~ def database_init_by_default(self) -> None:
-        # ~ """initialization of redis database
-        # ~ with a key, its value and the ID of the redis database
-        # ~ example :
-        # ~ redis_utilities.write_access_conversation_data ('grandpy_status_code', 'home', 0)"""
-        # ~ print("Initialisation REDIS")
-        # ~ init_data_redis = {
-            # ~ 'has_user_incivility_status': self.db_session.decode_string_to_byte(False),
-            # ~ 'has_user_indecency_status': self.db_session.decode_string_to_byte(False),
-            # ~ 'has_user_incomprehension_status': self.db_session.decode_string_to_byte(False),
-            # ~ 'has_fatigue_quotas_of_grandpy': self.db_session.decode_string_to_byte(False),
-            # ~ 'level': self.db_session.decode_int_to_byte(1),
-            # ~ 'number_of_user_incivility': self.db_session.decode_int_to_byte(0),
-            # ~ 'number_of_user_indecency': self.db_session.decode_int_to_byte(0),
-            # ~ 'number_of_user_incomprehension': self.db_session.decode_int_to_byte(0),
-            # ~ 'number_of_user_entries': self.db_session.decode_int_to_byte(0),
-            # ~ 'grandpy_status_code': self.db_session.decode_string_to_byte('home')}
-        # ~ for name_init, data_init in init_data_redis.items():
-            # ~ self.db_session.write_database_encoding(name_init, data_init)
-
     def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""
         user_entry_lowercase = self.user_entry.lower()
         return user_entry_lowercase.split()
-
-    # ~ def update_database(self) -> None:
-        # ~ """after all data processing update redis database with local attributes"""
-        # ~ has_user_incivility_status = \
-            # ~ self.db_session.decode_string_to_byte(self.has_user_incivility_status)
-        # ~ has_user_indecency_status = \
-            # ~ self.db_session.decode_string_to_byte(self.has_user_indecency_status)
-        # ~ has_user_incomprehension_status = \
-            # ~ self.db_session.decode_string_to_byte(self.has_user_incomprehension_status)
-        # ~ has_fatigue_quotas_of_grandpy = \
-            # ~ self.db_session.decode_string_to_byte(self.has_fatigue_quotas_of_grandpy)
-        # ~ grandpy_status_code = self.db_session.decode_string_to_byte(self.grandpy_status_code)
-        # ~ level = self.db_session.decode_int_to_byte(self.level)
-        # ~ number_of_user_incivility = \
-            # ~ self.db_session.decode_int_to_byte(self.number_of_user_incivility)
-        # ~ number_of_user_indecency = \
-            # ~ self.db_session.decode_int_to_byte(self.number_of_user_indecency)
-        # ~ number_of_user_incomprehension = \
-            # ~ self.db_session.decode_int_to_byte(self.number_of_user_incomprehension)
-        # ~ number_of_user_entries = \
-            # ~ self.db_session.decode_int_to_byte(self.number_of_user_entries)
-
-        # ~ attribut_value = {
-            # ~ 'has_user_incivility_status': has_user_incivility_status,
-            # ~ 'has_user_indecency_status': has_user_indecency_status,
-            # ~ 'has_user_incomprehension_status': has_user_incomprehension_status,
-            # ~ 'grandpy_status_code': grandpy_status_code,
-            # ~ 'level': level,
-            # ~ 'number_of_user_incivility': number_of_user_incivility,
-            # ~ 'number_of_user_indecency': number_of_user_indecency,
-            # ~ 'number_of_user_incomprehension': number_of_user_incomprehension,
-            # ~ 'number_of_user_entries': number_of_user_entries}
-        # ~ for name_update, data_update in attribut_value.items():
-            # ~ self.db_session.write_database_encoding(name_update, data_update)
-        # ~ if self.previous_has_fatigue_quotas_of_grandpy !=  self.has_fatigue_quotas_of_grandpy:
-            # ~ self.db_session.write_database_encoding(
-                # ~ 'has_fatigue_quotas_of_grandpy', self.db_session.decode_string_to_byte(
-                    # ~ self.has_fatigue_quotas_of_grandpy))
-            # ~ self.db_session.data_expiration()
 
     def get_user_request_parser(self) -> None:
         """recover the keywords of the user request
