@@ -12,6 +12,7 @@ def conversation_between_user_and_grandpy(user_request, db_number):
     """creation of the chat_session conversation object according to the user's request"""
     chat_session = Conversation(user_request, db_number=db_number)
     db_session = RedisDataManagement(db_number=db_number)
+
     level = db_session.byte_to_int_conversion(
         db_session.read_access_conversation_data('level',b'1'))
     has_user_incivility_status = db_session.byte_to_boolean_conversion(
@@ -88,7 +89,7 @@ def management_of_incivility_behavior(chat_session):
         else:
             display_behavior.display_grandpy_status_code_to_incivility_limit(chat_session)
     else:
-        chat_session.level = 2
+        chat_session.from_level1_to_level2()
 
 
 def management_of_indecency_behavior(chat_session):
@@ -115,7 +116,6 @@ def management_of_correct_behavior(chat_session):
     if not (
         chat_session.has_user_indecency_status and\
         chat_session.has_user_incomprehension_status):
-        print(f'number user_entries [main-correct_behavior] = {chat_session.number_of_user_entries}')
         if chat_session.number_of_user_entries == 5:
             display_behavior.display_grandpy_status_code_to_tired(chat_session)
             counting_behavior.user_question_answer_count(chat_session)

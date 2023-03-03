@@ -34,7 +34,7 @@ function response_quotas_reached(){
 function random_grandpy_answer(){
     const list_answers = ['gp_reply3', 'gp_reply4', 'gp_reply5', 'gp_reply6', 'gp_reply7'];
     var random_choice = Math.floor(Math.random()*list_answers.length);
-    //~ document.getElementById('word_of_welcome').style.display = 'none';
+    document.getElementById('word_of_welcome').style.display = 'none';
     document.getElementById('gp_reply1').style.display = 'none';
     document.getElementById('gp_reply2').style.display = 'none';
     document.getElementById('gp_reply3').style.display = 'none';
@@ -83,23 +83,22 @@ function gp_answer(grandpy_status_code){
             random_grandpy_answer();
             break;
         default :
-            response_quotas_reached();
-}}
+            response_quotas_reached();}}
 
-function request_execution(){
-    const send_request = document.getElementById('submit2');
-    send_request.addEventListener('submit', function(e){
-        fetch("/index/2/" + document.getElementById('question').value) 
-        .then(function(res){
-            if (res.ok){
-                return res.json();}
-        })
-        .then(function(value){
-            gp_answer(value);
-        })
-        .catch(function(err){
-            console.log('Une erreur est levé');
-            console.log(err);})
-        e.preventDefault();});}
-
-request_execution()
+const send_request = document.getElementById('submit2');
+send_request.addEventListener('submit', function(e){
+    fetch("/index/2/" + document.getElementById('question').value) 
+    .then(function(res){
+        if (res.ok){
+            return res.json();
+        }
+    })
+    .then(function(value){
+        gp_answer(value);
+    })
+    .catch(function(err){
+        console.log('Une erreur est levé');
+        console.log(err);
+    })
+    e.preventDefault();
+})

@@ -113,7 +113,7 @@ def display_correct_user_request_1_to_9(chat_session, response_grandpy):
         print(f'Utilisateur correct: {chat_session.user_entry}')
         print(f'Réponse de Grandpy faiblesse: {response_grandpy}')
     # if number_of_entries == 6 to 9
-    elif 6 <= number_of_user_entries <= 10:
+    elif 6 <= number_of_user_entries <= 9:
         # grandpy_status_code= 'response'
         print(f'Utilisateur correct: {chat_session.user_entry}')
 
