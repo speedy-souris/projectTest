@@ -10,8 +10,8 @@ from . import main
 class TestHomeMain:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
-        self.db_session.erasing_data()
-        self.db_session.database_init_by_default()
+        self.db_session.erasing_redis_databases()
+        self.db_session.redis_database_init_by_default()
 
     # 11) DONE incivility query X1
     # ~ @pytest.mark.skip()

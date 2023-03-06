@@ -7,8 +7,8 @@ from . import Conversation
 class TestWritingRedis:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
-        self.db_session.erasing_data()
-        self.db_session.database_init_by_default()
+        self.db_session.erasing_redis_databases()
+        self.db_session.redis_database_init_by_default()
         self.conversation = Conversation('')
         # self.chat_session = main('', db_number=1)
 
@@ -38,20 +38,20 @@ class TestWritingRedis:
 
     #@pytest.mark.skip()
     def test_database_init_by_default(self):
-        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
+        expected_result = self.db_session.read_redis_database_decoding('number_of_user_entries')
         assert expected_result == b'0'
 
     #@pytest.mark.skip()
     def test_update_database(self):
         self.conversation.number_of_user_entries = 7
-        self.db_session.update_database(self.conversation)
-        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
+        self.db_session.update_redis_database(self.conversation)
+        expected_result = self.db_session.read_redis_database_decoding('number_of_user_entries')
         assert expected_result == b'7'
 
     # @pytest.mark.skip()
-    def test_read_write_database_encoding(self):
-        self.db_session.write_database_encoding('has_user_incivility_status', b'True')
+    def test_write_redis_database_encoding(self):
+        self.db_session.write_redis_database_encoding('has_user_incivility_status', b'True')
         expected_result = \
             self.db_session.byte_to_boolean_conversion(
-                self.db_session.read_access_conversation_data('has_user_incivility_status'))
+                self.db_session.read_redis_database_decoding('has_user_incivility_status'))
         assert expected_result

@@ -22,14 +22,14 @@ def init():
     """
         Initialization of the dataRedis
     """
-    data = RedisDataManagement(db_number=0)
-    data.database_init_by_default()
+    redis = RedisDataManagement(db_number=0)
+    redis.database_init_by_default()
     return 'DataRedis initialized'
 
 
 # Initialization of general parameters
-@app.route('/index/<reflection>/<question>')
-def answer_gp(reflection, question):
+@app.route('/index/<reflection>/<user_request>')
+def answer_gp(reflection, user_request):
     """grandpy's response display function
         setting the parameter for grandpy's responses
         general variable to count grandpy's responses
@@ -46,10 +46,10 @@ def answer_gp(reflection, question):
     # grandpy's reflection time to answer questions
     time_reflection = time.sleep(int(reflection))
     # exchange between the user and grandpy
-    dataDiscussion = main(question)
+    chat_session = main(user_request)
     # sending parameters
     data_send = {
-       'grandpy_code': dataDiscussion.grandpy_status_code,
+       'grandpy_code': chat_session.grandpy_status_code,
             # ~ 'map_status': {
             # ~ 'address': dataDiscussion.get('address', ''),
             # ~ 'map': dataDiscussion.get('map', ''),

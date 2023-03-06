@@ -59,11 +59,11 @@ function beginning_of_fatigue(){
     document.getElementById('answer').style.display = 'inline';
     document.getElementById('other').style.display = 'inline'};
 
-function gp_answer(grandpy_status_code){
+function answer_gp(grandpy_status_code){
     //~ var response_json = JSON.parse(grandpy_code);
     //~ var response_json = grandpy_status_code;
-    //~ console.log(response_json.grandpy_code);
-    switch(grandpy_status_code.grandpy_code){
+    console.log(grandpy_status_code.grandpy_code);
+    switch(grandpy_status_code.status_code){
         case 'home':
             welcome_message();
             break;
@@ -83,7 +83,7 @@ function gp_answer(grandpy_status_code){
             random_grandpy_answer();
             break;
         default :
-            response_quotas_reached();}}
+            response_quotas_reached();}};
 
 const send_request = document.getElementById('submit2');
 send_request.addEventListener('submit', function(e){
@@ -94,11 +94,11 @@ send_request.addEventListener('submit', function(e){
         }
     })
     .then(function(value){
-        gp_answer(value);
+        answer_gp(value);
     })
     .catch(function(err){
         console.log('Une erreur est levé');
         console.log(err);
     })
     e.preventDefault();
-})
+});

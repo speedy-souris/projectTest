@@ -8,7 +8,7 @@ from . import counting_behavior
 class TestCounting:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
-        self.db_session.erasing_data()
+        self.db_session.erasing_redis_databases()
         self.chat_session = Conversation('', self.db_session)
 
     # @pytest.mark.skip()

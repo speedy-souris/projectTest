@@ -5,10 +5,10 @@ import redis
 class RedisDataManagement:
     """behavioral management of redis"""
     def __init__(self, db_number=0):
-        self.db_session = self.get_database_access(db_number=db_number)
+        self.db_session = self.get_redis_database_access(db_number=db_number)
 
     @staticmethod
-    def get_database_access(db_number) -> object:
+    def get_redis_database_access(db_number) -> object:
         """method for data_connection to the database
             db_number arg = 0 ==> Redis connect 'dev'
             db_number arg = 1 ==> Redis connect 'test'"""
@@ -52,7 +52,7 @@ class RedisDataManagement:
         byte_value = str(data_value).encode()
         return byte_value
 
-    def database_init_by_default(self) -> None:
+    def redis_database_init_by_default(self) -> None:
         """initialization of redis database
         with a key, its value and the ID of the redis database
         example :
@@ -70,9 +70,9 @@ class RedisDataManagement:
             'number_of_user_entries': self.decode_int_to_byte(0),
             'grandpy_status_code': self.decode_string_to_byte('home')}
         for name_init, data_init in init_data_redis.items():
-            self.write_database_encoding(name_init, data_init)
+            self.write_redis_database_encoding(name_init, data_init)
 
-    def update_database(self, chat_session) -> None:
+    def update_redis_database(self, chat_session) -> None:
         """after all data processing update redis database with local attributes"""
         has_user_incivility_status = \
             self.decode_string_to_byte(chat_session.has_user_incivility_status)
@@ -104,35 +104,35 @@ class RedisDataManagement:
             'number_of_user_incomprehension': number_of_user_incomprehension,
             'number_of_user_entries': number_of_user_entries}
         for name_update, data_update in attribut_value.items():
-            self.write_database_encoding(name_update, data_update)
+            self.write_redis_database_encoding(name_update, data_update)
         if chat_session.previous_has_fatigue_quotas_of_grandpy != \
             chat_session.has_fatigue_quotas_of_grandpy:
-            self.write_database_encoding(
+            self.write_redis_database_encoding(
                 'has_fatigue_quotas_of_grandpy', self.decode_string_to_byte(
                     chat_session.has_fatigue_quotas_of_grandpy))
-            self.data_expiration()
+            self.data_redis_expiration()
 
-    def erasing_data(self) -> None:
+    def erasing_redis_databases(self) -> None:
         """data erasure redis"""
         self.db_session.flushall()
 
-    def data_expiration(self) -> None:
+    def data_redis_expiration(self) -> None:
         """expiration of the fatigue_quotas_of_grandpy data for a theoretical duration of 24h00
         which simulates the well-deserved rest of grandpy
         ==> real duration for the tests 120 seconds"""
         # ~ if self.db_session.ttl('has_fatigue_quotas_of_grandpy') == -1:
         self.db_session.expire('has_fatigue_quotas_of_grandpy', 120)
 
-    def scan_database_redis(self) -> list:
+    def scan_redis_database(self) -> list:
         """scan all values of the redis database"""
         data_redis = self.db_session.keys('*')
         return data_redis
 
-    def write_database_encoding(self, key_value, data_value) -> None:
+    def write_redis_database_encoding(self, key_value, data_value) -> None:
         """Write data encoded in the database """
         self.db_session.set(key_value, data_value)
 
-    def read_access_conversation_data(
+    def read_redis_database_decoding(
         self, name_user_behavior, default_value=None) -> dict:
         """reading data from the database"""
         try:

@@ -11,7 +11,7 @@ from . import get_mockreturn
 class TestBehaviorParams:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
-        self.db_session.erasing_data()
+        self.db_session.erasing_redis_databases()
         self.conversation = Conversation('', db_number=1)
 
     def test_calculate_the_incivility_status(self):
