@@ -23,7 +23,7 @@ def init():
         Initialization of the dataRedis
     """
     redis = RedisDataManagement(db_number=0)
-    redis.database_init_by_default()
+    redis.redis_database_init_by_default()
     return 'DataRedis initialized'
 
 
@@ -49,7 +49,7 @@ def answer_gp(reflection, user_request):
     chat_session = main(user_request)
     # sending parameters
     data_send = {
-       'grandpy_code': chat_session.grandpy_status_code,
+       'grandpy_status_code': chat_session.grandpy_status_code,
             # ~ 'map_status': {
             # ~ 'address': dataDiscussion.get('address', ''),
             # ~ 'map': dataDiscussion.get('map', ''),

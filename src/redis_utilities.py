@@ -71,6 +71,8 @@ class RedisDataManagement:
             'grandpy_status_code': self.decode_string_to_byte('home')}
         for name_init, data_init in init_data_redis.items():
             self.write_redis_database_encoding(name_init, data_init)
+        print(f'nom incivility valeur = {self.read_redis_database_decoding("number_of_user_incivility")}')
+    
 
     def update_redis_database(self, chat_session) -> None:
         """after all data processing update redis database with local attributes"""
