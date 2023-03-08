@@ -70,19 +70,19 @@ def search_address_to_gMap(user_request):
 
 
 # 5) TODO management of the call to the WikiPedia API
-def search_address_to_wiki(user_request_parsed):
-    # DONE WIKIPEDIA API calling
-    """call of the WikiPedia APIs according to the user's request"""
-    googleMap_data = search_address_to_gMap(user_request_parsed)
-    latitude = \
-        googleMap_data['result']['geometry']['location']['lat']
-    longitude = \
-        googleMap_data['result']['geometry']['location']['lng']
-    wiki_pages= wikipedia_api.get_address_url(latitude, longitude)
-    for title in wiki_pages['query']['geosearch'][0]['title']:
-        if title in googleMap_data['result']['formatted_address']:
-            wiki_result = wikipedia_api.get_page_url(user_request_parsed)
-    return wiki_result
+# ~ def search_address_to_wiki(user_request_parsed):
+    # ~ # DONE WIKIPEDIA API calling
+    # ~ """call of the WikiPedia APIs according to the user's request"""
+    # ~ googleMap_data = search_address_to_gMap(user_request_parsed)
+    # ~ latitude = \
+        # ~ googleMap_data['result']['geometry']['location']['lat']
+    # ~ longitude = \
+        # ~ googleMap_data['result']['geometry']['location']['lng']
+    # ~ wiki_pages= wikipedia_api.get_address_url(latitude, longitude)
+    # ~ for title in wiki_pages['query']['geosearch'][0]['title']:
+        # ~ if title in googleMap_data['result']['formatted_address']:
+            # ~ wiki_result = wikipedia_api.get_page_url(user_request_parsed)
+    # ~ return wiki_result
 
 
 def management_of_incivility_behavior(chat_session):

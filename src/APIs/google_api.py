@@ -102,6 +102,15 @@ def get_static_map_from_address_api(address, localization):
     return map_static_api
 
 
+def search_address_to_gMap(user_request):
+    # DONE GoogleMap API calling
+    """call of the GoogleMap APIs according to the user's request"""
+    gmap_api_placeid_value = get_placeid_from_address(user_request)
+    place_id = gmap_api_placeid_value['candidates'][0]['place_id']
+    googleMap_data = get_address_api_from_placeid(place_id)
+    return googleMap_data
+
+
 if __name__ == '__main__':
     pla_id = get_placeid_from_address('vieux')
     print(f'pla_id = {pla_id}')
