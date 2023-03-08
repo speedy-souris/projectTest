@@ -138,12 +138,20 @@ def main(user_request, db_number=0):
     # ~ import pdb; pdb.set_trace()
     sessions = conversation_between_user_and_grandpy(user_request, db_number)
     # management level 1
-    if sessions[0].level == 1:
+    if (
+        sessions[0].level == 1
+        and
+        sessions[1].db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
+    ):
         management_of_incivility_behavior(sessions[0])
         management_of_indecency_behavior(sessions[0])
         management_of_incomprehension_behavior(sessions[0])
     # management level 2
-    elif sessions[0].level == 2:
+    elif (
+        sessions[0].level == 2
+        and
+        sessions[1].db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
+    ):
         management_of_indecency_behavior(sessions[0])
         management_of_incomprehension_behavior(sessions[0])
         management_of_correct_behavior(sessions[0])
@@ -152,6 +160,5 @@ def main(user_request, db_number=0):
 
 
 if __name__ == '__main__':
-    main('bonjour')
-    main('vieux')
+    pass
 
