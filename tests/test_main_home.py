@@ -435,7 +435,7 @@ class TestHomeMain:
         # TTL has_fatigue_quotas_of_grandpy > 0
         assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
 
-    @pytest.mark.skip()
+    # ~ @pytest.mark.skip()
     def test_indecency_after_correct_presentation_user(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
         expected_result = {

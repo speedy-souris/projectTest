@@ -58,6 +58,7 @@ class RedisDataManagement:
         example :
         redis_utilities.write_access_conversation_data ('grandpy_status_code', 'home', 0)"""
         print("Initialisation REDIS")
+        # ~ import pdb; pdb.set_trace()
         init_data_redis = {
             'has_user_incivility_status': self.decode_string_to_byte(False),
             'has_user_indecency_status': self.decode_string_to_byte(False),
@@ -71,11 +72,12 @@ class RedisDataManagement:
             'grandpy_status_code': self.decode_string_to_byte('home')}
         for name_init, data_init in init_data_redis.items():
             self.write_redis_database_encoding(name_init, data_init)
-        print(f'nom incivility valeur = {self.read_redis_database_decoding("number_of_user_incivility")}')
-    
+
 
     def update_redis_database(self, chat_session) -> None:
         """after all data processing update redis database with local attributes"""
+        print('Update REDIS')
+        # ~ import pdb; pdb.set_trace()
         has_user_incivility_status = \
             self.decode_string_to_byte(chat_session.has_user_incivility_status)
         has_user_indecency_status = \

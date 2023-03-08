@@ -7,6 +7,7 @@ function welcome_message(){
 
 function reflection_message(){
     document.getElementById("word_of_welcome").style.display = 'none'
+    document.getElementById('comprehension').style.display = 'none';
     document.getElementById('gp_reply1').style.display = 'none';
     document.getElementById('gp_reply2').style.display = 'none';
     document.getElementById('gp_reply3').style.display = 'none';
@@ -44,7 +45,7 @@ function response_quotas_reached(){
     document.getElementById('gp_reply5').style.display = 'none';
     document.getElementById('gp_reply6').style.display = 'none';
     document.getElementById('gp_reply7').style.display = 'none';
-    document.getElementById("ask").style.display = 'inline';
+    document.getElementById("ask").style.display = 'none';
     document.getElementById('quotas').style.display = 'inline'};
  
 function random_grandpy_answer(){
@@ -52,6 +53,7 @@ function random_grandpy_answer(){
     var random_choice = Math.floor(Math.random()*list_answers.length);
     document.getElementById('gp_reflection').style.display = 'none';
     document.getElementById('word_of_welcome').style.display = 'none';
+    document.getElementById('comprehension').style.display = 'none'; 
     document.getElementById('gp_reply1').style.display = 'none';
     document.getElementById('gp_reply2').style.display = 'none';
     document.getElementById('gp_reply3').style.display = 'none';
@@ -66,8 +68,14 @@ function random_grandpy_answer(){
 
 function incomprehension_message(){
     document.getElementById('gp_reflection').style.display = 'none';
+    document.getElementById('comprehension').style.display = 'none'; 
     document.getElementById('gp_reply1').style.display = 'none';
     document.getElementById('gp_reply2').style.display = 'none';
+    document.getElementById('gp_reply3').style.display = 'none';
+    document.getElementById('gp_reply4').style.display = 'none';
+    document.getElementById('gp_reply5').style.display = 'none';
+    document.getElementById('gp_reply6').style.display = 'none';
+    document.getElementById('gp_reply7').style.display = 'none';
     document.getElementById("question").value = '';
     document.getElementById("ask").style.display = 'inline';
     document.getElementById('comprehension').style.display = 'inline'};
