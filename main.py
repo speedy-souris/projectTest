@@ -152,6 +152,7 @@ def main(user_request, db_number=0):
         and
         sessions[1].db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
     ):
+        # ~ import pdb; pdb.set_trace()
         management_of_indecency_behavior(sessions[0])
         management_of_incomprehension_behavior(sessions[0])
         management_of_correct_behavior(sessions[0])

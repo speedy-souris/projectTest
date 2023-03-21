@@ -85,9 +85,14 @@ def search_address_to_wiki(user_request_parsed):
     for title in wiki_pages['query']['geosearch'][0]['title']:
         if title in googleMap_data['result']['formatted_address']:
             wiki_result = get_page_url(user_request_parsed)
-    return wiki_result
+    result_apis = {
+        # ~ 'googleMap_data': googleMap_data['result']['geometry']['location'],
+        'wiki_page_result': wiki_result
+    }
+    return result_apis
 
 
 if __name__ == '__main__':
-    address = get_address_url(48.8975156, 2.3833993)
+    import google_api
+    address = get_page_url('paris')
     print(f'url_address = {address}')

@@ -87,16 +87,30 @@ function beginning_of_fatigue(){
     document.getElementById('answer').style.display = 'inline';
     document.getElementById('other').style.display = 'inline'};
 
-function answer_gp(code_data){
+function wikipedia_response_display(code_grandpy){
+    var wiki_display = code_grandpy.history
+    wiki_response = document.getElementById('history').textContent = wiki_display;};
+
+function googleMap_static_response_display(code_grandpy){
+    var static_map_dispaly = code_grandpy.map
+    static_map_response = document.getElementById('map').textContent = static_map_display;};
+
+function apis_response_display(code_grandpy){
+    document.getElementById('address').textContent = "la réponse a la question : "+code_grandpy.address+" ?";
+    wikipedia_response_display(code_grandpy)
+    googleMap_static_response_display(code_grandpy)};
+
+function answer_gp(code_grandpy){
     //~ var response_json = JSON.parse(grandpy_code);
     //~ var response_json = grandpy_status_code;
-    console.log(code_data.grandpy_status_code);
-    switch(code_data.grandpy_status_code){
+    console.log(code_grandpy);
+    switch(code_grandpy.grandpy_status_code){
         case 'home':
             welcome_message();
             break;
         case 'tired':
             beginning_of_fatigue();
+            apis_response_display(code_grandpy);
             break;
         case 'mannerless':
             rude_message();
@@ -109,11 +123,12 @@ function answer_gp(code_data){
             break;
         case 'response':
             random_grandpy_answer();
+            apis_response_display(code_grandpy);
             break;
         case 'exhausted':
             response_quotas_reached();
-        default :
-            ;}};
+    }
+};
 
 const send_request = document.getElementById('submit2');
 send_request.addEventListener('submit', function(e){

@@ -2,6 +2,7 @@ import time
 from . import Flask, render_template
 from main import main
 from src.redis_utilities import RedisDataManagement
+from src.APIs import wikipedia_api, google_api
 
 
 app = Flask(__name__)
@@ -28,8 +29,8 @@ def init():
 
 
 # Initialization of general parameters
-@app.route('/index/<reflection>/<user_request>')
-def answer_gp(reflection, user_request):
+@app.route('/index/<reflection>/<user_question_request>')
+def answer_gp(reflection, user_question_request):
     """grandpy's response display function
         setting the parameter for grandpy's responses
         general variable to count grandpy's responses
@@ -46,16 +47,17 @@ def answer_gp(reflection, user_request):
     # grandpy's reflection time to answer questions
     time_reflection = time.sleep(int(reflection))
     # exchange between the user and grandpy
-    chat_session = main(user_request)
+    chat_session = main(user_question_request)
+    wiki_response = wikipedia_api.search_address_to_wiki(chat_session.user_entry)
+    # ~ static_map_display = google_api.get_static_map_display(wiki_response['googleMap_data'])
     # sending parameters
     data_send = {
-       'grandpy_status_code': chat_session.grandpy_status_code,
-            # ~ 'map_status': {
-            # ~ 'address': dataDiscussion.get('address', ''),
-            # ~ 'map': dataDiscussion.get('map', ''),
-            # ~ 'history': dataDiscussion.get('history', '')
-        # ~ }
+        'grandpy_status_code': chat_session.grandpy_status_code,
+        'address': user_question_request,
+        # ~ 'map': static_map_display,
+        'history': wiki_response['wiki_page_result']
     }
+    print(f'data_send = {data_send}')
     return data_send
 
 

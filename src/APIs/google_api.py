@@ -43,13 +43,16 @@ def get_settings_for_address_api(placeid):
     return parameters
 
 
-def get_settings_for_map_static_api(address, localization):
+def get_settings_for_map_static_api(location):
     """determination of the static map for the address found"""
     key = google_api_keys()[1]
+    latitude = location['lat']
+    longitude = location['lng']
+    
     markers_data =\
-     f"color:red|label:A|{localization['lat']},{localization['lng']}"
+     f"color:red|label:A|localization:latitude, longitude"
     parameters = {
-        'center': f'{address}', 'zoom': '18.5',
+        'center': f"{latitude},{longitude}", 'zoom': '18.5',
         'size': '600x300', 'maptype': 'roadmap',
         'markers': f'{markers_data}', 'key': f'{key}'
     }
@@ -94,25 +97,28 @@ def get_address_api_from_placeid(placeid) -> object:
     return address_api_value
 
 
-def get_static_map_from_address_api(address, localization):
+def get_static_map_from_address_api(localization):
     """Display of the static map at the user's request"""
     url_api = 'https://maps.googleapis.com/maps/api/staticmap'
-    parameter_data = get_settings_for_map_static_api(address, localization)
+    parameter_data = get_settings_for_map_static_api(localization)
     map_static_api = requests.get(url=url_api, params=parameter_data)
     return map_static_api
 
 
-def search_address_to_gMap(user_request):
+def search_address_to_gMap(user_question_request):
     # DONE GoogleMap API calling
     """call of the GoogleMap APIs according to the user's request"""
-    gmap_api_placeid_value = get_placeid_from_address(user_request)
+    gmap_api_placeid_value = get_placeid_from_address(user_question_request)
     place_id = gmap_api_placeid_value['candidates'][0]['place_id']
     googleMap_data = get_address_api_from_placeid(place_id)
     return googleMap_data
 
 
+def  get_static_map_display(json_from_wikipedia):
+    static_map_result = get_static_map_from_address_api(json_from_wikipedia)
+    return static_map_result
+
+
+
 if __name__ == '__main__':
-    pla_id = get_placeid_from_address('vieux')
-    print(f'pla_id = {pla_id}')
-    test = get_address_api_from_placeid(pla_id['candidates'][0]['place_id'])
-    print(f'test = {test}')
+    pass

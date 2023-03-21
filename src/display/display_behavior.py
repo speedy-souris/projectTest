@@ -149,7 +149,6 @@ def display_grandpy_status(chat_session, response_grandpy, following_billing=Tru
     """billing of status of grandpy just before its repose of 24 h 00"""
     # Termination of user requests (for 24H00)
     if not following_billing:
-        session = RedisDataManagement()
         print(f'limite atteinte = {chat_session.grandpy_status_code}')
         chat_session.has_fatigue_quotas_of_grandpy = True
         print(f'Utilisateur fin: {chat_session.user_entry}')
