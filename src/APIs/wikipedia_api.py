@@ -86,7 +86,7 @@ def search_address_to_wiki(user_request_parsed):
         if title in googleMap_data['result']['formatted_address']:
             wiki_result = get_page_url(user_request_parsed)
     result_apis = {
-        # ~ 'googleMap_data': googleMap_data['result']['geometry']['location'],
+        'googleMap_data': googleMap_data,
         'wiki_page_result': wiki_result
     }
     return result_apis

@@ -49,12 +49,13 @@ def answer_gp(reflection, user_question_request):
     # exchange between the user and grandpy
     chat_session = main(user_question_request)
     wiki_response = wikipedia_api.search_address_to_wiki(chat_session.user_entry)
-    # ~ static_map_display = google_api.get_static_map_display(wiki_response['googleMap_data'])
+    static_map_display = google_api.get_static_map_from_address_api(
+        wiki_response['googleMap_data'])
     # sending parameters
     data_send = {
         'grandpy_status_code': chat_session.grandpy_status_code,
         'address': user_question_request,
-        # ~ 'map': static_map_display,
+        'map': static_map_display,
         'history': wiki_response['wiki_page_result']
     }
     print(f'data_send = {data_send}')
