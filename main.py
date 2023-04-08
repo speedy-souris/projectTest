@@ -156,6 +156,7 @@ def main(user_request, db_number=0):
         management_of_indecency_behavior(sessions[0])
         management_of_incomprehension_behavior(sessions[0])
         management_of_correct_behavior(sessions[0])
+
     sessions[1].update_redis_database(sessions[0])
     return sessions[0]
 

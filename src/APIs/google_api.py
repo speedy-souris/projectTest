@@ -48,7 +48,6 @@ def get_settings_for_map_static_api(location, address):
     key = google_api_keys()[1]
     latitude = location['lat']
     longitude = location['lng']
-    print(f'latitude = {latitude}')
     markers_data =\
      f"color:red|label:A|{latitude},{longitude}"
     parameters = {
@@ -99,13 +98,16 @@ def get_address_api_from_placeid(placeid) -> object:
 
 def get_static_map_from_address_api(json_from_wikipedia):
     """Display of the static map at the user's request"""
-    location = json_from_wikipedia['result']['geometry']['location']
-    address = json_from_wikipedia['result']['formatted_address']
-    print(f'location = {location}')
-    print(f'address = {address}')
-    url_api = 'https://maps.googleapis.com/maps/api/staticmap'
-    parameter_data = get_settings_for_map_static_api(location, address)
-    map_static_api = requests.get(url=url_api, params=parameter_data)
+    try:
+        location = json_from_wikipedia['result']['geometry']['location']
+        address = json_from_wikipedia['result']['formatted_address']
+    except KeyError:
+        map_static_api = b''
+    else:
+        url_api = 'https://maps.googleapis.com/maps/api/staticmap'
+        parameter_data = get_settings_for_map_static_api(location, address)
+        map_static_api = requests.get(url=url_api, params=parameter_data).content
+    # ~ import pdb; pdb.set_trace()
     return map_static_api
 
 
@@ -113,8 +115,12 @@ def search_address_to_gMap(user_question_request):
     # DONE GoogleMap API calling
     """call of the GoogleMap APIs according to the user's request"""
     gmap_api_placeid_value = get_placeid_from_address(user_question_request)
-    place_id = gmap_api_placeid_value['candidates'][0]['place_id']
-    googleMap_data = get_address_api_from_placeid(place_id)
+    try:
+        place_id = gmap_api_placeid_value['candidates'][0]['place_id']
+    except IndexError:
+        googleMap_data = {}
+    else:
+        googleMap_data = get_address_api_from_placeid(place_id)
     return googleMap_data
 
 

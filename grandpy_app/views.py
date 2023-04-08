@@ -1,4 +1,5 @@
 import time
+import base64
 from . import Flask, render_template
 from main import main
 from src.redis_utilities import RedisDataManagement
@@ -55,10 +56,10 @@ def answer_gp(reflection, user_question_request):
     data_send = {
         'grandpy_status_code': chat_session.grandpy_status_code,
         'address': user_question_request,
-        'map': static_map_display,
+        'map': base64.b64encode(static_map_display).decode('utf-8'),
         'history': wiki_response['wiki_page_result']
     }
-    print(f'data_send = {data_send}')
+    # ~ print(f'data_send = {data_send}')
     return data_send
 
 
