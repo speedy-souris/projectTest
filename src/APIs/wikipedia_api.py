@@ -1,5 +1,6 @@
 """management of wikimedia APIs settings"""
 import requests
+import unicodedata
 from . import google_api
 
 
@@ -86,18 +87,47 @@ def search_address_to_wiki(user_request_parsed):
         wiki_pages = {}
     else:
         wiki_pages= get_address_url(latitude, longitude)
+    wiki_result = None
     try:
-        for title in wiki_pages['query']['geosearch'][0]['title']:
-            if title in googleMap_data['result']['formatted_address']:
-                wiki_result = get_page_url(user_request_parsed)
+        title = wiki_pages['query']['geosearch'][0]['title']
+        print(f'title = {title}')
+        print(f"googleMap_data = {googleMap_data['result']['formatted_address']}")
+        formatted_address = googleMap_data['result']['formatted_address']
+        
     except (KeyError, IndexError):
-        wiki_result = None
+        pass
+    else:
+        title = normalize_text(title)
+        formatted_address = normalize_text(formatted_address)
+        print(f'title2 = {title}')
+        print(f'formatted_address2 = {formatted_address}')
+        # ~ wiki_result = get_page_url(user_request_parsed)
+        print(f'user_request = {user_request_parsed}')
+        user_request_parsed = normalize_text(user_request_parsed)
+        print(f'user_request2 = {user_request_parsed}')
+        print(f'title = {title} formatted_address2 = {formatted_address}-> {title in formatted_address}')
+        title_as_set = set(title.split(' '))
+        formatted_address_as_set = set(formatted_address.split(' '))
+        title_as_set.isdisjoint(formatted_address_as_set) 
+        if not title_as_set.isdisjoint(formatted_address_as_set):
+            wiki_result = get_page_url(user_request_parsed)
+        else:
+            wiki_result = 'le wiki est vide !'
     result_apis = {
         'googleMap_data': googleMap_data,
         'wiki_page_result': wiki_result
     }
     return result_apis
 
+
+def normalize_text(text):
+    text = text.replace('-', ' ')
+    text = text.replace(',', ' ')
+    text = text.replace('.', ' ')
+    text = ''.join(
+        (c for c in unicodedata.normalize('NFD', text) if unicodedata.category(c) != 'Mn'))
+    return text.lower()
+    
 
 if __name__ == '__main__':
     import google_api
