@@ -185,6 +185,7 @@ class Conversation:
         list_of_keyword = [
             w for w in list_of_word_request_user
             if w.lower() not in self.__class__.UNNECESSARY_SET_DATA]
+        list_of_keyword = list_of_word_request_user
         self.user_entry = ' '.join(list_of_keyword)
 
 
