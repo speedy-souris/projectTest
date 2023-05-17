@@ -52,19 +52,12 @@ def get_page_url(title):
     url = 'https://fr.wikipedia.org/w/api.php'
     params = get_page_data(title)
     page_url = get_url_json(url=url, params=params)
-    try:
-        page_url['query']['pages'][0]['extract'] != ''
-    except KeyError:
-        pass
-    else:
+    if page_url['query']['pages'][0]['extract'] != '':
         return page_url['query']['pages'][0]['extract']
-    try:
-        page_url[3] != []
-    except KeyError:
-        pass
+    if page_url[3] != []:
+       return page_url[3]
     else:
-        return page_url[3]
-    return ['',[], [], []]
+        return ['',[], [], []]
 
 
 def get_address_url(latitude, longitude):
@@ -99,7 +92,7 @@ def search_address_to_wiki(user_request_parsed):
     score_list = [] # [0,1,0,1,2,...]
     if 'query' not in wiki_pages:
         return {'googleMap_data': {},
-                    'wiki_page_result': {}}
+                    'wiki_page_result': ['', [], [], []]}
     for index, dict_of_pages in enumerate(wiki_pages['query']['geosearch']):
         wikipedia_title = dict_of_pages["title"]
         title_as_set = set(normalize_text(wikipedia_title).split(' '))

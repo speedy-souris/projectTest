@@ -50,6 +50,7 @@ def answer_gp(reflection, user_question_request):
     # exchange between the user and grandpy
     chat_session = main(user_question_request)
     wiki_response = wikipedia_api.search_address_to_wiki(chat_session.user_entry)
+    print(f'[in views.py] wiki_response = {wiki_response}')
     static_map_display = google_api.get_static_map_from_address_api(
         wiki_response['googleMap_data'])
     # sending parameters
