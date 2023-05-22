@@ -163,6 +163,7 @@ class Conversation:
         """update the attribut has_user_indecency_status since GoogleMap API"""
         incomprehension_status = None
         result_api = google_api.get_placeid_from_address(self.user_entry)
+        print(f'[in conversation_as_incomprehension] = {result_api}')
         if result_api in (
             {'candidates': [], 'status': 'ZERO_RESULTS'},
             {'candidates': [], 'status': 'INVALID_REQUEST'},

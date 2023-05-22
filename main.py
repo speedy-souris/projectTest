@@ -129,7 +129,8 @@ def main(user_request, db_number=0):
     ):
         management_of_incivility_behavior(sessions[0])
         management_of_indecency_behavior(sessions[0])
-        management_of_incomprehension_behavior(sessions[0])
+        if user_request not in sessions[0].INCIVILITY_SET_DATA:
+            management_of_incomprehension_behavior(sessions[0])
     # management level 2
     elif (
         sessions[0].level == 2

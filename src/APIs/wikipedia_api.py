@@ -52,6 +52,7 @@ def get_page_url(title):
     url = 'https://fr.wikipedia.org/w/api.php'
     params = get_page_data(title)
     page_url = get_url_json(url=url, params=params)
+    print(f'[wikipedia_aspage_url = {page_url}]')
     if page_url['query']['pages'][0]['extract'] != '':
         return page_url['query']['pages'][0]['extract']
     if page_url[3] != []:
