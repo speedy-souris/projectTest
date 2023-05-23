@@ -110,14 +110,16 @@ def management_of_indecency_behavior(chat_object_connect):
                 chat_object_connect)
 
 
-def management_of_incomprehension_behavior(chat_session):
-    chat_session.calculate_the_incomprehension_status()
-    if chat_session.has_user_incomprehension_status:
-        if chat_session.number_of_user_incomprehension < 3:
-            display_behavior.display_grandpy_status_code_to_incomprehension(chat_session)
+def management_of_incomprehension_behavior(chat_object_connect):
+    chat_object_connect.calculate_the_incomprehension_status()
+    if chat_object_connect.has_user_incomprehension_status:
+        if chat_object_connect.number_of_user_incomprehension < 3:
+            display_behavior.display_grandpy_status_code_to_incomprehension(
+                chat_object_connect)
             counting_behavior.user_incomprehension_count(chat_session)
         else:
-            display_behavior.display_grandpy_status_code_to_incomprehension_limit(chat_session)
+            display_behavior.display_grandpy_status_code_to_incomprehension_limit(
+                chat_object_connect)
 
 
 def management_of_correct_behavior(chat_session):
