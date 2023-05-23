@@ -12,7 +12,8 @@ def conversation_between_user_and_grandpy(user_request, database_redis_number):
     """creation of the chat_session conversation object according to the user's request"""
     database_object_redis_connect = \
         RedisDataManagement(database_redis_number=database_redis_number)
-    if database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') == -2:
+    if database_object_redis_connect.database_connect.ttl(
+        'has_fatigue_quotas_of_grandpy') == -2:
         database_object_redis_connect.redis_database_init_by_default()
     level = database_object_redis_connect.byte_to_int_conversion(
         database_object_redis_connect.read_redis_database_decoding(
@@ -149,7 +150,8 @@ def main(user_request, database_redis_number=0):
     if (
         chat_object_connect.level == 1
         and
-        database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
+        database_object_redis_connect.database_connect.ttl(
+            'has_fatigue_quotas_of_grandpy') == -1
     ):
         management_of_incivility_behavior(chat_object_connect)
         management_of_indecency_behavior(chat_object_connect)
@@ -159,7 +161,8 @@ def main(user_request, database_redis_number=0):
     elif (
         chat_object_connect.level == 2
         and
-        database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
+        database_object_redis_connect.database_connect.ttl(
+            'has_fatigue_quotas_of_grandpy') == -1
     ):
         # ~ import pdb; pdb.set_trace()
         management_of_indecency_behavior(chat_object_connect)
