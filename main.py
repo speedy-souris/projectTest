@@ -116,35 +116,38 @@ def management_of_correct_behavior(chat_session):
             chat_session.get_user_request_parser()
 
 
-def main(user_request, db_number=0):
+def main(user_request, database_redis_number=0):
     """question answer between user and Grandpy"""
     print('Main')
     # ~ import pdb; pdb.set_trace()
-    sessions = conversation_between_user_and_grandpy(user_request, db_number)
+    object_connection = \
+        conversation_between_user_and_grandpy(user_request, database_redis_number)
+    chat_object_connect = connection[0]
+    database_object_redis_connect = connection[1]
     # management level 1
     if (
-        sessions[0].level == 1
+        chat_object_connect.level == 1
         and
-        sessions[1].db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
+        database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
     ):
-        management_of_incivility_behavior(sessions[0])
-        management_of_indecency_behavior(sessions[0])
-        if user_request not in sessions[0].INCIVILITY_SET_DATA:
-            management_of_incomprehension_behavior(sessions[0])
+        management_of_incivility_behavior(chat_object_connect)
+        management_of_indecency_behavior(chat_object_connect)
+        # ~ if user_request not in sessions[0].INCIVILITY_SET_DATA:
+        management_of_incomprehension_behavior(chat_object_connect)
     # management level 2
     elif (
-        sessions[0].level == 2
+        chat_object_connect.level == 2
         and
-        sessions[1].db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
+        database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') == -1
     ):
         # ~ import pdb; pdb.set_trace()
-        management_of_indecency_behavior(sessions[0])
-        if user_request in session[0].INCOMPREHENSION_SET_DATA:
-            management_of_incomprehension_behavior(sessions[0])
-        management_of_correct_behavior(sessions[0])
+        management_of_indecency_behavior(chat_object_connect)
+        # ~ if user_request in sessions[0].INCOMPREHENSION_SET_DATA:
+        management_of_incomprehension_behavior(chat_object_connect)
+        management_of_correct_behavior(chat_object_connect)
 
-    sessions[1].update_redis_database(sessions[0])
-    return sessions[0]
+    database_object_redis_connect.update_redis_database(chat_object_connect)
+    return chat_object_connect
 
 
 if __name__ == '__main__':
