@@ -26,6 +26,8 @@ class Conversation:
         'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
         'senile', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'gateux',
         'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr', 'bsr', 'slt'})
+    # Data for check incomprehension user behavior
+    INCOMPREHENSION_SET_DATA = frozenset({'~', '#', '|', '\\', '€', '/', '&'})
     # Data for parser (Words deleted for search)
     UNNECESSARY_SET_DATA = frozenset({
         'a', 'abord', 'absolument', 'afin', 'ah', 'ai', 'aie', 'ailleurs', 'ainsi', 'ait',
