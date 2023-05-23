@@ -9,9 +9,10 @@ from . import main
 #@pytest.mark.skip()
 class TestHomeMain:
     def setup_method(self):
-        self.db_session = RedisDataManagement(db_number=1)
-        self.db_session.erasing_redis_databases()
-        self.db_session.redis_database_init_by_default()
+        self.database_object_redis_connect = \
+            RedisDataManagement(database_redis_number=1)
+        self.database_object_redis_connect.erasing_redis_databases()
+        self.database_object_redis_connect.redis_database_init_by_default()
 
     # 11) DONE incivility query X1
     # ~ @pytest.mark.skip()
@@ -28,7 +29,7 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        presentation_user = main.main('ou se trouve openClassrooms', db_number=1)
+        presentation_user = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # has_user_incivility_status = True
         assert presentation_user.has_user_incivility_status
         # has_user_indecency_status = False
@@ -62,8 +63,8 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('ou se trouve openClassrooms', db_number=1)
-        presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        presentation_user_incivility = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # has_user_incivility_status = True
         assert presentation_user_incivility.has_user_incivility_status
         # has_user_indecency_status = False
@@ -98,12 +99,12 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        # ~ main.main('ou se trouve openClassrooms', db_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        # ~ main.main('ou se trouve openClassrooms', database_redis_number=1)
         # incorrect presentation of the user ==> question without ('bonjour'...)
-        presentation_user_incivility = main.main('ou se trouve openClassrooms', db_number=1)
+        presentation_user_incivility = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # has_user_incivility_status = True
         assert presentation_user_incivility.has_user_incivility_status
         # has_user_indecency_status = False
@@ -117,7 +118,7 @@ class TestHomeMain:
         # has_fatigue_quotas_of_grandpy = True
         assert presentation_user_incivility.has_fatigue_quotas_of_grandpy
         # TTL has_fatigue_quotas_of_grandpy > 0
-        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
+        assert self.database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # 15) DONE indecency query (home) 1 to X2
     # ~ @pytest.mark.skip()

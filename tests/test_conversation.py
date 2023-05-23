@@ -12,7 +12,7 @@ class TestBehaviorParams:
     def setup_method(self):
         self.db_session = RedisDataManagement(db_number=1)
         self.db_session.erasing_redis_databases()
-        self.conversation = Conversation('', db_number=1)
+        self.conversation = Conversation('', database_redis_number=1)
 
     def test_calculate_the_incivility_status(self):
         user_behavior_data_incivility = Conversation('Ou se trouve OpenClassrooms', db_number=1)
@@ -66,7 +66,7 @@ class TestBehaviorParams:
 
     #@pytest.mark.skip()
     def test_get_request_parser(self):
-        user_request = Conversation('ou se trouve openClassrooms', db_number=1)
+        user_request = Conversation('ou se trouve openClassrooms', database_redis_number=1)
         user_request.get_user_request_parser()
         user_entry = user_request.user_entry
         assert user_entry == 'openClassrooms'

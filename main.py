@@ -84,17 +84,17 @@ def search_address_to_gMap(user_request):
     return googleMap_data
 
 
-def management_of_incivility_behavior(chat_session):
-    chat_session.calculate_the_incivility_status()
-    if chat_session.has_user_incivility_status:
-        if chat_session.number_of_user_incivility < 3:
+def management_of_incivility_behavior(chat_object_connect):
+    chat_object_connect.calculate_the_incivility_status()
+    if chat_object_connect.has_user_incivility_status:
+        if chat_object_connect.number_of_user_incivility < 3:
 
-            display_behavior.display_grandpy_status_code_to_mannerless(chat_session)
-            counting_behavior.user_incivility_count(chat_session)
+            display_behavior.display_grandpy_status_code_to_mannerless(chat_object_connect)
+            counting_behavior.user_incivility_count(chat_object_connect)
         else:
-            display_behavior.display_grandpy_status_code_to_incivility_limit(chat_session)
+            display_behavior.display_grandpy_status_code_to_incivility_limit(chat_object_connect)
     else:
-        chat_session.from_level1_to_level2()
+        chat_object_connect.from_level1_to_level2()
 
 def management_of_indecency_behavior(chat_session):
     chat_session.calculate_the_indecency_status()

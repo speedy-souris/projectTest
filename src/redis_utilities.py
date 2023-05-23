@@ -4,15 +4,15 @@ import redis
 
 class RedisDataManagement:
     """behavioral management of redis"""
-    def __init__(self, db_number=0):
-        self.db_session = self.get_redis_database_access(db_number=db_number)
+    def __init__(self, database_redis_number=0):
+        self.db_session = self.get_redis_database_access(database_redis_number=database_redis_number)
 
     @staticmethod
-    def get_redis_database_access(db_number) -> object:
+    def get_redis_database_access(database_redis_number) -> object:
         """method for data_connection to the database
             db_number arg = 0 ==> Redis connect 'dev'
             db_number arg = 1 ==> Redis connect 'test'"""
-        redis_connect = redis.Redis(host='localhost', port=6379, db=db_number)
+        redis_connect = redis.Redis(host='localhost', port=6379, db=database_redis_number)
         return redis_connect
 
     @staticmethod
