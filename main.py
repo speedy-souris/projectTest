@@ -7,41 +7,56 @@ from src.APIs import google_api
 from src.APIs import wikipedia_api
 
 
-def conversation_between_user_and_grandpy(user_request, db_number):
+def conversation_between_user_and_grandpy(user_request, database_redis_number):
     # DONE conversation object
     """creation of the chat_session conversation object according to the user's request"""
-    db_session = RedisDataManagement(db_number=db_number)
-    if db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') == -2:
-        db_session.redis_database_init_by_default()
-    level = db_session.byte_to_int_conversion(
-        db_session.read_redis_database_decoding('level',db_session.decode_int_to_byte(1)))
-    has_user_incivility_status = db_session.byte_to_boolean_conversion(
+    database_object_redis_connect = \
+        RedisDataManagement(database_redis_number=database_redis_number)
+    if database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') == -2:
+        database_object_redis_connect.redis_database_init_by_default()
+    level = database_object_redis_connect.byte_to_int_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+        'level',db_session.decode_int_to_byte(1)))
+    has_user_incivility_status = \
+        database_object_redis_connect.byte_to_boolean_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'has_user_incivility_status',
+            database_object_redis_connect.decode_string_to_byte(False)))
+    number_of_user_incivility = database_object_redis_connect.byte_to_int_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'number_of_user_incivility',
+            database_object_redis_connect.decode_int_to_byte(0)))
+    has_user_indecency_status = \
+        database_object_redis_connect.byte_to_boolean_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'has_user_indecency_status',
+            database_object_redis_connect.decode_string_to_byte(False)))
+    number_of_user_indecency = database_object_redis_connect.byte_to_int_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'number_of_user_indecency',
+            database_object_redis_connect.decode_int_to_byte(0)))
+    has_user_incomprehension_status = \
+        database_object_redis_connect.byte_to_boolean_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'has_user_incomprehension_status',
+            database_object_redis_connect.decode_string_to_byte(False)))
+    number_of_user_incomprehension = \
+        database_object_redis_connect.byte_to_int_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'number_of_user_incomprehension',
+            database_object_redis_connect.decode_int_to_byte(0)))
+    number_of_user_entries = database_object_redis_connect.byte_to_int_conversion(
         db_session.read_redis_database_decoding(
-            'has_user_incivility_status',db_session.decode_string_to_byte(False)))
-    number_of_user_incivility = db_session.byte_to_int_conversion(
-        db_session.read_redis_database_decoding(
-            'number_of_user_incivility',db_session.decode_int_to_byte(0)))
-    has_user_indecency_status = db_session.byte_to_boolean_conversion(
-        db_session.read_redis_database_decoding(
-            'has_user_indecency_status',db_session.decode_string_to_byte(False)))
-    number_of_user_indecency = db_session.byte_to_int_conversion(
-        db_session.read_redis_database_decoding(
-            'number_of_user_indecency',db_session.decode_int_to_byte(0)))
-    has_user_incomprehension_status = db_session.byte_to_boolean_conversion(
-        db_session.read_redis_database_decoding(
-            'has_user_incomprehension_status',db_session.decode_string_to_byte(False)))
-    number_of_user_incomprehension = db_session.byte_to_int_conversion(
-        db_session.read_redis_database_decoding(
-            'number_of_user_incomprehension',db_session.decode_int_to_byte(0)))
-    number_of_user_entries = db_session.byte_to_int_conversion(
-        db_session.read_redis_database_decoding(
-            'number_of_user_entries',db_session.decode_int_to_byte(0)))
-    has_fatigue_quotas_of_grandpy = db_session.byte_to_boolean_conversion(
-        db_session.read_redis_database_decoding(
-        'has_fatigue_quotas_of_grandpy',db_session.decode_string_to_byte(False)))
-    grandpy_status_code = db_session.byte_to_string_conversion(
-        db_session.read_redis_database_decoding(
-            'grandpy_status_code',db_session.decode_string_to_byte('home')))
+            'number_of_user_entries',database_object_redis_connect.decode_int_to_byte(0)))
+    has_fatigue_quotas_of_grandpy = \
+        database_object_redis_connect.byte_to_boolean_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+        'has_fatigue_quotas_of_grandpy',
+        database_object_redis_connect.decode_string_to_byte(False)))
+    grandpy_status_code = database_object_redis_connect.byte_to_string_conversion(
+        database_object_redis_connect.read_redis_database_decoding(
+            'grandpy_status_code',
+            database_object_redis_connect.decode_string_to_byte('home')))
     args = {
         'level': level,
         'has_user_incivility_status': has_user_incivility_status,
@@ -54,8 +69,8 @@ def conversation_between_user_and_grandpy(user_request, db_number):
         'has_fatigue_quotas_of_grandpy': has_fatigue_quotas_of_grandpy,
         'grandpy_status_code': grandpy_status_code}
 
-    chat_session = Conversation(user_request, db_number, **args)
-    return chat_session, db_session
+    chat_object_connect = Conversation(user_request, db_number, **args)
+    return chat_object_connect, database_object_redis_connect
 
 
 # ---------------------------
