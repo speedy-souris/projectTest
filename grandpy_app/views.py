@@ -24,7 +24,7 @@ def init():
     """
         Initialization of the dataRedis
     """
-    redis = RedisDataManagement(db_number=0)
+    redis = RedisDataManagement(database_redis_number=0)
     redis.redis_database_init_by_default()
     return 'DataRedis initialized'
 
@@ -48,20 +48,30 @@ def answer_gp(reflection, user_question_request):
     # grandpy's reflection time to answer questions
     time_reflection = time.sleep(int(reflection))
     # exchange between the user and grandpy
-    chat_session = main(user_question_request)
-    wiki_response = wikipedia_api.search_address_to_wiki(chat_session.user_entry)
-    print(f'[in views.py] wiki_response = {wiki_response}')
-    static_map_display = google_api.get_static_map_from_address_api(
-        wiki_response['googleMap_data'])
-    # sending parameters
-    data_send = {
-        'grandpy_status_code': chat_session.grandpy_status_code,
+    chat_object_connect = main(user_question_request)
+    if chat_object_connect.__class__.INCIVILITY_SET_DATA.isdisjoint(
+        chat_object_connect.user_entry):
+        data_send = {
+        'grandpy_status_code': chat_object_connect.grandpy_status_code,
         'address': user_question_request,
-        'map': base64.b64encode(static_map_display).decode('utf-8'),
-        'history': wiki_response['wiki_page_result']
-    }
-    # ~ print(f'data_send = {data_send}')
-    return data_send
+        'map': '',
+        'history': ''}
+        return data_send
+    else:
+        wiki_response = \
+            wikipedia_api.search_address_to_wiki(
+                chat_object_connect, chat_object_connect.user_entry)
+        static_map_display = google_api.get_static_map_from_address_api(
+            wiki_response['googleMap_data'])
+        # sending parameters
+        data_send = {
+            'grandpy_status_code': chat_object_connect.grandpy_status_code,
+            'address': user_question_request,
+            'map': base64.b64encode(static_map_display).decode('utf-8'),
+            'history': wiki_response['wiki_page_result']
+        }
+        # ~ print(f'data_send = {data_send}')
+        return data_send
 
 
 if __name__ == '__main__':

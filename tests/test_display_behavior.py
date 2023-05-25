@@ -7,7 +7,7 @@ from . import display_behavior
 # @pytest.mark.skip()
 class TestDisplay:
     def setup_method(self):
-        self.db_session = RedisDataManagement(db_number=1)
+        self.db_session = RedisDataManagement(database_redis_number=1)
         self.db_session.erasing_redis_databases()
         self.chat_session = Conversation('', 1)
 

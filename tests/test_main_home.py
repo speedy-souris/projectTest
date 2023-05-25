@@ -118,7 +118,7 @@ class TestHomeMain:
         # has_fatigue_quotas_of_grandpy = True
         assert presentation_user_incivility.has_fatigue_quotas_of_grandpy
         # TTL has_fatigue_quotas_of_grandpy > 0
-        assert self.database_object_redis_connect.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
+        assert self.database_object_redis_connect.database_connect.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # 15) DONE indecency query (home) 1 to X2
     # ~ @pytest.mark.skip()
@@ -135,7 +135,7 @@ class TestHomeMain:
                             'southwest': {'lat': 43.97977603685276, 'lng': 1.84876291855722}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        presentation_user_indecency = main.main('vieux', db_number=1)
+        presentation_user_indecency = main.main('vieux', database_redis_number=1)
         # has_user_incivility_status = True
         assert presentation_user_indecency.has_user_incivility_status
         # has_user_indecency_status = True
@@ -169,8 +169,8 @@ class TestHomeMain:
                             'southwest': {'lat': 43.97977603685276, 'lng': 1.84876291855722}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('vieux', db_number=1)
-        presentation_user_indecency = main.main('vieux', db_number=1)
+        main.main('vieux', database_redis_number=1)
+        presentation_user_indecency = main.main('vieux', database_redis_number=1)
 
         # has_user_incivility_status = True
         assert presentation_user_indecency.has_user_incivility_status
@@ -206,10 +206,10 @@ class TestHomeMain:
                             'southwest': {'lat': 43.97977603685276, 'lng': 1.84876291855722}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('vieux', db_number=1)
-        main.main('vieux', db_number=1)
+        main.main('vieux', database_redis_number=1)
+        main.main('vieux', database_redis_number=1)
         # incorrect request of the user X4 ==> indecency presentation without ('bonjour'....)
-        presentation_user_indecency = main.main('vieux', db_number=1)
+        presentation_user_indecency = main.main('vieux', database_redis_number=1)
 
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
@@ -218,7 +218,7 @@ class TestHomeMain:
         # number_of_user_indecency = 3
         assert presentation_user_indecency.number_of_user_indecency == 3
 
-        presentation_user_indecency = main.main('vieux', db_number=1)
+        presentation_user_indecency = main.main('vieux', database_redis_number=1)
         # has_fatigue_quotas_of_grandpy = True
         assert presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'exhausted'
@@ -226,7 +226,7 @@ class TestHomeMain:
         # number_of_user_indecency = 3
         assert presentation_user_indecency.number_of_user_indecency == 3
         # TTL has_fatigue_quotas_of_grandpy > 0
-        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
+        assert self.database_object_redis_connect.database_connect.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # 19) DONE incomprehension query (home) 1 to X2
     # ~ @pytest.mark.skip()
@@ -234,7 +234,7 @@ class TestHomeMain:
         # incomprehension presentation of the user X1 ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_mock_result))
-        presentation_user_incomprehension = main.main('', db_number=1)
+        presentation_user_incomprehension = main.main('', database_redis_number=1)
 
         # user_behavior['has_user_incivility_status'] = True
         assert presentation_user_incomprehension.has_user_incivility_status
@@ -260,8 +260,8 @@ class TestHomeMain:
         # incomprehension presentation of the user X2 ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_mock_result))
-        main.main('', db_number=1)
-        presentation_user_incomprehension = main.main('', db_number=1)
+        main.main('', database_redis_number=1)
+        presentation_user_incomprehension = main.main('', database_redis_number=1)
 
         # user_behavior['has_user_incivility_status'] = True
         assert presentation_user_incomprehension.has_user_incivility_status
@@ -288,11 +288,11 @@ class TestHomeMain:
         # incomprehension presentation of the user ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_mock_result))
-        main.main('', db_number=1)
-        main.main('', db_number=1)
-        main.main('', db_number=1)
+        main.main('', database_redis_number=1)
+        main.main('', database_redis_number=1)
+        main.main('', database_redis_number=1)
         # incomprehension presentation of the user X4 ==> question without ('bonjour'...)
-        presentation_user_incomprehension = main.main('', db_number=1)
+        presentation_user_incomprehension = main.main('', database_redis_number=1)
 
         # user_behavior['has_fatigue_quotas_of_grandpy'] = True
         assert presentation_user_incomprehension.has_fatigue_quotas_of_grandpy
@@ -301,7 +301,7 @@ class TestHomeMain:
         # user_behavior['number_of_user_incomprehension'] = 3
         assert presentation_user_incomprehension.number_of_user_incomprehension == 3
         # TTL has_fatigue_quotas_of_grandpy > 0
-        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
+        assert self.database_object_redis_connect.database_connect.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # # 7) DONE correct query X1
     # ~ @pytest.mark.skip()
@@ -318,8 +318,8 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('bonjour', db_number=1)
-        dialogue_of_presentation = main.main('ou se trouve openClassrooms', db_number=1)
+        main.main('bonjour', database_redis_number=1)
+        dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2
         assert dialogue_of_presentation.level == 2
         # has_user_incivility_status == False
@@ -355,14 +355,14 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('bonjour', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
+        main.main('bonjour', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2
-        dialogue_of_presentation = main.main('ou se trouve openClassrooms', db_number=1)
+        dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2
         assert dialogue_of_presentation.level == 2
         # has_user_incivility_status == False
@@ -398,20 +398,20 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('bonjour', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
+        main.main('bonjour', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2
-        dialogue_of_presentation = main.main('ou se trouve openClassrooms', db_number=1)
+        dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         print(f"number_entries[test] = {dialogue_of_presentation.number_of_user_entries}")
         # level == 2
         assert dialogue_of_presentation.level == 2
@@ -434,7 +434,7 @@ class TestHomeMain:
         # number_of_user_entries == 10
         assert dialogue_of_presentation.number_of_user_entries == 10
         # TTL has_fatigue_quotas_of_grandpy > 0
-        assert self.db_session.db_session.ttl('has_fatigue_quotas_of_grandpy') > 0
+        assert self.database_object_redis_connect.database_connect.ttl('has_fatigue_quotas_of_grandpy') > 0
 
     # ~ @pytest.mark.skip()
     def test_indecency_after_correct_presentation_user(self, monkeypatch):
@@ -450,9 +450,9 @@ class TestHomeMain:
                         'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
             'status': 'OK'}
         monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
-        main.main('bonjour', db_number=1)
-        main.main('ou se trouve openClassrooms', db_number=1)
-        dialogue_of_presentation = main.main('vieux', db_number=1)
+        main.main('bonjour', database_redis_number=1)
+        main.main('ou se trouve openClassrooms', database_redis_number=1)
+        dialogue_of_presentation = main.main('vieux', database_redis_number=1)
         # level == 2
         assert dialogue_of_presentation.level == 2
         # has_user_incivility_status == False

@@ -108,14 +108,14 @@ class Conversation:
         'étaient', 'étais', 'était', 'étant', 'été', 'être', 'ô', ',', ';', '.', '?', '!',
         'donner', "l'adresse", 'du', 'connais', 'donnez', 'connaissez'})
 
-    def __init__(self, user_entry, db_number=0, **args):
+    def __init__(self, user_entry, database_redis_number=0, **args):
         self.user_entry = user_entry
-        self.db_session = RedisDataManagement(db_number=db_number)
+        self.db_session = RedisDataManagement(database_redis_number=database_redis_number)
         self.level = args.get('level', 1)
         # Leve1 1 --> Presentation
         self.has_user_incivility_status = args.get('has_user_incivility_status', False)
         self.number_of_user_incivility = args.get('number_of_user_incivility', 0)
-        # Level 1 --> Presentation and Level 2 --> Chat_session
+        # Level 1 --> Presentation and Level 2 --> chat_object_connect
         self.has_user_indecency_status = args.get('has_user_indecency_status', False)
         self.has_user_incomprehension_status = \
             args.get('has_user_incomprehension_status', False)
@@ -138,7 +138,7 @@ class Conversation:
         return text
 
     def from_level1_to_level2(self):
-        """transition method from level 1 (Presentation) to level 2 (chat_session)"""
+        """transition method from level 1 (Presentation) to level 2 (chat_object_connect)"""
         self.level = 2
         self.has_user_incivility_status = False
         self.number_of_user_incivility = 0
@@ -188,7 +188,7 @@ class Conversation:
         list_of_keyword = [
             w for w in list_of_word_request_user
             if w.lower() not in self.__class__.UNNECESSARY_SET_DATA]
-        list_of_keyword = list_of_word_request_user
+        # ~ list_of_keyword = list_of_word_request_user
         self.user_entry = ' '.join(list_of_keyword)
 
 

@@ -10,29 +10,29 @@ from . import get_mockreturn
 # @pytest.mark.skip()
 class TestBehaviorParams:
     def setup_method(self):
-        self.db_session = RedisDataManagement(db_number=1)
+        self.db_session = RedisDataManagement(database_redis_number=1)
         self.db_session.erasing_redis_databases()
         self.conversation = Conversation('', database_redis_number=1)
 
     def test_calculate_the_incivility_status(self):
-        user_behavior_data_incivility = Conversation('Ou se trouve OpenClassrooms', db_number=1)
+        user_behavior_data_incivility = Conversation('Ou se trouve OpenClassrooms', database_redis_number=1)
         user_behavior_data_incivility.calculate_the_incivility_status()
         expected_result_data_incivility = user_behavior_data_incivility.has_user_incivility_status
         assert expected_result_data_incivility
 
-        user_behavior_data = Conversation('Bonjour', db_number=1)
+        user_behavior_data = Conversation('Bonjour', database_redis_number=1)
         user_behavior_data.calculate_the_incivility_status()
         expected_result_data = user_behavior_data.has_user_incivility_status
         assert not expected_result_data
 
     def test_calculate_the_indecency_status(self):
-        user_behavior_data_indecency = Conversation("hello le vieux", db_number=1)
+        user_behavior_data_indecency = Conversation("hello le vieux", database_redis_number=1)
         user_behavior_data_indecency.calculate_the_indecency_status()
         expected_result_data_indecency = user_behavior_data_indecency.has_user_indecency_status
 
         assert expected_result_data_indecency
 
-        user_behavior_data = Conversation('Bonjour', db_number=1)
+        user_behavior_data = Conversation('Bonjour', database_redis_number=1)
         user_behavior_data.calculate_the_indecency_status()
         expected_result_data = user_behavior_data.has_user_indecency_status
         assert not expected_result_data
@@ -53,7 +53,7 @@ class TestBehaviorParams:
 
     #@pytest.mark.skip()
     def test_lower_and_split_user_entry(self):
-        user_request = Conversation('BONJOUR', db_number=1)
+        user_request = Conversation('BONJOUR', database_redis_number=1)
         expected_result = user_request.lower_and_split_user_entry()
         assert expected_result == ['bonjour']
 

@@ -9,7 +9,7 @@ from src.APIs import wikipedia_api
 
 def conversation_between_user_and_grandpy(user_request, database_redis_number):
     # DONE conversation object
-    """creation of the chat_session conversation object according to the user's request"""
+    """creation of the chat_object_connect conversation object according to the user's request"""
     database_object_redis_connect = \
         RedisDataManagement(database_redis_number=database_redis_number)
     if database_object_redis_connect.database_connect.ttl(
@@ -17,7 +17,7 @@ def conversation_between_user_and_grandpy(user_request, database_redis_number):
         database_object_redis_connect.redis_database_init_by_default()
     level = database_object_redis_connect.byte_to_int_conversion(
         database_object_redis_connect.read_redis_database_decoding(
-        'level',db_session.decode_int_to_byte(1)))
+        'level',database_object_redis_connect.decode_int_to_byte(1)))
     has_user_incivility_status = \
         database_object_redis_connect.byte_to_boolean_conversion(
         database_object_redis_connect.read_redis_database_decoding(
@@ -47,7 +47,7 @@ def conversation_between_user_and_grandpy(user_request, database_redis_number):
             'number_of_user_incomprehension',
             database_object_redis_connect.decode_int_to_byte(0)))
     number_of_user_entries = database_object_redis_connect.byte_to_int_conversion(
-        db_session.read_redis_database_decoding(
+        database_object_redis_connect.read_redis_database_decoding(
             'number_of_user_entries',database_object_redis_connect.decode_int_to_byte(0)))
     has_fatigue_quotas_of_grandpy = \
         database_object_redis_connect.byte_to_boolean_conversion(
@@ -70,7 +70,7 @@ def conversation_between_user_and_grandpy(user_request, database_redis_number):
         'has_fatigue_quotas_of_grandpy': has_fatigue_quotas_of_grandpy,
         'grandpy_status_code': grandpy_status_code}
 
-    chat_object_connect = Conversation(user_request, db_number, **args)
+    chat_object_connect = Conversation(user_request, database_redis_number, **args)
     return chat_object_connect, database_object_redis_connect
 
 
@@ -117,25 +117,25 @@ def management_of_incomprehension_behavior(chat_object_connect):
         if chat_object_connect.number_of_user_incomprehension < 3:
             display_behavior.display_grandpy_status_code_to_incomprehension(
                 chat_object_connect)
-            counting_behavior.user_incomprehension_count(chat_session)
+            counting_behavior.user_incomprehension_count(chat_object_connect)
         else:
             display_behavior.display_grandpy_status_code_to_incomprehension_limit(
                 chat_object_connect)
 
 
-def management_of_correct_behavior(chat_session):
-    if (not chat_session.has_user_indecency_status 
+def management_of_correct_behavior(chat_object_connect):
+    if (not chat_object_connect.has_user_indecency_status 
         and
-        not chat_session.has_user_incomprehension_status):
-        if chat_session.number_of_user_entries == 5:
-            display_behavior.display_grandpy_status_code_to_tired(chat_session)
-            counting_behavior.user_question_answer_count(chat_session)
-        elif chat_session.number_of_user_entries == 10:
-            display_behavior.display_grandpy_status_code_to_response_limit(chat_session)
+        not chat_object_connect.has_user_incomprehension_status):
+        if chat_object_connect.number_of_user_entries == 5:
+            display_behavior.display_grandpy_status_code_to_tired(chat_object_connect)
+            counting_behavior.user_question_answer_count(chat_object_connect)
+        elif chat_object_connect.number_of_user_entries == 10:
+            display_behavior.display_grandpy_status_code_to_response_limit(chat_object_connect)
         else:
-            display_behavior.display_grandpy_status_code_to_response(chat_session)
-            counting_behavior.user_question_answer_count(chat_session)
-            chat_session.get_user_request_parser()
+            display_behavior.display_grandpy_status_code_to_response(chat_object_connect)
+            counting_behavior.user_question_answer_count(chat_object_connect)
+            chat_object_connect.get_user_request_parser()
 
 
 def main(user_request, database_redis_number=0):
@@ -144,8 +144,8 @@ def main(user_request, database_redis_number=0):
     # ~ import pdb; pdb.set_trace()
     object_connection = \
         conversation_between_user_and_grandpy(user_request, database_redis_number)
-    chat_object_connect = connection[0]
-    database_object_redis_connect = connection[1]
+    chat_object_connect = object_connection[0]
+    database_object_redis_connect = object_connection[1]
     # management level 1
     if (
         chat_object_connect.level == 1

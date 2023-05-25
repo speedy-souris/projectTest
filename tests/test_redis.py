@@ -6,11 +6,11 @@ from . import Conversation
 # @pytest.mark.skip()
 class TestWritingRedis:
     def setup_method(self):
-        self.db_session = RedisDataManagement(db_number=1)
+        self.db_session = RedisDataManagement(database_redis_number=1)
         self.db_session.erasing_redis_databases()
         self.db_session.redis_database_init_by_default()
         self.conversation = Conversation('')
-        # self.chat_session = main('', db_number=1)
+        # self.chat_session = main('', database_redis_number=1)
 
     def test_byte_to_int_conversion(self):
         expected_result = self.db_session.byte_to_int_conversion(b'5')
