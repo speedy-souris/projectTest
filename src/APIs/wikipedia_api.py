@@ -74,7 +74,7 @@ def get_address_url(latitude, longitude):
     return address_url
 
 
-def search_address_to_wiki(chat_object_connect, user_request_parsed):
+def search_address_to_wiki(chat_connect_object, user_request_parsed):
     # DONE WIKIPEDIA API calling
     """call of the WikiPedia APIs according to the user's request"""
     googleMap_data = google_api.search_address_to_gMap(user_request_parsed)

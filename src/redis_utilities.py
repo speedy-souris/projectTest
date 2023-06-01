@@ -76,29 +76,29 @@ class RedisDataManagement:
             self.write_redis_database_encoding(name_init, data_init)
 
 
-    def update_redis_database(self, chat_object_connect) -> None:
+    def update_redis_database(self, chat_connect_object) -> None:
         """after all data processing update redis database with local attributes"""
         print('Update REDIS')
         # ~ import pdb; pdb.set_trace()
         has_user_incivility_status = \
-            self.decode_string_to_byte(chat_object_connect.has_user_incivility_status)
+            self.decode_string_to_byte(chat_connect_object.has_user_incivility_status)
         has_user_indecency_status = \
-            self.decode_string_to_byte(chat_object_connect.has_user_indecency_status)
+            self.decode_string_to_byte(chat_connect_object.has_user_indecency_status)
         has_user_incomprehension_status = \
-            self.decode_string_to_byte(chat_object_connect.has_user_incomprehension_status)
+            self.decode_string_to_byte(chat_connect_object.has_user_incomprehension_status)
         has_fatigue_quotas_of_grandpy = \
-            self.decode_string_to_byte(chat_object_connect.has_fatigue_quotas_of_grandpy)
+            self.decode_string_to_byte(chat_connect_object.has_fatigue_quotas_of_grandpy)
         grandpy_status_code = \
-            self.decode_string_to_byte(chat_object_connect.grandpy_status_code)
-        level = self.decode_int_to_byte(chat_object_connect.level)
+            self.decode_string_to_byte(chat_connect_object.grandpy_status_code)
+        level = self.decode_int_to_byte(chat_connect_object.level)
         number_of_user_incivility = \
-            self.decode_int_to_byte(chat_object_connect.number_of_user_incivility)
+            self.decode_int_to_byte(chat_connect_object.number_of_user_incivility)
         number_of_user_indecency = \
-            self.decode_int_to_byte(chat_object_connect.number_of_user_indecency)
+            self.decode_int_to_byte(chat_connect_object.number_of_user_indecency)
         number_of_user_incomprehension = \
-            self.decode_int_to_byte(chat_object_connect.number_of_user_incomprehension)
+            self.decode_int_to_byte(chat_connect_object.number_of_user_incomprehension)
         number_of_user_entries = \
-            self.decode_int_to_byte(chat_object_connect.number_of_user_entries)
+            self.decode_int_to_byte(chat_connect_object.number_of_user_entries)
 
         attribut_value = {
             'has_user_incivility_status': has_user_incivility_status,
@@ -112,11 +112,11 @@ class RedisDataManagement:
             'number_of_user_entries': number_of_user_entries}
         for name_update, data_update in attribut_value.items():
             self.write_redis_database_encoding(name_update, data_update)
-        if chat_object_connect.previous_has_fatigue_quotas_of_grandpy != \
-            chat_object_connect.has_fatigue_quotas_of_grandpy:
+        if chat_connect_object.previous_has_fatigue_quotas_of_grandpy != \
+            chat_connect_object.has_fatigue_quotas_of_grandpy:
             self.write_redis_database_encoding(
                 'has_fatigue_quotas_of_grandpy', self.decode_string_to_byte(
-                    chat_object_connect.has_fatigue_quotas_of_grandpy))
+                    chat_connect_object.has_fatigue_quotas_of_grandpy))
             self.data_redis_expiration()
 
     def erasing_redis_databases(self) -> None:

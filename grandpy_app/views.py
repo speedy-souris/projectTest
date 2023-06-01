@@ -48,11 +48,11 @@ def answer_gp(reflection, user_question_request):
     # grandpy's reflection time to answer questions
     time_reflection = time.sleep(int(reflection))
     # exchange between the user and grandpy
-    chat_object_connect = main(user_question_request)
-    if chat_object_connect.__class__.INCIVILITY_SET_DATA.isdisjoint(
-        chat_object_connect.user_entry):
+    chat_connect_object = main(user_question_request)
+    if chat_connect_object.__class__.INCIVILITY_SET_DATA.isdisjoint(
+        chat_connect_object.user_entry):
         data_send = {
-        'grandpy_status_code': chat_object_connect.grandpy_status_code,
+        'grandpy_status_code': chat_connect_object.grandpy_status_code,
         'address': user_question_request,
         'map': '',
         'history': ''}
@@ -60,12 +60,12 @@ def answer_gp(reflection, user_question_request):
     else:
         wiki_response = \
             wikipedia_api.search_address_to_wiki(
-                chat_object_connect, chat_object_connect.user_entry)
+                chat_connect_object, chat_connect_object.user_entry)
         static_map_display = google_api.get_static_map_from_address_api(
             wiki_response['googleMap_data'])
         # sending parameters
         data_send = {
-            'grandpy_status_code': chat_object_connect.grandpy_status_code,
+            'grandpy_status_code': chat_connect_object.grandpy_status_code,
             'address': user_question_request,
             'map': base64.b64encode(static_map_display).decode('utf-8'),
             'history': wiki_response['wiki_page_result']

@@ -163,16 +163,18 @@ class Conversation:
 
     def calculate_the_incomprehension_status(self) -> None:
         """update the attribut has_user_indecency_status since GoogleMap API"""
-        incomprehension_status = None
+        incomprehension_status = True
         result_api = google_api.get_placeid_from_address(self.user_entry)
         print(f'[in conversation_as_incomprehension] = {result_api}')
-        if result_api in (
-            {'candidates': [], 'status': 'ZERO_RESULTS'},
-            {'candidates': [], 'status': 'INVALID_REQUEST'},
-            {'candidates': [], 'error_message': 'The provided API key is invalid.',
-                'status': 'REQUEST_DENIED'}):
-            incomprehension_status = True
-        else:
+        
+        if type(result_api) is dict and 'result' in result_api:
+            if bool(result_api['result']):
+            #exemple result_api
+            # ~ in (
+            # ~ {'candidates': [], 'status': 'ZERO_RESULTS'},
+            # ~ {'candidates': [], 'status': 'INVALID_REQUEST'},
+            # ~ {'candidates': [], 'error_message': 'The provided API key is invalid.',
+                # ~ 'status': 'REQUEST_DENIED'}):
                 incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
 
