@@ -117,7 +117,7 @@ def search_address_to_gMap(user_question_request):
     gmap_api_placeid_value = get_placeid_from_address(user_question_request)
     try:
         place_id = gmap_api_placeid_value['candidates'][0]['place_id']
-    except IndexError:
+    except (IndexError, KeyError):
         googleMap_data = {}
     else:
         googleMap_data = get_address_api_from_placeid(place_id)
