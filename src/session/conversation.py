@@ -146,6 +146,7 @@ class Conversation:
         self.number_of_user_indecency = 0
         self.has_user_incomprehension_status = False
         self.number_of_user_incomprehension = 0
+        self.grandpy_status_code = 'benevolent'
 
     def calculate_the_incivility_status(self) -> None:
         """update the attribut has_user_incivility_status since INCIVILITY_SET_DATA set"""
@@ -163,17 +164,19 @@ class Conversation:
 
     def calculate_the_incomprehension_status(self) -> None:
         """update the attribut has_user_indecency_status since GoogleMap API"""
+        import pdb; pdb.set_trace()
         incomprehension_status = True
-        result_api = google_api.get_placeid_from_address(self.user_entry)
+        result_api = google_api.search_address_to_gMap(self.user_entry)
         print(f'[in conversation_as_incomprehension] = {result_api}')
+        print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
         
-        if type(result_api) is dict and 'result' in result_api:
-            if bool(result_api['result']):
-            #exemple result_api
-            # ~ in (
-            # ~ {'candidates': [], 'status': 'ZERO_RESULTS'},
-            # ~ {'candidates': [], 'status': 'INVALID_REQUEST'},
-            # ~ {'candidates': [], 'error_message': 'The provided API key is invalid.',
+        if type(result_api) is dict and 'candidates' in result_api:
+            if bool(result_api['candidates']):
+                #exemple result_api
+                # in (
+                # ~ {'candidates': [], 'status': 'ZERO_RESULTS'},
+                # ~ {'candidates': [], 'status': 'INVALID_REQUEST'},
+                # ~ {'candidates': [], 'error_message': 'The provided API key is invalid.',
                 # ~ 'status': 'REQUEST_DENIED'}):
                 incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
