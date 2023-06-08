@@ -56,6 +56,7 @@ def answer_gp(reflection, user_question_request):
         'address': user_question_request,
         'map': '',
         'history': ''}
+        print(f'[in views.py] data_send = {data_send}')
         return data_send
     else:
         wiki_response = \
@@ -70,7 +71,7 @@ def answer_gp(reflection, user_question_request):
             'map': base64.b64encode(static_map_display).decode('utf-8'),
             'history': wiki_response['wiki_page_result']
         }
-        # ~ print(f'data_send = {data_send}')
+        print(f'data_send = {data_send}')
         return data_send
 
 

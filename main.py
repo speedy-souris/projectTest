@@ -10,6 +10,7 @@ from src.APIs import wikipedia_api
 def conversation_between_user_and_grandpy(user_request, database_redis_number):
     # DONE conversation object
     """creation of the chat_connect_object conversation object according to the user's request"""
+    # ~ import pdb; pdb.set_trace()
     database_redis_connect_object = \
         RedisDataManagement(database_redis_number=database_redis_number)
     if database_redis_connect_object.database_connect.ttl(
@@ -74,18 +75,8 @@ def conversation_between_user_and_grandpy(user_request, database_redis_number):
     return chat_connect_object, database_redis_connect_object
 
 
-# ---------------------------
-# 4) DONE management of the call to the GoogleMap API
-def search_address_to_gMap(user_request):
-    # DONE GoogleMap API calling
-    """call of the GoogleMap APIs according to the user's request"""
-    gmap_api_placeid_value = google_api.get_placeid_from_address(user_request)
-    place_id = gmap_api_placeid_value['candidates'][0]['place_id']
-    googleMap_data = google_api.get_address_api_from_placeid(place_id)
-    return googleMap_data
-
-
 def management_of_incivility_behavior(chat_connect_object):
+    # ~ import pdb; pdb.set_trace()
     chat_connect_object.calculate_the_incivility_status()
     if chat_connect_object.has_user_incivility_status:
         if chat_connect_object.number_of_user_incivility < 3:
@@ -100,6 +91,7 @@ def management_of_incivility_behavior(chat_connect_object):
         chat_connect_object.from_level1_to_level2()
 
 def management_of_indecency_behavior(chat_connect_object):
+    # ~ import pdb; pdb.set_trace()
     chat_connect_object.calculate_the_indecency_status()
     if chat_connect_object.has_user_indecency_status:
         if chat_connect_object.number_of_user_indecency < 3:
@@ -112,6 +104,7 @@ def management_of_indecency_behavior(chat_connect_object):
 
 
 def management_of_incomprehension_behavior(chat_connect_object):
+    # ~ import pdb; pdb.set_trace()
     chat_connect_object.calculate_the_incomprehension_status()
     if chat_connect_object.has_user_incomprehension_status:
         if chat_connect_object.number_of_user_incomprehension < 3:
@@ -124,6 +117,7 @@ def management_of_incomprehension_behavior(chat_connect_object):
 
 
 def management_of_correct_behavior(chat_connect_object):
+    # ~ import pdb; pdb.set_trace()
     if (not chat_connect_object.has_user_indecency_status 
         and
         not chat_connect_object.has_user_incomprehension_status):
@@ -155,7 +149,9 @@ def main(user_request, database_redis_number=0):
     ):
         management_of_incivility_behavior(chat_connect_object)
         management_of_indecency_behavior(chat_connect_object)
+        # ~ import pdb; pdb.set_trace()
         # ~ if user_request not in sessions[0].INCIVILITY_SET_DATA:
+        # ~ if chat_connect_object.level == 1:
         management_of_incomprehension_behavior(chat_connect_object)
     # management level 2
     elif (

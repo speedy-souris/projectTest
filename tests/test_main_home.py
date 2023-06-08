@@ -303,6 +303,31 @@ class TestHomeMain:
         # TTL has_fatigue_quotas_of_grandpy > 0
         assert self.database_object_redis_connect.database_connect.ttl('has_fatigue_quotas_of_grandpy') > 0
 
+
+    def test_correct_presentation_user(self):
+        #  correct presentation of the user ==> 'bonjour' alone
+        dialogue_of_presentation = main.main('bonjour', database_redis_number=1)
+        # level == 2
+        assert dialogue_of_presentation.level == 2
+        # has_user_incivility_status == False
+        assert not dialogue_of_presentation.has_user_incivility_status
+        # has_user_indecency_status == False
+        assert not dialogue_of_presentation.has_user_indecency_status
+        # has_user_incomprehension_status == False
+        assert not dialogue_of_presentation.has_user_incomprehension_status
+        # has_fatigue_quotas_of_grandpy == False
+        assert not dialogue_of_presentation.has_fatigue_quotas_of_grandpy
+        # grandpy_status_code == 'benevolent'
+        assert dialogue_of_presentation.grandpy_status_code == 'benevolent'
+        # number_of_user_incivility == 0
+        assert dialogue_of_presentation.number_of_user_incivility == 0
+        # number_of_user_indecency == 0
+        assert dialogue_of_presentation.number_of_user_indecency == 0
+        # number_of_user_incomprehension == 0
+        assert dialogue_of_presentation.number_of_user_incomprehension == 0
+        # number_of_user_entries == 1
+        assert dialogue_of_presentation.number_of_user_entries == 0
+
     # # 7) DONE correct query X1
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX1(self, monkeypatch):

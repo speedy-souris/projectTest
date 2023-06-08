@@ -105,7 +105,7 @@ function answer_gp(code_grandpy){
     //~ var response_json = grandpy_status_code;
     
     switch(code_grandpy.grandpy_status_code){
-        case 'home':
+        case 'benevolent':
             welcome_message();
             break;
         case 'tired':
