@@ -114,13 +114,19 @@ def get_static_map_from_address_api(json_from_wikipedia):
 def search_address_to_gMap(user_question_request):
     # DONE GoogleMap API calling
     """call of the GoogleMap APIs according to the user's request"""
-    gmap_api_placeid_value = get_placeid_from_address(user_question_request)
-    try:
-        place_id = gmap_api_placeid_value['candidates'][0]['place_id']
-    except (IndexError, KeyError):
-        googleMap_data = {}
-    else:
-        googleMap_data = get_address_api_from_placeid(place_id)
+    gmap_api_placeid_value = ' '
+    googleMap_data = user_question_request
+    
+    if bool(user_question_request) :
+        gmap_api_placeid_value = get_placeid_from_address(user_question_request)
+        print(f'[user_request] = {user_question_request}')
+        print(f'[place_id] = {gmap_api_placeid_value}')
+        try:
+            place_id = gmap_api_placeid_value['candidates'][0]['place_id']
+        except TypeError:
+            googleMap_data = {}
+        else:
+            googleMap_data = get_address_api_from_placeid(place_id)
     return googleMap_data
 
 

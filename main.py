@@ -140,6 +140,7 @@ def main(user_request, database_redis_number=0):
         conversation_between_user_and_grandpy(user_request, database_redis_number)
     chat_connect_object = connection_object[0]
     database_redis_connect_object = connection_object[1]
+    chat_connect_object.get_user_request_parser()
     # management level 1
     if (
         chat_connect_object.level == 1

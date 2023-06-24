@@ -14,6 +14,27 @@ class TestHomeMain:
         self.database_object_redis_connect.erasing_redis_databases()
         self.database_object_redis_connect.redis_database_init_by_default()
 
+    @staticmethod
+    def expected_result_mock():
+        """expected result for the mock return"""
+        expected_result = {
+            'placeid': {
+                'candidates': [{
+                    'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
+                'status': 'OK'},
+            'address': {
+                'html_attributions': [],
+                'result': {
+                    'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
+                    'geometry': {
+                        'location': {'lat': 48.8975156, 'lng': 2.3833993},
+                        'viewport': {
+                            'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
+                            'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
+                'status': 'OK'}
+        }
+        return expected_result
+
     # 11) DONE incivility query X1
     # ~ @pytest.mark.skip()
     def test_incorrect_presentation_user_to_1(self, monkeypatch):
@@ -332,17 +353,10 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX1(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        expected_result = {
-            'html_attributions': [],
-            'result': {
-                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
-                'geometry': {
-                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
-                    'viewport': {
-                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
-                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
-            'status': 'OK'}
-        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        expected_result = self.expected_result_mock()
+        monkeypatch.setattr(
+            requests, 'get', get_mockreturn(
+                expected_result['placeid'], expected_result['address']))
         main.main('bonjour', database_redis_number=1)
         dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2

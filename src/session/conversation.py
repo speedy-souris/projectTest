@@ -110,6 +110,7 @@ class Conversation:
 
     def __init__(self, user_entry, database_redis_number=0, **args):
         self.user_entry = user_entry
+        self.parsed_user_entry = ''
         self.db_session = RedisDataManagement(database_redis_number=database_redis_number)
         self.level = args.get('level', 1)
         # Leve1 1 --> Presentation
@@ -127,6 +128,7 @@ class Conversation:
         self.grandpy_status_code =\
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
+        
 
     def __str__(self):
         text = ''
@@ -164,21 +166,23 @@ class Conversation:
 
     def calculate_the_incomprehension_status(self) -> None:
         """update the attribut has_user_indecency_status since GoogleMap API"""
-        import pdb; pdb.set_trace()
-        incomprehension_status = True
-        result_api = google_api.search_address_to_gMap(self.user_entry)
-        print(f'[in conversation_as_incomprehension] = {result_api}')
-        print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
+        # ~ import pdb; pdb.set_trace()
+        incomprehension_status = False
+        if bool(self.parsed_user_entry):
+            incomprehension_status = True
+            result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
+            print(f'[in conversation_as_incomprehension] = {result_api}')
+            print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
         
-        if type(result_api) is dict and 'candidates' in result_api:
-            if bool(result_api['candidates']):
+            if type(result_api) is dict and 'result' in result_api:
+                if bool(result_api['result']):
                 #exemple result_api
                 # in (
                 # ~ {'candidates': [], 'status': 'ZERO_RESULTS'},
                 # ~ {'candidates': [], 'status': 'INVALID_REQUEST'},
                 # ~ {'candidates': [], 'error_message': 'The provided API key is invalid.',
                 # ~ 'status': 'REQUEST_DENIED'}):
-                incomprehension_status = False
+                    incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
 
     def lower_and_split_user_entry(self) -> list:
@@ -194,7 +198,8 @@ class Conversation:
             w for w in list_of_word_request_user
             if w.lower() not in self.__class__.UNNECESSARY_SET_DATA]
         # ~ list_of_keyword = list_of_word_request_user
-        self.user_entry = ' '.join(list_of_keyword)
+        if list_of_keyword != []:
+            self.parsed_user_entry = ' '.join(list_of_keyword)
 
 
 if __name__ == '__main__':
