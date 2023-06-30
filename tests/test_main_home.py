@@ -37,19 +37,19 @@ class TestHomeMain:
 
     # 11) DONE incivility query X1
     # ~ @pytest.mark.skip()
-    def test_incorrect_presentation_user_to_1(self, monkeypatch):
+    def test_incorrect_presentation_user_to_1(self):
         # incorrect presentation of the user X1 ==> question without ('bonjour'...)
-        expected_result = {
-            'html_attributions': [],
-            'result': {
-                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
-                'geometry': {
-                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
-                    'viewport': {
-                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
-                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
-            'status': 'OK'}
-        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        # ~ expected_result = {
+            # ~ 'html_attributions': [],
+            # ~ 'result': {
+                # ~ 'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
+                # ~ 'geometry': {
+                    # ~ 'location': {'lat': 48.8975156, 'lng': 2.3833993},
+                    # ~ 'viewport': {
+                        # ~ 'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
+                        # ~ 'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
+            # ~ 'status': 'OK'}
+        # ~ monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
         presentation_user = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # has_user_incivility_status = True
         assert presentation_user.has_user_incivility_status
@@ -383,17 +383,10 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX5(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        expected_result = {
-            'html_attributions': [],
-            'result': {
-                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
-                'geometry': {
-                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
-                    'viewport': {
-                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
-                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
-            'status': 'OK'}
-        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        expected_result = self.expected_result_mock()
+        monkeypatch.setattr(
+            requests, 'get', get_mockreturn(
+                expected_result['placeid'], expected_result['address']))
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
@@ -426,17 +419,10 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX10(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        expected_result = {
-            'html_attributions': [],
-            'result': {
-                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
-                'geometry': {
-                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
-                    'viewport': {
-                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
-                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
-            'status': 'OK'}
-        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        expected_result = self.expected_result_mock()
+        monkeypatch.setattr(
+            requests, 'get', get_mockreturn(
+                expected_result['placeid'], expected_result['address']))
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)

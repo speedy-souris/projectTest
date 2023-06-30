@@ -14,7 +14,7 @@ def display_grandpy_status_code_to_benevolent(chat_session):
     """billing of answers of grandpy for status benevolent"""
     # grandpy_status_code = 'benevolent'
     chat_session.grandpy_status_code = 'benevolent'
-    chat_session.level = 2
+    chat_session.from_level1_to_level2()
     grandpy_response = \
         display_grandpy_status(
             chat_session, chat_session.__class__.grandpy_status_code_value['benevolent'])

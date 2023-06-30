@@ -88,7 +88,7 @@ def management_of_incivility_behavior(chat_connect_object):
             display_behavior.display_grandpy_status_code_to_incivility_limit(
                 chat_connect_object)
     else:
-        chat_connect_object.from_level1_to_level2()
+        display_behavior.display_grandpy_status_code_to_benevolent(chat_connect_object)
 
 def management_of_indecency_behavior(chat_connect_object):
     # ~ import pdb; pdb.set_trace()
