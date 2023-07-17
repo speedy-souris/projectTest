@@ -54,7 +54,7 @@ def get_page_url(title):
     page_url = get_url_json(url=url, params=params)
     print(f'[wikipedia_as_page_url = {page_url}]')
     if page_url['query']['pages'][0]['extract'] != '':
-        return page_url['query']['pages'][0]['extract']
+        return page_url
     if page_url[3] != []:
        return page_url[3]
     else:
