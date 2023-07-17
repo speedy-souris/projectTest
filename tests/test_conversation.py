@@ -68,5 +68,5 @@ class TestBehaviorParams:
     def test_get_request_parser(self):
         user_request = Conversation('ou se trouve openClassrooms', database_redis_number=1)
         user_request.get_user_request_parser()
-        user_entry = user_request.user_entry
+        user_entry = user_request.parsed_user_entry
         assert user_entry == 'openClassrooms'

@@ -15,28 +15,52 @@ class TestHomeMain:
         self.database_object_redis_connect.erasing_redis_databases()
         self.database_object_redis_connect.redis_database_init_by_default()
 
+    # ~ @staticmethod
+    # ~ def expected_result_mock(
+        # ~ get_candidate_places=False, about_a_place=False, get_wikipedia_places=False):
+        # ~ """expected result for the mock return"""
+        # ~ if get_candidate_places:
+            # ~ #  'openClassrooms'
+            # ~ return {
+                # ~ 'candidates': [{
+                    # ~ 'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
+                    # ~ 'status': 'OK'},
+        # ~ if about_a_place:
+            # ~ #  'openClassrooms > placeid > ChIJIZX8lhRu5kcRGwYk8Ce3Vc8' 
+            # ~ return {
+                # ~ 'html_attributions': [],
+                # ~ 'result': {
+                    # ~ 'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
+                    # ~ 'geometry': {
+                        # ~ 'location': {'lat': 48.8975156, 'lng': 2.3833993},
+                        # ~ 'viewport': {
+                            # ~ 'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
+                            # ~ 'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
+                # ~ 'status': 'OK'}
+        # ~ if get_wikipedia_places:
+            # ~ return {
+                # ~ "batchcomplete": True,
+                # ~ "query": {
+                    # ~ "pages": [{
+                        # ~ "pageid": 4338589,
+                        # ~ "ns": 0,
+                        # ~ "title": "OpenClassrooms",
+                        # ~ "extract": "OpenClassrooms est un site web de formation..."}]
+                # ~ }
+            # ~ }
+        # ~ return {}
     @staticmethod
-    def expected_result_mock(get_candidate_places=False, about_a_place=False):
-        """expected result for the mock return"""
-        if get_candidate_places:
-            #  'openClassrooms'
-            return {
-                'candidates': [{
-                    'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
-                    'status': 'OK'},
-        if about_a_place:
-            #  'openClassrooms > placeid > ChIJIZX8lhRu5kcRGwYk8Ce3Vc8' 
-            return {
-                'html_attributions': [],
-                'result': {
-                    'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
-                    'geometry': {
-                        'location': {'lat': 48.8975156, 'lng': 2.3833993},
-                        'viewport': {
-                            'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
-                            'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
-                'status': 'OK'}
-        return {}
+    def mock_params(monkeypatch, expected_result_function):
+        """mock parameter for monkeypatch"""
+        get_candidate_places = expected_result_function(get_candidate_places=True)
+        about_a_place = expected_result_function(about_a_place=True)
+        get_wikipedia_places = expected_result_function(get_wikipedia_places=True)
+        monkeypatch.setattr(
+            requests, 'get', get_mockreturn(
+                candidate_places_result=get_candidate_places,
+                about_a_place_result=about_a_place, 
+                wikipedia_places_result=get_wikipedia_places)
+        )
 
     # 11) DONE incivility query X1
     # ~ @pytest.mark.skip()
@@ -256,10 +280,11 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_incomprehension_request_user_to_1(self, monkeypatch):
         # incomprehension presentation of the user X1 ==> question without ('bonjour'...)
-        # ~ expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
+        expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
+        # ~ get_candidate_places = expected_result_mock(get_candidate_places=True)
         monkeypatch.setattr(
-            requests, 'get', get_user_incomprehension_googleMap_api_mockreturn())
-            
+            requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
+
         presentation_user_incomprehension = main.main('', database_redis_number=1)
         # user_behavior['has_user_incivility_status'] = True
         assert presentation_user_incomprehension.has_user_incivility_status
@@ -283,9 +308,9 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_incomprehension_request_user_to_2(self, monkeypatch):
         # incomprehension presentation of the user X2 ==> question without ('bonjour'...)
-        # ~ expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
+        expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
         monkeypatch.setattr(
-            requests, 'get', get_user_incomprehension_googleMap_api_mockreturn())
+            requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
         main.main('', database_redis_number=1)
         presentation_user_incomprehension = main.main('', database_redis_number=1)
 
@@ -312,9 +337,9 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_incomprehension_request_user_to_3(self, monkeypatch):
         # incomprehension presentation of the user ==> question without ('bonjour'...)
-        # ~ expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
+        expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
         monkeypatch.setattr(
-            requests, 'get', get_user_incomprehension_googleMap_api_mockreturn())
+            requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
         main.main('', database_redis_number=1)
         main.main('', database_redis_number=1)
         main.main('', database_redis_number=1)
@@ -359,10 +384,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX1(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        get_candidate_places = self.expected_result_mock(get_candidate_places=True)
-        about_a_place = self.expected_result_mock(about_a_place=True)
-        monkeypatch.setattr(
-            requests, 'get', get_mockreturn(get_candidate_places, about_a_place))
+        self.mock_params(monkeypatch, get_mockreturn.expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2
@@ -389,10 +411,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX5(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        get_candidate_places = self.expected_result_mock(get_candidate_places=True)
-        about_a_place = self.expected_result_mock(about_a_place=True)
-        monkeypatch.setattr(
-            requests, 'get', get_mockreturn(get_candidate_places, about_a_place))
+        self.mock_params(monkeypatch, get_mockreturn.expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
@@ -425,10 +444,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX10(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        get_candidate_places = self.expected_result_mock(get_candidate_places=True)
-        about_a_place = self.expected_result_mock(about_a_place=True)
-        monkeypatch.setattr(
-            requests, 'get', get_mockreturn(get_candidate_places, about_a_place))
+        self.mock_params(monkeypatch, get_mockreturn.expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
