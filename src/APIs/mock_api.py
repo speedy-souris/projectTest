@@ -24,19 +24,19 @@ def get_mockreturn(
 # --------------------------------------------------
 # -- user's incomprehension  Mock--
 # --------------------------------------------------
-def get_user_incomprehension_googleMap_api_mockreturn():
-    """mock template call"""
-    def mock_get(url, params):
-        """Mock function on api object"""
-        class JsonResponse:
-            """mock result in JSON format"""
-            @staticmethod
-            def json():
-                """Json method"""
-                return {
-                    'candidates': [], 'status': 'INVALID_REQUEST'}
-        return JsonResponse()
-    return mock_get
+# ~ def get_user_incomprehension_googleMap_api_mockreturn():
+    # ~ """mock template call"""
+    # ~ def mock_get(url, params):
+        # ~ """Mock function on api object"""
+        # ~ class JsonResponse:
+            # ~ """mock result in JSON format"""
+            # ~ @staticmethod
+            # ~ def json():
+                # ~ """Json method"""
+                # ~ return {
+                    # ~ 'candidates': [], 'status': 'INVALID_REQUEST'}
+        # ~ return JsonResponse()
+    # ~ return mock_get
 
 
 def expected_result_mock(

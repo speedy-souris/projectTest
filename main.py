@@ -146,26 +146,27 @@ def main(user_request, database_redis_number=0):
         chat_connect_object.level == 1
         and
         database_redis_connect_object.database_connect.ttl(
-            'has_fatigue_quotas_of_grandpy') == -1
-    ):
+            'has_fatigue_quotas_of_grandpy') == -1):
         management_of_incivility_behavior(chat_connect_object)
-        management_of_indecency_behavior(chat_connect_object)
+        if not chat_connect_object.has_user_incivility_status:
+            management_of_indecency_behavior(chat_connect_object)
+            if not chat_connect_object.has_user_indecency_status:
         # ~ import pdb; pdb.set_trace()
         # ~ if user_request not in sessions[0].INCIVILITY_SET_DATA:
         # ~ if chat_connect_object.level == 1:
-        management_of_incomprehension_behavior(chat_connect_object)
+                management_of_incomprehension_behavior(chat_connect_object)
     # management level 2
     elif (
         chat_connect_object.level == 2
         and
         database_redis_connect_object.database_connect.ttl(
-            'has_fatigue_quotas_of_grandpy') == -1
-    ):
+            'has_fatigue_quotas_of_grandpy') == -1):
         # ~ import pdb; pdb.set_trace()
         management_of_indecency_behavior(chat_connect_object)
         # ~ if user_request in sessions[0].INCOMPREHENSION_SET_DATA:
         management_of_incomprehension_behavior(chat_connect_object)
         management_of_correct_behavior(chat_connect_object)
+    
 
     database_redis_connect_object.update_redis_database(chat_connect_object)
     return chat_connect_object

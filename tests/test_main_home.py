@@ -2,7 +2,8 @@ from . import requests
 from . import pytest
 from . import RedisDataManagement
 from . import get_mockreturn
-from . import get_user_incomprehension_googleMap_api_mockreturn
+from . import expected_result_mock
+# ~ from . import get_user_incomprehension_googleMap_api_mockreturn
 from . import main
 # from . import BehaviorParams
 
@@ -189,7 +190,7 @@ class TestHomeMain:
         # has_user_indecency_status = True
         assert presentation_user_indecency.has_user_indecency_status
         # has_user_incomprehension_status = False
-        assert not presentation_user_indecency.has_user_incomprehension_status
+        assert presentation_user_indecency.has_user_incomprehension_status
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'disrespectful'
@@ -225,7 +226,7 @@ class TestHomeMain:
         # has_user_indecency_status = True
         assert presentation_user_indecency.has_user_indecency_status
         # has_user_incomprehension_status = False
-        assert not presentation_user_indecency.has_user_incomprehension_status
+        assert presentation_user_indecency.has_user_incomprehension_status
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'disrespectful'
@@ -259,6 +260,8 @@ class TestHomeMain:
         # incorrect request of the user X4 ==> indecency presentation without ('bonjour'....)
         presentation_user_indecency = main.main('vieux', database_redis_number=1)
 
+        # has_user_incomprehension_status = False
+        assert presentation_user_indecency.has_user_incomprehension_status
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'disrespectful'
@@ -384,7 +387,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX1(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        self.mock_params(monkeypatch, get_mockreturn.expected_result_mock)
+        self.mock_params(monkeypatch, expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # level == 2
@@ -411,7 +414,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX5(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        self.mock_params(monkeypatch, get_mockreturn.expected_result_mock)
+        self.mock_params(monkeypatch, expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
@@ -444,7 +447,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX10(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        self.mock_params(monkeypatch, get_mockreturn.expected_result_mock)
+        self.mock_params(monkeypatch, expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)

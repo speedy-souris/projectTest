@@ -167,9 +167,9 @@ class Conversation:
     def calculate_the_incomprehension_status(self) -> None:
         """update the attribut has_user_indecency_status since GoogleMap API"""
         # ~ import pdb; pdb.set_trace()
-        incomprehension_status = False
+        # ~ incomprehension_status = False
+        incomprehension_status = True
         if bool(self.parsed_user_entry):
-            incomprehension_status = True
             result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
             print(f'[in conversation_as_incomprehension] = {result_api}')
             print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
