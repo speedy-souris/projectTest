@@ -47,7 +47,7 @@ def expected_result_mock(
         return {
             'candidates': [{
                 'place_id': 'ChIJIZX8lhRu5kcRGwYk8Ce3Vc8'}],
-                'status': 'OK'},
+                'status': 'OK'}
     if about_a_place:
         #  'openClassrooms > placeid > ChIJIZX8lhRu5kcRGwYk8Ce3Vc8' 
         return {
