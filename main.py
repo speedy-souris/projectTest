@@ -163,9 +163,11 @@ def main(user_request, database_redis_number=0):
             'has_fatigue_quotas_of_grandpy') == -1):
         # ~ import pdb; pdb.set_trace()
         management_of_indecency_behavior(chat_connect_object)
+        if not chat_connect_object.has_user_indecency_status:
         # ~ if user_request in sessions[0].INCOMPREHENSION_SET_DATA:
-        management_of_incomprehension_behavior(chat_connect_object)
-        management_of_correct_behavior(chat_connect_object)
+            management_of_incomprehension_behavior(chat_connect_object)
+            if not chat_connect_object.has_user_incomprehension_status:
+                management_of_correct_behavior(chat_connect_object)
     
 
     database_redis_connect_object.update_redis_database(chat_connect_object)

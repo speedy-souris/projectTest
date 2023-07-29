@@ -24,6 +24,7 @@ def get_url_from_json(url, params):
     """conversion of the address found in JSON format"""
     request = requests.get(url, params)
     url_json = request.json()
+    print(f"[get_url_from_json] = {url_json}")
     return url_json
 
 
@@ -73,6 +74,7 @@ def get_placeid_from_address(address):
      'https://maps.googleapis.com/maps/api/place/findplacefromtext/json'
     parameter_data = get_settings_for_placeid_api(address)
     placeid_value = get_url_from_json(url_api, parameter_data)
+    print(f'[get_placeid_from_address] = {placeid_value}')
     return placeid_value
 
 

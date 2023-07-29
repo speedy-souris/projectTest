@@ -174,8 +174,8 @@ class Conversation:
             print(f'[in conversation_as_incomprehension] = {result_api}')
             print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
         
-            if type(result_api) is dict and 'result' in result_api:
-                if bool(result_api['result']):
+            if type(result_api) is dict and 'candidates' in result_api:
+                if bool(result_api['candidates']):
                 #exemple result_api
                 # in (
                 # ~ {'candidates': [], 'status': 'ZERO_RESULTS'},
