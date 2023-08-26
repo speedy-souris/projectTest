@@ -105,7 +105,8 @@ def management_of_indecency_behavior(chat_connect_object):
 
 def management_of_incomprehension_behavior(chat_connect_object):
     # ~ import pdb; pdb.set_trace()
-    chat_connect_object.calculate_the_incomprehension_status()
+    coordinates_googleMap_API = \
+        chat_connect_object.calculate_the_incomprehension_status()
     if chat_connect_object.has_user_incomprehension_status:
         if chat_connect_object.number_of_user_incomprehension < 3:
             display_behavior.display_grandpy_status_code_to_incomprehension(
@@ -114,6 +115,7 @@ def management_of_incomprehension_behavior(chat_connect_object):
         else:
             display_behavior.display_grandpy_status_code_to_incomprehension_limit(
                 chat_connect_object)
+    return coordinates_googleMap_API
 
 
 def management_of_correct_behavior(chat_connect_object):
@@ -136,6 +138,7 @@ def main(user_request, database_redis_number=0):
     """question answer between user and Grandpy"""
     print('Main')
     # ~ import pdb; pdb.set_trace()
+    coordinates_googleMap_API = {'candidates': [], 'status': 'ZERO_RESULTS'}
     connection_object = \
         conversation_between_user_and_grandpy(user_request, database_redis_number)
     chat_connect_object = connection_object[0]
@@ -148,13 +151,13 @@ def main(user_request, database_redis_number=0):
         database_redis_connect_object.database_connect.ttl(
             'has_fatigue_quotas_of_grandpy') == -1):
         management_of_incivility_behavior(chat_connect_object)
-        if not chat_connect_object.has_user_incivility_status:
-            management_of_indecency_behavior(chat_connect_object)
-            if not chat_connect_object.has_user_indecency_status:
+        # ~ if not chat_connect_object.has_user_incivility_status:
+            # ~ management_of_indecency_behavior(chat_connect_object)
+            # ~ if chat_connect_object.has_user_indecency_status:
         # ~ import pdb; pdb.set_trace()
         # ~ if user_request not in sessions[0].INCIVILITY_SET_DATA:
         # ~ if chat_connect_object.level == 1:
-                management_of_incomprehension_behavior(chat_connect_object)
+                # ~ management_of_incomprehension_behavior(chat_connect_object)
     # management level 2
     elif (
         chat_connect_object.level == 2
@@ -165,13 +168,14 @@ def main(user_request, database_redis_number=0):
         management_of_indecency_behavior(chat_connect_object)
         if not chat_connect_object.has_user_indecency_status:
         # ~ if user_request in sessions[0].INCOMPREHENSION_SET_DATA:
-            management_of_incomprehension_behavior(chat_connect_object)
+            coordinates_googleMap_API = \
+                management_of_incomprehension_behavior(chat_connect_object)
             if not chat_connect_object.has_user_incomprehension_status:
                 management_of_correct_behavior(chat_connect_object)
     
 
     database_redis_connect_object.update_redis_database(chat_connect_object)
-    return chat_connect_object
+    return chat_connect_object, coordinates_googleMap_API
 
 
 if __name__ == '__main__':

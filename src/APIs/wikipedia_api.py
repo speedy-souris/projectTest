@@ -74,17 +74,17 @@ def get_address_url(latitude, longitude):
     return address_url
 
 
-def search_address_to_wiki(chat_connect_object, user_request_parsed):
+def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
     # DONE WIKIPEDIA API calling
     """call of the WikiPedia APIs according to the user's request"""
-    googleMap_data = google_api.search_address_to_gMap(user_request_parsed)
+    # ~ googleMap_data = google_api.search_address_to_gMap(user_request_parsed)
     try:
         latitude = \
-            googleMap_data['result']['geometry']['location']['lat']
+            googleMap_data['lat']
         longitude = \
-            googleMap_data['result']['geometry']['location']['lng']
+            googleMap_data['lng']
     except KeyError:
-        wiki_pages = {}
+        wiki_pages = {'candidates': [], 'status': 'ZERO_RESULTS'}
     else:
         wiki_pages= get_address_url(latitude, longitude)
     wiki_result = None
@@ -112,7 +112,7 @@ def search_address_to_wiki(chat_connect_object, user_request_parsed):
         index for index, value_score in enumerate(score_list)
         if value_score == score_max
     ]
-    print(wiki_pages_list[index_score[0]])
+    print(f'[address_to_wiki] = {wiki_pages_list[index_score[0]]}')
     # ~ score_max = max(score_list[]['score'])
     # ~ index_score_max_in_score_list = [i for i, j in enumarate(score_list) if j == score_max]
     # ~ best_page_wikipedia = score_list[index_score_max_in_score_list]
@@ -150,7 +150,7 @@ def search_address_to_wiki(chat_connect_object, user_request_parsed):
         elif not title_as_set.isdisjoint(formatted_address_as_set):
             wiki_result = get_page_url(formatted_address)
         else:
-            wiki_result = wiki_result = get_page_url(title)
+            wiki_result = get_page_url(title)
     result_apis = {
         'googleMap_data': googleMap_data,
         'wiki_page_result': wiki_result}
@@ -174,6 +174,4 @@ def normalize_text(text):
     
 
 if __name__ == '__main__':
-    import google_api
-    address = get_page_url('paris')
-    print(f'url_address = {address}')
+    pass

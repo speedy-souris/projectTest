@@ -184,19 +184,20 @@ class TestHomeMain:
                             # ~ 'southwest': {'lat': 43.97977603685276, 'lng': 1.84876291855722}}}},
             # ~ 'status': 'OK'}
         # ~ monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        main.main('bonjour', database_redis_number=1)
         presentation_user_indecency = main.main('vieux', database_redis_number=1)
         # has_user_incivility_status = True
-        assert presentation_user_indecency.has_user_incivility_status
+        assert not presentation_user_indecency.has_user_incivility_status
         # has_user_indecency_status = True
         assert presentation_user_indecency.has_user_indecency_status
         # has_user_incomprehension_status = False
-        assert presentation_user_indecency.has_user_incomprehension_status
+        assert not presentation_user_indecency.has_user_incomprehension_status
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'disrespectful'
         assert presentation_user_indecency.grandpy_status_code == 'disrespectful'
         # number_of_user_incivility = 1
-        assert presentation_user_indecency.number_of_user_incivility == 1
+        assert presentation_user_indecency.number_of_user_incivility == 0
         # number_of_user_indecency = 1
         assert presentation_user_indecency.number_of_user_indecency == 1
         # 'number_of_user_incomprehension = 0
@@ -218,21 +219,22 @@ class TestHomeMain:
                             # ~ 'southwest': {'lat': 43.97977603685276, 'lng': 1.84876291855722}}}},
             # ~ 'status': 'OK'}
         # ~ monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        main.main('bonjour', database_redis_number=1)
         main.main('vieux', database_redis_number=1)
         presentation_user_indecency = main.main('vieux', database_redis_number=1)
 
         # has_user_incivility_status = True
-        assert presentation_user_indecency.has_user_incivility_status
+        assert not presentation_user_indecency.has_user_incivility_status
         # has_user_indecency_status = True
         assert presentation_user_indecency.has_user_indecency_status
         # has_user_incomprehension_status = False
-        assert presentation_user_indecency.has_user_incomprehension_status
+        assert not presentation_user_indecency.has_user_incomprehension_status
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'disrespectful'
         assert presentation_user_indecency.grandpy_status_code == 'disrespectful'
         # 'number_of_user_incivility = 1
-        assert presentation_user_indecency.number_of_user_incivility == 2
+        assert presentation_user_indecency.number_of_user_incivility == 0
         # number_of_user_indecency = 2
         assert presentation_user_indecency.number_of_user_indecency == 2
         # number_of_user_incomprehension = 0
@@ -255,13 +257,14 @@ class TestHomeMain:
                             # ~ 'southwest': {'lat': 43.97977603685276, 'lng': 1.84876291855722}}}},
             # ~ 'status': 'OK'}
         # ~ monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        main.main('bonjour', database_redis_number=1)
         main.main('vieux', database_redis_number=1)
         main.main('vieux', database_redis_number=1)
         # incorrect request of the user X4 ==> indecency presentation without ('bonjour'....)
         presentation_user_indecency = main.main('vieux', database_redis_number=1)
 
         # has_user_incomprehension_status = False
-        assert presentation_user_indecency.has_user_incomprehension_status
+        assert not presentation_user_indecency.has_user_incomprehension_status
         # has_fatigue_quotas_of_grandpy = False
         assert not presentation_user_indecency.has_fatigue_quotas_of_grandpy
         # grandpy_status_code = 'disrespectful'
@@ -282,15 +285,16 @@ class TestHomeMain:
     # 19) DONE incomprehension query (home) 1 to X2
     # ~ @pytest.mark.skip()
     def test_incomprehension_request_user_to_1(self, monkeypatch):
-        # incomprehension presentation of the user X1 ==> question without ('bonjour'...)
+        # incomprehension presentation of the user X1 ==> question with ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
         # ~ get_candidate_places = expected_result_mock(get_candidate_places=True)
         monkeypatch.setattr(
             requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
 
-        presentation_user_incomprehension = main.main('', database_redis_number=1)
-        # user_behavior['has_user_incivility_status'] = True
-        assert presentation_user_incomprehension.has_user_incivility_status
+        main.main('bonjour', database_redis_number=1)
+        presentation_user_incomprehension = main.main('zejsdkjcsdk', database_redis_number=1)
+        # user_behavior['has_user_incivility_status'] = False
+        assert not presentation_user_incomprehension.has_user_incivility_status
         # user_behavior['has_user_indecency_status'] = False
         assert not presentation_user_incomprehension.has_user_indecency_status
         # user_behavior['has_user_incomprehension_status'] = True
@@ -300,7 +304,7 @@ class TestHomeMain:
         # user_behavior['grandpy_status_code'] = 'incomprehension'
         assert presentation_user_incomprehension.grandpy_status_code == 'incomprehension'
         # user_behavior['number_of_user_incivility'] = 1
-        assert presentation_user_incomprehension.number_of_user_incivility == 1
+        assert presentation_user_incomprehension.number_of_user_incivility == 0
         # user_behavior['number_of_user_indecency'] = 0
         assert presentation_user_incomprehension.number_of_user_indecency == 0
         # user_behavior['number_of_user_incomprehension'] = 1
@@ -308,17 +312,46 @@ class TestHomeMain:
         # user_behavior['number_of_user_entries'] = 0
         assert presentation_user_incomprehension.number_of_user_entries == 0
 
+        def test_incomprehension_request_user_to_1_with_empty_input(self, monkeypatch):
+        # incomprehension presentation of the user X1 ==> question with ('bonjour'...)
+            expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
+            # ~ get_candidate_places = expected_result_mock(get_candidate_places=True)
+            monkeypatch.setattr(
+                requests, 'get', get_mockreturn(about_a_places_result=expected_mock_result))
+    
+            main.main('bonjour', database_redis_number=1)
+            presentation_user_incomprehension = main.main(' ', database_redis_number=1)
+            # user_behavior['has_user_incivility_status'] = True
+            assert not presentation_user_incomprehension.has_user_incivility_status
+            # user_behavior['has_user_indecency_status'] = False
+            assert not presentation_user_incomprehension.has_user_indecency_status
+            # user_behavior['has_user_incomprehension_status'] = True
+            assert presentation_user_incomprehension.has_user_incomprehension_status
+            # user_behavior['has_fatigue_quotas_of_grandpy'] = False
+            assert not presentation_user_incomprehension.has_fatigue_quotas_of_grandpy
+            # user_behavior['grandpy_status_code'] = 'incomprehension'
+            assert presentation_user_incomprehension.grandpy_status_code == 'incomprehension'
+            # user_behavior['number_of_user_incivility'] = 1
+            assert presentation_user_incomprehension.number_of_user_incivility == 0
+            # user_behavior['number_of_user_indecency'] = 0
+            assert presentation_user_incomprehension.number_of_user_indecency == 0
+            # user_behavior['number_of_user_incomprehension'] = 1
+            assert presentation_user_incomprehension.number_of_user_incomprehension == 1
+            # user_behavior['number_of_user_entries'] = 0
+            assert presentation_user_incomprehension.number_of_user_entries == 0    
+
     # ~ @pytest.mark.skip()
     def test_incomprehension_request_user_to_2(self, monkeypatch):
         # incomprehension presentation of the user X2 ==> question without ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
         monkeypatch.setattr(
             requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
+        main.main('bonjour', database_redis_number=1)
         main.main('', database_redis_number=1)
         presentation_user_incomprehension = main.main('', database_redis_number=1)
 
         # user_behavior['has_user_incivility_status'] = True
-        assert presentation_user_incomprehension.has_user_incivility_status
+        assert not presentation_user_incomprehension.has_user_incivility_status
         # user_behavior['has_user_indecency_status'] = False
         assert not presentation_user_incomprehension.has_user_indecency_status
         # user_behavior['has_user_incomprehension_status'] = True
@@ -328,7 +361,7 @@ class TestHomeMain:
         # user_behavior['grandpy_status_code'] = 'incomprehension'
         assert presentation_user_incomprehension.grandpy_status_code == 'incomprehension'
         # user_behavior['number_of_user_incivility'] = 2
-        assert presentation_user_incomprehension.number_of_user_incivility == 2
+        assert presentation_user_incomprehension.number_of_user_incivility == 0
         # user_behavior['number_of_user_indecency'] = 0
         assert presentation_user_incomprehension.number_of_user_indecency == 0
         # user_behavior['number_of_user_incomprehension'] = 2
@@ -343,6 +376,7 @@ class TestHomeMain:
         expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
         monkeypatch.setattr(
             requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
+        main.main('bonjour', database_redis_number=1)
         main.main('', database_redis_number=1)
         main.main('', database_redis_number=1)
         main.main('', database_redis_number=1)
@@ -489,17 +523,7 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_indecency_after_correct_presentation_user(self, monkeypatch):
         # correct presentation of the user ==> ('bonjour'....)
-        expected_result = {
-            'html_attributions': [],
-            'result': {
-                'formatted_address': '10 Quai de la Charente, 75019 Paris, France',
-                'geometry': {
-                    'location': {'lat': 48.8975156, 'lng': 2.3833993},
-                    'viewport': {
-                        'northeast': {'lat': 48.89886618029151, 'lng': 2.384755530291502},
-                        'southwest': {'lat': 48.89616821970851, 'lng': 2.382057569708498}}}},
-            'status': 'OK'}
-        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
+        self.mock_params(monkeypatch, expected_result_mock)
         main.main('bonjour', database_redis_number=1)
         main.main('ou se trouve openClassrooms', database_redis_number=1)
         dialogue_of_presentation = main.main('vieux', database_redis_number=1)

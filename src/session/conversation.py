@@ -164,26 +164,29 @@ class Conversation:
         self.has_user_indecency_status =\
             not indecency_set_data.isdisjoint(user_entry_lowercase)
 
-    def calculate_the_incomprehension_status(self) -> None:
+    def calculate_the_incomprehension_status(self) -> dict:
         """update the attribut has_user_indecency_status since GoogleMap API"""
         # ~ import pdb; pdb.set_trace()
         # ~ incomprehension_status = False
         incomprehension_status = True
+        result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
         if bool(self.parsed_user_entry):
-            result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
             print(f'[in conversation_as_incomprehension] = {result_api}')
             print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
-        
-            if type(result_api) is dict and 'candidates' in result_api:
-                if bool(result_api['candidates']):
-                #exemple result_api
-                # in (
-                # ~ {'candidates': [], 'status': 'ZERO_RESULTS'},
-                # ~ {'candidates': [], 'status': 'INVALID_REQUEST'},
-                # ~ {'candidates': [], 'error_message': 'The provided API key is invalid.',
-                # ~ 'status': 'REQUEST_DENIED'}):
+            if type(result_api) is dict and 'result' in result_api:
+                if bool(result_api['result']):
                     incomprehension_status = False
         self.has_user_incomprehension_status = incomprehension_status
+        coordinates_googleMap_API = ' '
+        if bool(self.parsed_user_entry):
+            try:
+            # ~ if type(result_api) is dict and 'result' in result_api:
+                coordinates_googleMap_API = result_api['result']['geometrie']['location']
+            except (KeyError, TypeError):
+                coordinates_googleMap_API = {}
+            else:
+                print(f'[calculate_incomprehension] = {coordinates_googleMap_API}')
+                return coordinates_googleMap_API
 
     def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""
