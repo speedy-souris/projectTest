@@ -175,7 +175,9 @@ def main(user_request, database_redis_number=0):
     
 
     database_redis_connect_object.update_redis_database(chat_connect_object)
-    return chat_connect_object, coordinates_googleMap_API
+    chat_connect_object.coordinates_api = coordinates_googleMap_API
+    print(f'[main] = {chat_connect_object.coordinates_api}')
+    return chat_connect_object
 
 
 if __name__ == '__main__':

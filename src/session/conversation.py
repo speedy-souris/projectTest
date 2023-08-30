@@ -171,8 +171,8 @@ class Conversation:
         incomprehension_status = True
         result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
         if bool(self.parsed_user_entry):
-            print(f'[in conversation_as_incomprehension] = {result_api}')
-            print (f'[in conversation_as_incomprehension]  = {self.user_entry}')
+            print(f'[in conversation_as_incomprehension1] = {result_api}')
+            print (f'[in conversation_as_incomprehension2]  = {self.user_entry}')
             if type(result_api) is dict and 'result' in result_api:
                 if bool(result_api['result']):
                     incomprehension_status = False
@@ -181,7 +181,7 @@ class Conversation:
         if bool(self.parsed_user_entry):
             try:
             # ~ if type(result_api) is dict and 'result' in result_api:
-                coordinates_googleMap_API = result_api['result']['geometrie']['location']
+                coordinates_googleMap_API = result_api#['result']['geometry']['location']
             except (KeyError, TypeError):
                 coordinates_googleMap_API = {}
             else:

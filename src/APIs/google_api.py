@@ -100,6 +100,7 @@ def get_address_api_from_placeid(placeid) -> object:
 
 def get_static_map_from_address_api(json_from_wikipedia):
     """Display of the static map at the user's request"""
+    print(f'[map_static] = {json_from_wikipedia}')
     try:
         location = json_from_wikipedia['result']['geometry']['location']
         address = json_from_wikipedia['result']['formatted_address']

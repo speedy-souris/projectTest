@@ -59,23 +59,30 @@ def answer_gp(reflection, user_question_request):
         # ~ print(f'[in views.py] data_send = {data_send}')
         # ~ return data_send
     # ~ else:
-    chat_object = chat_connect_object[0]
-    coordinates_googleMap_API = chat_connect_object[1]
+    # ~ chat_object = chat_connect_object[0]
+    coordinates_googleMap_API = chat_connect_object.coordinates_api
     wiki_response = \
         wikipedia_api.search_address_to_wiki(
-            chat_object, chat_object.parsed_user_entry, coordinates_googleMap_API)
-    print(f'[views.py] = {wiki_response}')
-    static_map_display = google_api.get_static_map_from_address_api(
-        wiki_response['googleMap_data'])
+            chat_connect_object, chat_connect_object.parsed_user_entry, 
+            coordinates_googleMap_API)
+    try:
+        wiki_response['wiki_page_result'] = \
+            wiki_response['wiki_page_result']['query']['pages'][0]['extract']
+    except TypeError:
+        wiki_response['wiki_page_result'] = 'page vide'
+    else:
+        print(f'[views.py] = {wiki_response}')
+        static_map_display = google_api.get_static_map_from_address_api(
+            wiki_response['googleMap_data'])
     # sending parameters
-    data_send = {
-        'grandpy_status_code': chat_connect_object.grandpy_status_code,
-        'address': user_question_request,
-        'map': base64.b64encode(static_map_display).decode('utf-8'),
-        'history': wiki_response['wiki_page_result']
-    }
-    print(f'data_send = {data_send}')
-    return data_send
+        data_send = {
+            'grandpy_status_code': chat_connect_object.grandpy_status_code,
+            'address': user_question_request,
+            'map': base64.b64encode(static_map_display).decode('utf-8'),
+            'history': wiki_response['wiki_page_result']
+        }
+        print(f'data_send = {data_send}')
+        return data_send
 
 
 if __name__ == '__main__':

@@ -53,12 +53,18 @@ def get_page_url(title):
     params = get_page_data(title)
     page_url = get_url_json(url=url, params=params)
     print(f'[wikipedia_as_page_url = {page_url}]')
-    if page_url['query']['pages'][0]['extract'] != '':
-        return page_url
-    if page_url[3] != []:
-       return page_url[3]
+    try:
+        page_url['query']['pages'][0]['extract'] != ''
+    except KeyError:
+        page_url = {}
     else:
+        return page_url
+    try:
+        page_url[3] != []
+    except KeyError:
         return ['',[], [], []]
+    else:
+        return page_url[3]
 
 
 def get_address_url(latitude, longitude):
@@ -78,12 +84,13 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
     # DONE WIKIPEDIA API calling
     """call of the WikiPedia APIs according to the user's request"""
     # ~ googleMap_data = google_api.search_address_to_gMap(user_request_parsed)
+    print(f'[seach_wiki] = {googleMap_data}')
     try:
         latitude = \
-            googleMap_data['lat']
+            googleMap_data['result']['geometry']['location']['lat']
         longitude = \
-            googleMap_data['lng']
-    except KeyError:
+            googleMap_data['result']['geometry']['location']['lng']
+    except (KeyError, TypeError):
         wiki_pages = {'candidates': [], 'status': 'ZERO_RESULTS'}
     else:
         wiki_pages= get_address_url(latitude, longitude)

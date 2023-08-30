@@ -287,7 +287,7 @@ class TestHomeMain:
     def test_incomprehension_request_user_to_1(self, monkeypatch):
         # incomprehension presentation of the user X1 ==> question with ('bonjour'...)
         expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
-        # ~ get_candidate_places = expected_result_mock(get_candidate_places=True)
+        get_candidate_places = expected_result_mock(get_candidate_places=True)
         monkeypatch.setattr(
             requests, 'get', get_mockreturn(candidate_places_result=expected_mock_result))
 
@@ -315,7 +315,7 @@ class TestHomeMain:
         def test_incomprehension_request_user_to_1_with_empty_input(self, monkeypatch):
         # incomprehension presentation of the user X1 ==> question with ('bonjour'...)
             expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
-            # ~ get_candidate_places = expected_result_mock(get_candidate_places=True)
+            get_candidate_places = expected_result_mock(get_candidate_places=True)
             monkeypatch.setattr(
                 requests, 'get', get_mockreturn(about_a_places_result=expected_mock_result))
     
