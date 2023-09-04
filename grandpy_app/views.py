@@ -65,6 +65,7 @@ def answer_gp(reflection, user_question_request):
         wikipedia_api.search_address_to_wiki(
             chat_connect_object, chat_connect_object.parsed_user_entry, 
             coordinates_googleMap_API)
+    print(f'[views1] = {wiki_response}')
     try:
         wiki_response['wiki_page_result'] = \
             wiki_response['wiki_page_result']['query']['pages'][0]['extract']
@@ -80,7 +81,7 @@ def answer_gp(reflection, user_question_request):
         'map': base64.b64encode(static_map_display).decode('utf-8'),
         'history': wiki_response['wiki_page_result']
     }
-    print(f'data_send = {data_send}')
+    #print(f'data_send = {data_send}')
     return data_send
 
 
