@@ -85,6 +85,9 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
     """call of the WikiPedia APIs according to the user's request"""
     # ~ googleMap_data = google_api.search_address_to_gMap(user_request_parsed)
     print(f'[seach_wiki] = {googleMap_data}')
+    #
+    # return location coordinates from the googleMap api 
+    #
     try:
         latitude = \
             googleMap_data['result']['geometry']['location']['lat']
@@ -94,10 +97,12 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
         wiki_pages = {'candidates': [], 'status': 'ZERO_RESULTS'}
     else:
         wiki_pages= get_address_url(latitude, longitude)
+    #
+    # creation of indexes on each wikipedia page
+    #
     wiki_result = None
     wiki_pages_list = [] # [{'score': 2, 'wikipedia_title':'rue shomberg'}]  
     score_list = [] # [0,1,0,1,2,...]
-    print(f'[search_wiki2] = {wiki_pages}')
     if 'query' not in wiki_pages:
         return {'googleMap_data': {},
                     'wiki_page_result': ['', [], [], []]}
@@ -115,9 +120,9 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
         index for index, value_score in enumerate(score_list)
         if value_score == score_max
     ]
-    print(f'[address_to_wiki] = {wiki_pages_list[index_score[0]]}')
-    print(f'[search_wiki2.5] = {wiki_pages}')
-    print(f'[search_wiki2.6] = {googleMap_data}')
+    #
+    # retrieve and display the wikipedia page with the highest index
+    #
     try:
         title = wiki_pages_list[index_score[0]]['wikipedia_title']
         formatted_address = googleMap_data['result']['formatted_address']
@@ -128,7 +133,8 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
         # ~ title = normalize_text(title)
         # ~ formatted_address = normalize_text(formatted_address)
         wiki_result = get_page_url(user_request_parsed)
-        user_request_parsed = normalize_text(user_request_parsed)
+        print(f'[search_wiki2.65] = {user_request_parsed}')
+        # ~ user_request_parsed = normalize_text(user_request_parsed)
         title_as_set = set(title.split(' '))
         formatted_address_as_set = set(formatted_address.split(' '))
         title_as_set.isdisjoint(formatted_address_as_set) 
