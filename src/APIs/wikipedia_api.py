@@ -135,7 +135,9 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
     # retrieve and display the wikipedia page with the highest index
     #
     try:
-        title = wiki_pages_list[index_score[0]]['wikipedia_title']
+        # ~ title = wiki_pages_list[index_score[0]]['wikipedia_title']
+        print(f"search_wiki2.65 = {wiki_pages['query']['geosearch'][0]}")
+        title = wiki_pages['query']['geosearch'][0]['title']
         formatted_address = googleMap_data['result']['formatted_address']
         
     except (KeyError, IndexError):
@@ -154,12 +156,13 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
             # ~ wiki_result = get_page_url(user_request_parsed)
             # ~ print(f'[search_wiki2.66] = {wiki_result}')
         # ~ elif not title_as_set.isdisjoint(formatted_address_as_set):
+        print(f"[search_wiki2.7] = {title}")
         wiki_result = get_page_url(title)
             # ~ print(f'[search_wiki2.67] = {wiki_result}')
         # ~ else:
             # ~ wiki_result = get_page_url(title)
             # ~ print(f'[search_wiki2.68] = {wiki_result}')
-        # ~ print(f'[search_wiki2.7] = {wiki_result}')
+        print(f'[search_wiki2.71] = {wiki_result}')
     # ~ print(f'[seach_wiki3] = {wiki_result}')
     result_apis = {
         'googleMap_data': googleMap_data,
