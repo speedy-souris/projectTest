@@ -60,12 +60,16 @@ def answer_gp(reflection, user_question_request):
         # ~ return data_send
     # ~ else:
     # ~ chat_object = chat_connect_object[0]
+    print(f'[views1] = {chat_connect_object.parsed_user_entry}' )
     coordinates_googleMap_API = chat_connect_object.coordinates_api
+    print(f'[views1.5] = { coordinates_googleMap_API}')
+   
     wiki_response = \
         wikipedia_api.search_address_to_wiki(
             chat_connect_object, chat_connect_object.parsed_user_entry, 
             coordinates_googleMap_API)
-    print(f'[views1] = {wiki_response}')
+    print(f'[views2] = {wiki_response}')
+    
     try:
         wiki_response['wiki_page_result'] = \
             wiki_response['wiki_page_result']['query']['pages'][0]['extract']

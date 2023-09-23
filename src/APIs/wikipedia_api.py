@@ -94,12 +94,17 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
         longitude = \
             googleMap_data['result']['geometry']['location']['lng']
     except (KeyError, TypeError):
-        wiki_pages = {'candidates': [], 'status': 'ZERO_RESULTS'}
+        wiki_pages = {
+            'batchcomplete': '', 
+            'query': {
+                'geosearch': []}}
     else:
         wiki_pages= get_address_url(latitude, longitude)
     #
     # creation of indexes on each wikipedia page
     #
+        print(f'[search_wiki2] = {[page["title"] for page in wiki_pages["query"]["geosearch"]]}')
+        # ~ print(f'[search_wiki2] = {[d for d in wiki_pages["query"]["geosearch"][0]["title"]]}')
     wiki_result = None
     wiki_pages_list = [] # [{'score': 2, 'wikipedia_title':'rue shomberg'}]  
     score_list = [] # [0,1,0,1,2,...]
@@ -108,14 +113,20 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
                     'wiki_page_result': ['', [], [], []]}
     for index, dict_of_pages in enumerate(wiki_pages['query']['geosearch']):
         wikipedia_title = dict_of_pages["title"]
-        title_as_set = set(normalize_text(wikipedia_title).split(' '))
-        formatted_address_as_set = \
-            set(normalize_text(googleMap_data['result']['formatted_address']).split(' '))
+        # ~ title_as_set = set(normalize_text(wikipedia_title).split(' '))
+        title_as_set = set(wikipedia_title)
+        # ~ print(f'[search_wiki2.1] = {title_as_set}')
+        # ~ print(f'[search_wiki2.2] = {wikipedia_title}')
+        # ~ formatted_address_as_set = \
+            # ~ set(normalize_text(googleMap_data['result']['formatted_address']).split(' '))
+        formatted_address_as_set = set(googleMap_data['result']['formatted_address'])
         wiki_pages_list.append(
             {'score': len(title_as_set & formatted_address_as_set),
             'wikipedia_title': wikipedia_title})
         score_list.append(wiki_pages_list[index]['score'])
+    print(f'[search_wiki2.5] = {score_list}')
     score_max = max(score_list)
+    print(f'[search_wiki2.6] = {score_max}')
     index_score = [
         index for index, value_score in enumerate(score_list)
         if value_score == score_max
@@ -132,21 +143,24 @@ def search_address_to_wiki(chat_object, user_request_parsed, googleMap_data):
     else:
         # ~ title = normalize_text(title)
         # ~ formatted_address = normalize_text(formatted_address)
-        wiki_result = get_page_url(user_request_parsed)
-        print(f'[search_wiki2.65] = {user_request_parsed}')
+        # ~ print(f'[search_wiki2.65] = {formatted_address} {title}')
+        # ~ wiki_result = get_page_url(user_request_parsed)
         # ~ user_request_parsed = normalize_text(user_request_parsed)
-        title_as_set = set(title.split(' '))
-        formatted_address_as_set = set(formatted_address.split(' '))
-        title_as_set.isdisjoint(formatted_address_as_set) 
-        user_request_as_set = user_request_parsed.split(' ')
-        if not title_as_set.isdisjoint(user_request_as_set ):
-            wiki_result = get_page_url(user_request_parsed)
-        elif not title_as_set.isdisjoint(formatted_address_as_set):
-            wiki_result = get_page_url(formatted_address)
-        else:
-            wiki_result = get_page_url(title)
-        print(f'[search_wiki2.7] = {wiki_result}')
-    print(f'[seach_wiki3] = {wiki_result}')
+        # ~ title_as_set = set(title.split(' '))
+        # ~ formatted_address_as_set = set(formatted_address.split(' '))
+        # ~ title_as_set.isdisjoint(formatted_address_as_set) 
+        # ~ user_request_as_set = user_request_parsed.split(' ')
+        # ~ if not title_as_set.isdisjoint(user_request_as_set ):
+            # ~ wiki_result = get_page_url(user_request_parsed)
+            # ~ print(f'[search_wiki2.66] = {wiki_result}')
+        # ~ elif not title_as_set.isdisjoint(formatted_address_as_set):
+        wiki_result = get_page_url(title)
+            # ~ print(f'[search_wiki2.67] = {wiki_result}')
+        # ~ else:
+            # ~ wiki_result = get_page_url(title)
+            # ~ print(f'[search_wiki2.68] = {wiki_result}')
+        # ~ print(f'[search_wiki2.7] = {wiki_result}')
+    # ~ print(f'[seach_wiki3] = {wiki_result}')
     result_apis = {
         'googleMap_data': googleMap_data,
         'wiki_page_result': wiki_result}
