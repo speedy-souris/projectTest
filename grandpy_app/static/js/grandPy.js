@@ -89,11 +89,11 @@ function beginning_of_fatigue(){
 
 function wikipedia_response_display(code_grandpy){
     var wiki_display = code_grandpy.history
-    wiki_response = document.getElementById('history').textContent = wiki_display;};
+    document.getElementById('history').innerHTML = wiki_display;};
 
 function googleMap_static_response_display(code_grandpy){
     var static_map_display = code_grandpy.map
-    static_map_response = document.getElementById('map').src = 'data:image/png;base64,'+static_map_display;};
+    document.getElementById('map').src = 'data:image/png;base64,'+static_map_display;};
 
 function apis_response_display(code_grandpy){
     document.getElementById('address').textContent = "la réponse a la question : "+code_grandpy.address+" ?";
@@ -101,9 +101,6 @@ function apis_response_display(code_grandpy){
     googleMap_static_response_display(code_grandpy)};
 
 function answer_gp(code_grandpy){
-    //~ var response_json = JSON.parse(grandpy_code);
-    //~ var response_json = grandpy_status_code;
-    
     switch(code_grandpy.grandpy_status_code){
         case 'benevolent':
             welcome_message();

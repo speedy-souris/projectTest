@@ -21,24 +21,6 @@ def get_mockreturn(
     return mock_get
 
 
-# --------------------------------------------------
-# -- user's incomprehension  Mock--
-# --------------------------------------------------
-# ~ def get_user_incomprehension_googleMap_api_mockreturn():
-    # ~ """mock template call"""
-    # ~ def mock_get(url, params):
-        # ~ """Mock function on api object"""
-        # ~ class JsonResponse:
-            # ~ """mock result in JSON format"""
-            # ~ @staticmethod
-            # ~ def json():
-                # ~ """Json method"""
-                # ~ return {
-                    # ~ 'candidates': [], 'status': 'INVALID_REQUEST'}
-        # ~ return JsonResponse()
-    # ~ return mock_get
-
-
 def expected_result_mock(
     get_candidate_places=False, about_a_place=False, get_wikipedia_places=False):
     """expected result for the mock return"""

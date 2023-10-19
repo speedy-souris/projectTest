@@ -110,12 +110,10 @@ def get_static_map_from_address_api(json_from_wikipedia):
         url_api = 'https://maps.googleapis.com/maps/api/staticmap'
         parameter_data = get_settings_for_map_static_api(location, address)
         map_static_api = requests.get(url=url_api, params=parameter_data).content
-    # ~ import pdb; pdb.set_trace()
     return map_static_api
 
 
 def search_address_to_gMap(user_question_request):
-    # DONE GoogleMap API calling
     """call of the GoogleMap APIs according to the user's request"""
     gmap_api_placeid_value = ' '
     googleMap_data = user_question_request

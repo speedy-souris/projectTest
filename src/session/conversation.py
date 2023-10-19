@@ -26,8 +26,6 @@ class Conversation:
         'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
         'senile', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'gateux',
         'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr', 'bsr', 'slt'})
-    # Data for check incomprehension user behavior
-    # ~ INCOMPREHENSION_SET_DATA = frozenset({'~', '#', '|', '\\', '€', '/', '&'})
     # Data for parser (Words deleted for search)
     UNNECESSARY_SET_DATA = frozenset({
         'a', 'abord', 'absolument', 'afin', 'ah', 'ai', 'aie', 'ailleurs', 'ainsi', 'ait',
@@ -128,7 +126,7 @@ class Conversation:
         self.grandpy_status_code =\
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
-        
+
 
     def __str__(self):
         text = ''
@@ -166,8 +164,6 @@ class Conversation:
 
     def calculate_the_incomprehension_status(self) -> dict:
         """update the attribut has_user_indecency_status since GoogleMap API"""
-        # ~ import pdb; pdb.set_trace()
-        # ~ incomprehension_status = False
         incomprehension_status = True
         result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
         if bool(self.parsed_user_entry):
@@ -180,7 +176,6 @@ class Conversation:
         coordinates_googleMap_API = ' '
         if bool(self.parsed_user_entry):
             try:
-            # ~ if type(result_api) is dict and 'result' in result_api:
                 coordinates_googleMap_API = result_api#['result']['geometry']['location']
             except (KeyError, TypeError):
                 coordinates_googleMap_API = {}
@@ -200,7 +195,6 @@ class Conversation:
         list_of_keyword = [
             w for w in list_of_word_request_user
             if w.lower() not in self.__class__.UNNECESSARY_SET_DATA]
-        # ~ list_of_keyword = list_of_word_request_user
         if list_of_keyword != []:
             self.parsed_user_entry = ' '.join(list_of_keyword)
 
