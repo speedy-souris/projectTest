@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}" />
+  <link rel="icon" type="image/ico" ref="{{ url_for('static', filename='image/favicon.ico') }}" />
+  <title>GrandPy</title>
+</head>
+
+<body>
+  <header class="text-center bg-warning">
+    <h1>GrandPy</h1>
+    <h2 class="d-none d-xl-block">le Papy robot est là pour vous aidez a vous retrouver dans le quartier!</h2>
+  </header>
+  <main class="container-fluid">
+    <div class="row">
+      <div class="col">1</div>
+      <div class="col">2</div>
+      <div class="col">3</div>
+      <div class="col">4</div>
+      <div class="col">5</div>
+      <div class="col">6</div>
+      <div class="col">7</div>
+      <div class="col">8</div>
+      <div class="col">9</div>
+      <div class="col">10</div>
+      <div class="col">11</div>
+      <div class="col">12</div>
+    </div>
+    {# the question asked to GrandPy #}
+    <div class="row">
+      <div class="col-2 col-md-3 col-lg-2 col-xxl-1" style="margin-top: 380px;">
+        <img src="{{ url_for('static', filename='image/Grandpy.png') }}" class="rounded float-md-end" alt=" image de
+                      grand papy" />
+      </div>
+      <div id="answer" class="col-12 col-md-11 col-lg-8 col-xl-6 my-5 offset-lg-1 offset-xl-2"
+        style="margin-top: auto;">
+        <fieldset>
+          <p id="address"></p>
+          <legend>Réponse de GrandPy</legend>
+          {# Geolocation of demand #}
+          <fieldset>
+            <legend>Localisation</legend>
+            <img id="map" width="600" height="300" frameborder="0" style="border: 0" />
+          </fieldset>
+
+          {# History of the content of the application #}
+          <fieldset>
+            <legend>Historique</legend>
+            <p id="history"></p>
+          </fieldset>
+        </fieldset>
+        {# validate the other question #}
+        <div id="other" class="my-5"><a href="{{ url_for('index') }}"> Pose une Autre question</a> </div>
+      </div>
+      <div class="col-10 col-md-8 col-lg-5 col-xxl-4" style="margin-top: 188px;">
+        {# welcome message #}
+        <img id="word_of_welcome" src="{{ url_for('static', filename='image/text_home.png') }}"
+          alt="parole de grand papy" />
+        {# reply message #}
+        <img id="gp_reply1" src="{{ url_for('static', filename='image/answer1.png') }}" alt="parole de grand papy" />
+        <img id="gp_reply2" src="{{ url_for('static', filename='image/answer2.png') }}" alt="parole de grand papy" />
+        <img id="gp_reply3" src="{{ url_for('static', filename='image/answer3.png') }}" alt="parole de grand papy" />
+        <img id="gp_reply4" src="{{ url_for('static', filename='image/answer4.png') }}" alt="parole de grand papy" />
+        <img id="gp_reply5" src="{{ url_for('static', filename='image/answer5.png') }}" alt="parole de grand papy" />
+        <img id="gp_reply6" src="{{ url_for('static', filename='image/answer6.png') }}" alt="parole de grand papy" />
+        <img id="gp_reply7" src="{{ url_for('static', filename='image/answer7.png') }}" alt="parole de grand papy" />
+        {# over quotas message#}
+        <img id="quotas" src="{{ url_for('static', filename='image/over_quotas.png') }}" alt="parole de grand papy" />
+        {# incomprehension message#}
+        <img id="comprehension" src="{{ url_for('static', filename='image/incomprehension.png') }}"
+          alt="parole de grand papy" />
+        {# fatigue message#}
+        <img id="overstrain" src="{{ url_for('static', filename='image/overstrain.png') }}"
+          alt="parole de grand papy" />
+        {# reflection grandPy #}
+        <img id="gp_reflection" style="margin-top: 100px" src="{{ url_for('static', filename='image/gpsearch.gif') }}"
+          alt="reflexion de grand papy" />
+      </div>
+
+      <div class="col-12 col-md-7 col-lg-6 col-xxl-5 offset-xxl-1" style="margin-top: 250px;">
+        <form class="row">
+          <fieldset style="background-color: yellow;">
+            <legend>Votre question à GrandPy</legend>
+            <div class="col-10">
+              <label for="questions" class="form-label">Posez votre question ici !</label>
+              <input type="text" class="form-control" id="question"
+                placeholder="ex: Ou se trouve l'hotel Napoleon a 75000 paris ?" autofocus required>
+            </div>
+            <button type="submit" class="btn btn-light my-3 mx-2">Envoyer</button>
+          </fieldset>
+        </form>
+      </div>
+      {# description persona #}
+      <div class="row">
+        <div class="col-4 d-none d-xl-block">
+          <div>Persona GrandPy,</div>
+          <div>Ce grand-père répond aux questions qui lui sont posés</div>
+          <div class="fw-bold">(Attention à son Caractère !...)</div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer class="text-center bg-warning my-5">
+    <div>
+      Pascal MACCHI
+    </div>
+    <div class="d-none d-xl-block">
+      <div>
+        <a href="https://github.com/speedy-souris/projet7.git">code source du projet GrandPy</a>
+      </div>
+      <div>
+        <a href="https://trello.com/invite/b/mk3rI1BS/320cd4a3077e3ad9252650d4b7c664f5/grandpy">
+          suivi du projet par la méthode agile Trello</a>
+      </div>
+    </div>
+    <div>2019 - 2023</div>
+  </footer>
+  <script src="{{ url_for('static', filename='js/grandPy.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
