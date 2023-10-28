@@ -3,6 +3,11 @@ function invisible_element(id_element) {
   document.getElementById(id_element).classList.add("d-none");
 }
 
+function visible_element(id_element) {
+  document.getElementById(id_element).classList.remove("d-none");
+  document.getElementById(id_element).classList.add("d-block");
+}
+
 function welcome_message() {
   document.getElementById("gp_reflection").style.display = "none";
   document.getElementById("ask").style.display = "inline";
