@@ -9,57 +9,56 @@ function visible_element(id_element) {
 }
 
 function welcome_message() {
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("ask").style.display = "inline";
+  invisible_element("gp_reflection");
+  visible_element("ask");
   document.getElementById("question").value = "";
-  document.getElementById("word_of_welcome").style.display = "inline";
+  visible_element("word_of_welcome");
 }
 
 function reflection_message() {
-  document.getElementById("word_of_welcome").style.display = "none";
-  document.getElementById("comprehension").style.display = "none";
-  document.getElementById("gp_reply1").style.display = "none";
-  document.getElementById("gp_reply2").style.display = "none";
-  document.getElementById("gp_reply3").style.display = "none";
-  document.getElementById("gp_reply4").style.display = "none";
-  document.getElementById("gp_reply5").style.display = "none";
-  document.getElementById("gp_reply6").style.display = "none";
-  document.getElementById("gp_reply7").style.display = "none";
-  document.getElementById("ask").style.display = "none";
-  document.getElementById("gp_reflection").style.display = "inline";
+  invisible_element("comprehension");
+  invisible_element("gp_reply1");
+  invisible_element("gp_reply2");
+  invisible_element("gp_reply3");
+  invisible_element("gp_reply4");
+  invisible_element("gp_reply5");
+  invisible_element("gp_reply6");
+  invisible_element("gp_reply7");
+  invisible_element("ask");
+  visible_element("gp_reflection");
 }
 
 function message_of_meanness() {
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("gp_reply1").style.display = "none";
-  document.getElementById("gp_reply2").style.display = "none";
-  document.getElementById("comprehension").style.display = "none";
+  invisible_element("gp_reflection");
+  invisible_element("gp_reply1");
+  invisible_element("gp_reply2");
+  invisible_element("comprehension");
   document.getElementById("question").value = "";
-  document.getElementById("ask").style.display = "inline";
-  document.getElementById("gp_reply2").style.display = "inline";
+  visible_element("ask");
+  visible_element("gp_reply2");
 }
 
 function rude_message() {
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("gp_reply1").style.display = "none";
-  document.getElementById("gp_reply2").style.display = "none";
-  document.getElementById("comprehension").style.display = "none";
+  invisible_element("gp_reflection");
+  invisible_element("gp_reply1");
+  invisible_element("gp_reply2");
+  invisible_element("comprehension");
   document.getElementById("question").value = "";
-  document.getElementById("ask").style.display = "inline";
-  document.getElementById("gp_reply1").style.display = "inline";
+  visible_element("ask");
+  visible_element("gp_reply1");
 }
 
 function response_quotas_reached() {
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("gp_reply1").style.display = "none";
-  document.getElementById("gp_reply2").style.display = "none";
-  document.getElementById("gp_reply3").style.display = "none";
-  document.getElementById("gp_reply4").style.display = "none";
-  document.getElementById("gp_reply5").style.display = "none";
-  document.getElementById("gp_reply6").style.display = "none";
-  document.getElementById("gp_reply7").style.display = "none";
-  document.getElementById("ask").style.display = "none";
-  document.getElementById("quotas").style.display = "inline";
+  invisible_element("gp_reflection");
+  invisible_element("gp_reply1");
+  invisible_element("gp_reply2");
+  invisible_element("gp_reply3");
+  invisible_element("gp_reply4");
+  invisible_element("gp_reply5");
+  invisible_element("gp_reply6");
+  invisible_element("gp_reply7");
+  invisible_element("ask");
+  visible_element("quotas");
 }
 
 function random_grandpy_answer() {
@@ -71,43 +70,43 @@ function random_grandpy_answer() {
     "gp_reply7",
   ];
   var random_choice = Math.floor(Math.random() * list_answers.length);
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("word_of_welcome").style.display = "none";
-  document.getElementById("comprehension").style.display = "none";
-  document.getElementById("gp_reply1").style.display = "none";
-  document.getElementById("gp_reply2").style.display = "none";
-  document.getElementById("gp_reply3").style.display = "none";
-  document.getElementById("gp_reply4").style.display = "none";
-  document.getElementById("gp_reply5").style.display = "none";
-  document.getElementById("gp_reply6").style.display = "none";
-  document.getElementById("gp_reply7").style.display = "none";
-  document.getElementById(list_answers[random_choice]).style.display = "inline";
-  document.getElementById("ask").style.display = "none";
-  document.getElementById("answer").style.display = "inline";
-  document.getElementById("other").style.display = "inline";
+  invisible_element("gp_reflection");
+  invisible_element("word_of_welcome");
+  invisible_element("comprehension");
+  invisible_element("gp_reply1");
+  invisible_element("gp_reply2");
+  invisible_element("gp_reply3");
+  invisible_element("gp_reply4");
+  invisible_element("gp_reply5");
+  invisible_element("gp_reply6");
+  invisible_element("gp_reply7");
+  visible_element(list_answers[random_choice]);
+  invisible_element("ask");
+  visible_element("answer");
+  visible_element("other");
 }
 
 function incomprehension_message() {
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("comprehension").style.display = "none";
-  document.getElementById("gp_reply1").style.display = "none";
-  document.getElementById("gp_reply2").style.display = "none";
-  document.getElementById("gp_reply3").style.display = "none";
-  document.getElementById("gp_reply4").style.display = "none";
-  document.getElementById("gp_reply5").style.display = "none";
-  document.getElementById("gp_reply6").style.display = "none";
-  document.getElementById("gp_reply7").style.display = "none";
+  invisible_element("gp_reflection");
+  invisible_element("comprehension");
+  invisible_element("gp_reply1");
+  invisible_element("gp_reply2");
+  invisible_element("gp_reply3");
+  invisible_element("gp_reply4");
+  invisible_element("gp_reply5");
+  invisible_element("gp_reply6");
+  invisible_element("gp_reply7");
   document.getElementById("question").value = "";
-  document.getElementById("ask").style.display = "inline";
-  document.getElementById("comprehension").style.display = "inline";
+  visible_element("ask");
+  visible_element("comprehension");
 }
 
 function beginning_of_fatigue() {
-  document.getElementById("gp_reflection").style.display = "none";
-  document.getElementById("overstrain").style.display = "inline";
-  document.getElementById("ask").style.display = "none";
-  document.getElementById("answer").style.display = "inline";
-  document.getElementById("other").style.display = "inline";
+  invisible_element("gp_reflection");
+  visible_element("overstrain");
+  invisible_element("ask");
+  visible_element("answer");
+  visible_element("other");
 }
 
 function wikipedia_response_display(code_grandpy) {
