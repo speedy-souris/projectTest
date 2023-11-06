@@ -8,7 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style2.css') }}" />
-  <link rel="icon" type="image/ico" ref="{{ url_for('static', filename='image/favicon.ico') }}" />
+  <link rel="icon" type="image/ico" href="{{ url_for('static', filename='image/favicon.ico') }}" />
   <title>GrandPy</title>
 </head>
 
@@ -38,27 +38,8 @@
         <img src="{{ url_for('static', filename='image/Grandpy.png') }}" class="rounded float-md-end" alt=" image de
                       grand papy" />
       </div>
-      <div id="answer" class="col-12 col-md-11 col-lg-8 col-xl-6 my-5 offset-lg-1 offset-xl-2"
-        style="margin-top: auto;">
-        <fieldset>
-          <p id="address"></p>
-          <legend>Réponse de GrandPy</legend>
-          {# Geolocation of demand #}
-          <fieldset>
-            <legend>Localisation</legend>
-            <img id="map" width="600" height="300" frameborder="0" style="border: 0" />
-          </fieldset>
-
-          {# History of the content of the application #}
-          <fieldset>
-            <legend>Historique</legend>
-            <p id="history"></p>
-          </fieldset>
-        </fieldset>
-        {# validate the other question #}
-        <div id="other" class="my-5"><a href="{{ url_for('index') }}"> Pose une Autre question</a> </div>
-      </div>
-      <div class="col-10 col-md-8 col-lg-5 col-xxl-4" style="margin-top: 188px;">
+      
+      <div class="col-10 col-md-8 col-lg-5 col-xxl-3" style="height: 380px; margin-top: 188px;">
         {# welcome message #}
         <img id="word_of_welcome" src="{{ url_for('static', filename='image/text_home.png') }}"
           alt="parole de grand papy" />
@@ -82,7 +63,26 @@
         <img id="gp_reflection" style="margin-top: 100px" src="{{ url_for('static', filename='image/gpsearch.gif') }}"
           alt="reflexion de grand papy" />
       </div>
+      <div id="answer" class="col-12 col-md-11 col-lg-8 col-xl-6 my-5 offset-lg-1 offset-xl-2 "
+        style="margin-top: auto;background-color: yellow">
+        <fieldset>
+          <p id="address"></p>
+          <legend>Réponse de GrandPy</legend>
+          {# Geolocation of demand #}
+          <fieldset>
+            <legend>Localisation</legend>
+            <img id="map" width="600" height="300" frameborder="0" style="border: 0" />
+          </fieldset>
 
+          {# History of the content of the application #}
+          <fieldset>
+            <legend>Historique</legend>
+            <p id="history"></p>
+          </fieldset>
+        </fieldset>
+        {# validate the other question #}
+        <div id="other" class="my-5"><a href="{{ url_for('index') }}"> Pose une Autre question</a> </div>
+      </div>
       <div class="col-12 col-md-7 col-lg-6 col-xxl-5 offset-xxl-1" style="margin-top: 250px;">
         <form class="row" id="submit2">
           <fieldset id="ask" style="background-color: yellow;">

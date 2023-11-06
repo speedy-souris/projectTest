@@ -16,6 +16,7 @@ function welcome_message() {
 }
 
 function reflection_message() {
+  invisible_element("word_of_welcome")
   invisible_element("comprehension");
   invisible_element("gp_reply1");
   invisible_element("gp_reply2");
