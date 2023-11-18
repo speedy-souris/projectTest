@@ -1,5 +1,7 @@
-"""module of counting of the behaviour of the user
-bad behavior (incivility, indecency, incomprehension) --> X3 ... good behavior --> X10"""
+"""additional option for project 13
+    module of counting of the behaviour of the user
+    bad behavior (incivility, indecency, incomprehension) --> X3 ... good behavior --> X10
+     """
 
 
 # DONE create a behaviour of discourtesy for the user

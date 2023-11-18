@@ -3,7 +3,7 @@ from . import google_api
 from . import RedisDataManagement
 
 class Conversation:
-    """conversation setting class"""
+    """conversation setting class with additional option for project 13 """
     # Default value of grandpy status attributes
     grandpy_status_code_value = {
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
@@ -127,7 +127,9 @@ class Conversation:
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
 
-
+    #
+    # additional option for project 13
+    # 
     def __str__(self):
         text = ''
         if self.level == 1:
@@ -183,6 +185,9 @@ class Conversation:
                 print(f'[calculate_incomprehension] = {coordinates_googleMap_API}')
                 return coordinates_googleMap_API
 
+    #
+    # project 7 
+    #
     def lower_and_split_user_entry(self) -> list:
         """management of the user_entry attribute"""
         user_entry_lowercase = self.user_entry.lower()

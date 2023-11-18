@@ -1,4 +1,5 @@
-"""module for managing the Redis database"""
+"""additional option for project 13
+    module for managing the Redis database  """
 import redis
 
 
