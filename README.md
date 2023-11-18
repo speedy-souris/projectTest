@@ -5,8 +5,8 @@ question Réponses avec GrandPy
 Le projet se compose d'une page web qui affiche un jeu de question / réponse
 les demandes sont faites à un papy robot via un formulaire
 les réponses données par le robot utilise plusieurs APIS de google
-a savoir l'**API Google Map** et l'**API Google Map Static**
-ajout de fonctions supplementaires lié au **PROJET 13** a savoir
+a savoir l'**API Google Map** et l'**API Google Map Static**.
+Ajout de fonctions supplementaires lié au **PROJET 13** a savoir
 comportement different du papy robot selont sont état de fatigue général = 10 question posées maxi 
 et aussi selon le comportement de lutilisateur (grossiéreté, impolitesse, langage incorrect ...)
 il s'ensuit un blocage de 24 h 00 théorique ramené a 2 minutes pour les besoin du cours
