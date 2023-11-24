@@ -5,17 +5,17 @@ import requests
 
 def google_api_keys():
     """Internal Key Management Local / Production
-         HEROKU_KEY_API_MAP / HEROKU_KEY_API_STATIC_MAP
+         SERVER_KEY_API_MAP / SERVER_KEY_API_STATIC_MAP
          contain the private keys of GoogleMap APIs used in production environment .
          KEY_API_MAP / KEY_API_STATIC_MAP
          contain the private keys of GoogleMap APIs used in local environment"""
-    if os.environ.get('HEROKU_KEY_API_MAP') is None:  # local internal key
+    if os.environ.get('SERVER_KEY_API_MAP') is None:  # local internal key
         key_map = os.getenv('KEY_API_MAP')
         key_static_map = os.getenv('KEY_API_STATIC_MAP')
         has_status_prod = False
     else:  # internal production key
-        key_map = os.getenv('HEROKU_KEY_API_MAP')
-        key_static_map = os.getenv('HEROKU_KEY_API_STATIC_MAP')
+        key_map = os.getenv('SERVER_KEY_API_MAP')
+        key_static_map = os.getenv('SERVER_KEY_API_STATIC_MAP')
         has_status_prod = True
     return key_map, key_static_map, has_status_prod
 
