@@ -15,7 +15,7 @@ class RedisDataManagement:
             db_number arg = 0 ==> Redis connect 'dev'
             db_number arg = 1 ==> Redis connect 'test'"""
         redis_connect = \
-            redis.Redis(host='localhost', port=6379, db=database_redis_number)
+            redis.Redis(host=os.getenv('REDIS_URL','localhost'), port=6379, db=database_redis_number)
         return redis_connect
 
     @staticmethod
