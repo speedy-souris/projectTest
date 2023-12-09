@@ -1,3 +1,4 @@
+from flask import request
 import time
 import base64
 from . import Flask, render_template
@@ -16,6 +17,8 @@ def index():
         Initialization of the index.html page
         single home page
     """
+    app.logger.info("url de serveur : %s",request.url_root)
+    
     return render_template('index2.html')
 
 
