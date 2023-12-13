@@ -1,4 +1,5 @@
-from flask import request
+import logging
+from logging.handlers import RotatingFileHandler
 import time
 import base64
 from . import Flask, render_template
@@ -10,6 +11,14 @@ from wikimarkup.parser import Parser
 
 app = Flask(__name__)
 
+# Configuration du niveau de journalisation (DEBUG pour tous les niveaux)
+app.logger.setLevel(logging.DEBUG)
+# Configuration d'un gestionnaire RotatingFileHandler pour les logs
+handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+handler.setLevel(logging.DEBUG)
+# Ajout du gestionnaire à l'enregistreur par défaut de l'application Flask
+app.logger.addHandler(handler)
+
 # main function for displaying answers
 @app.route('/')
 def index():
@@ -17,8 +26,11 @@ def index():
         Initialization of the index.html page
         single home page
     """
-    app.logger.info("url de serveur : %s",request.url_root)
-    
+    app.logger.debug('Ceci est un message de débogage.')
+    app.logger.info('Ceci est un message d\'information.')
+    app.logger.warning('Ceci est un avertissement.')
+    app.logger.error('Ceci est une erreur.')
+    app.logger.critical('Ceci est un message critique.')
     return render_template('index2.html')
 
 
