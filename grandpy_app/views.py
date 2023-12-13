@@ -3,6 +3,7 @@ from logging.handlers import RotatingFileHandler
 import time
 import base64
 from . import Flask, render_template
+from flask import request
 from main import main
 from src.redis_utilities import RedisDataManagement
 from src.APIs import wikipedia_api, google_api
@@ -26,11 +27,10 @@ def index():
         Initialization of the index.html page
         single home page
     """
-    app.logger.debug('Ceci est un message de débogage.')
-    app.logger.info('Ceci est un message d\'information.')
-    app.logger.warning('Ceci est un avertissement.')
-    app.logger.error('Ceci est une erreur.')
-    app.logger.critical('Ceci est un message critique.')
+    # Récupérer l'URL de la requête en cours
+    current_url = request.url
+    app.logger.debug(f"URL de la requête : {current_url}")
+
     return render_template('index2.html')
 
 
