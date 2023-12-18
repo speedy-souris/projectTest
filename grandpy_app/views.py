@@ -1,5 +1,3 @@
-import logging
-from logging.handlers import RotatingFileHandler
 import time
 import base64
 from . import Flask, render_template
@@ -12,14 +10,6 @@ from wikimarkup.parser import Parser
 
 app = Flask(__name__)
 
-# Configuration du niveau de journalisation (DEBUG pour tous les niveaux)
-app.logger.setLevel(logging.DEBUG)
-# Configuration d'un gestionnaire RotatingFileHandler pour les logs
-handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
-handler.setLevel(logging.DEBUG)
-# Ajout du gestionnaire à l'enregistreur par défaut de l'application Flask
-app.logger.addHandler(handler)
-
 # main function for displaying answers
 @app.route('/')
 def index():
@@ -29,7 +19,7 @@ def index():
     """
     # Récupérer l'URL de la requête en cours
     current_url = request.url
-    app.logger.debug(f"URL de la requête : {current_url}")
+    print(f"URL de la requête : {current_url}")
 
     return render_template('index2.html')
 
