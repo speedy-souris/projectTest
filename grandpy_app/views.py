@@ -1,5 +1,6 @@
 import time
 import base64
+import logging
 from . import Flask, render_template
 from flask import request
 from main import main
@@ -19,7 +20,7 @@ def index():
     """
     # Récupérer l'URL de la requête en cours
     current_url = request.url
-    print(f"URL de la requête : {current_url}")
+    logging.warning(f"URL de la requête : {current_url}")
 
     return render_template('index2.html')
 
