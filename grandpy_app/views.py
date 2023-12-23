@@ -45,10 +45,7 @@ def answer_gp(reflection, user_question_request):
         and the state of civility in the questions
         as well as the different coordinates for the display of the map
             - quotas_api
-            - civility
-            - decency
             - nb_request
-            - comprehension
             - address (answer and data map)
             - history
             - location"""
