@@ -36,16 +36,12 @@ def conversation_between_user_and_grandpy(user_request, database_redis_number):
 
 
 def management_of_correct_behavior(chat_connect_object):
-    if  not chat_connect_object.has_user_incomprehension_status:
-        if chat_connect_object.number_of_user_entries == 5:
-            display_behavior.display_grandpy_status_code_to_tired(chat_connect_object)
-            counting_behavior.user_question_answer_count(chat_connect_object)
-        elif chat_connect_object.number_of_user_entries == 10:
-            display_behavior.display_grandpy_status_code_to_response_limit(chat_connect_object)
-        else:
-            display_behavior.display_grandpy_status_code_to_response(chat_connect_object)
-            counting_behavior.user_question_answer_count(chat_connect_object)
-            chat_connect_object.get_user_request_parser()
+    if chat_connect_object.number_of_user_entries == 10:
+        display_behavior.display_grandpy_status_code_to_response_limit(chat_connect_object)
+    else:
+        display_behavior.display_grandpy_status_code_to_response(chat_connect_object)
+        counting_behavior.user_question_answer_count(chat_connect_object)
+        chat_connect_object.get_user_request_parser()
 
 
 def main(user_request, database_redis_number=0):
