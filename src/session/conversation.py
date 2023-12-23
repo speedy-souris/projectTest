@@ -7,25 +7,10 @@ class Conversation:
     # Default value of grandpy status attributes
     grandpy_status_code_value = {
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
-        'benevolent': "Ok, c'est tres bien mon petit !",
         'response': "Voici la reponse à t'as questions !",
-        'tired': 'Houla, maintenant ma memoire commence à fatiguée !',
-        'incomprehension': "Ha, je ne comprends pas, essaye d'être plus précis ... !",
-        'mannerless': "S'il te plait, reformule ta question en étant plus polis ... !",
-        'disrespectful': "Hola, sois plus RESPECTUEUX ENVERS TES AINES 'MON PETIT' ... !",
-        'incivility_limit': 'Cette impolitesse me FATIGUE ... !',
-        'indecency_limit': 'Cette grossièreté me FATIGUE ... !',
-        'incomprehension_limit': 'Cette incomprehension me FATIGUE ... !',
         'response_limit': 'HEY ! CA SUFFIT mon petit, ma mémoire est saturé ... !',
         'exhausted': 'Je suis fatigué reviens me voir demain !'}
     # -------------------------------
-    # Data for check incivility user behavior
-    INCIVILITY_SET_DATA = frozenset({'bonjour', 'bonsoir', 'salut', 'hello', 'hi'})
-    # Data for check indecency user behavior
-    INDECENCY_SET_DATA = frozenset({
-        'vieux', 'con', 'ancetre', 'poussierieux', 'vieillard', 'demoder', 'dinosaure',
-        'senile', 'arrierer', 'decrepit', 'centenaire', 'rococo', 'antiquite', 'gateux',
-        'archaique', 'croulant', 'vieille', 'baderne', 'fossile', 'foutu', 'bjr', 'bsr', 'slt'})
     # Data for parser (Words deleted for search)
     UNNECESSARY_SET_DATA = frozenset({
         'a', 'abord', 'absolument', 'afin', 'ah', 'ai', 'aie', 'ailleurs', 'ainsi', 'ait',
@@ -110,16 +95,6 @@ class Conversation:
         self.user_entry = user_entry
         self.parsed_user_entry = ''
         self.db_session = RedisDataManagement(database_redis_number=database_redis_number)
-        self.level = args.get('level', 1)
-        # Leve1 1 --> Presentation
-        self.has_user_incivility_status = args.get('has_user_incivility_status', False)
-        self.number_of_user_incivility = args.get('number_of_user_incivility', 0)
-        # Level 1 --> Presentation and Level 2 --> chat_object_connect
-        self.has_user_indecency_status = args.get('has_user_indecency_status', False)
-        self.has_user_incomprehension_status = \
-            args.get('has_user_incomprehension_status', False)
-        self.number_of_user_indecency = args.get('number_of_user_indecency', 0)
-        self.number_of_user_incomprehension = args.get('number_of_user_incomprehension', 0)
         self.number_of_user_entries = args.get('number_of_user_entries', 0)
         self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
         self.previous_has_fatigue_quotas_of_grandpy = self.has_fatigue_quotas_of_grandpy
@@ -127,63 +102,6 @@ class Conversation:
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
 
-    #
-    # additional option for project 13
-    # 
-    def __str__(self):
-        text = ''
-        if self.level == 1:
-            text = \
-                f"Niveau : {self.level}, incivility / indecency / incomprehension"
-        elif self.level == 2:
-            text = f"Niveau : {self.level}, indecency / incomprehension"
-        return text
-
-    def from_level1_to_level2(self):
-        """transition method from level 1 (Presentation) to level 2 (chat_object_connect)"""
-        self.level = 2
-        self.has_user_incivility_status = False
-        self.number_of_user_incivility = 0
-        self.has_user_indecency_status = False
-        self.number_of_user_indecency = 0
-        self.has_user_incomprehension_status = False
-        self.number_of_user_incomprehension = 0
-        self.grandpy_status_code = 'benevolent'
-
-    def calculate_the_incivility_status(self) -> None:
-        """update the attribut has_user_incivility_status since INCIVILITY_SET_DATA set"""
-        user_entry_lowercase = self.lower_and_split_user_entry()
-        incivility_set_data = self.__class__.INCIVILITY_SET_DATA
-        self.has_user_incivility_status =\
-            incivility_set_data.isdisjoint(user_entry_lowercase)
-
-    def calculate_the_indecency_status(self) -> None:
-        """update the attribut has_user_indecency_status since INDECENCY_SET_DATA set"""
-        user_entry_lowercase = self.lower_and_split_user_entry()
-        indecency_set_data = self.__class__.INDECENCY_SET_DATA
-        self.has_user_indecency_status =\
-            not indecency_set_data.isdisjoint(user_entry_lowercase)
-
-    def calculate_the_incomprehension_status(self) -> dict:
-        """update the attribut has_user_indecency_status since GoogleMap API"""
-        incomprehension_status = True
-        result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
-        if bool(self.parsed_user_entry):
-            print(f'[in conversation_as_incomprehension1] = {result_api}')
-            print (f'[in conversation_as_incomprehension2]  = {self.user_entry}')
-            if type(result_api) is dict and 'result' in result_api:
-                if bool(result_api['result']):
-                    incomprehension_status = False
-        self.has_user_incomprehension_status = incomprehension_status
-        coordinates_googleMap_API = ' '
-        if bool(self.parsed_user_entry):
-            try:
-                coordinates_googleMap_API = result_api#['result']['geometry']['location']
-            except (KeyError, TypeError):
-                coordinates_googleMap_API = {}
-            else:
-                print(f'[calculate_incomprehension] = {coordinates_googleMap_API}')
-                return coordinates_googleMap_API
 
     #
     # project 7 
