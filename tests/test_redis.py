@@ -50,8 +50,8 @@ class TestWritingRedis:
 
     # @pytest.mark.skip()
     def test_write_redis_database_encoding(self):
-        self.db_session.write_redis_database_encoding('has_user_incivility_status', b'True')
+        self.db_session.write_redis_database_encoding('has_fatigue_quotas_of_grandpy', b'True')
         expected_result = \
             self.db_session.byte_to_boolean_conversion(
-                self.db_session.read_redis_database_decoding('has_user_incivility_status'))
+                self.db_session.read_redis_database_decoding('has_fatigue_quotas_of_grandpy'))
         assert expected_result
