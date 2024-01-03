@@ -10,7 +10,7 @@ function visible_element(id_element) {
   document.getElementById(id_element).classList.add("d-block");
 }
 
-// function that displays the welcome message
+//~ // function that displays the welcome message
 function welcome_message() {
   invisible_element("gp_reflection");
   visible_element("ask");
@@ -20,10 +20,6 @@ function welcome_message() {
 
 // function that displays grandPy thinking
 function reflection_message() {
-  invisible_element("word_of_welcome")
-  invisible_element("comprehension");
-  invisible_element("gp_reply1");
-  invisible_element("gp_reply2");
   invisible_element("gp_reply3");
   invisible_element("gp_reply4");
   invisible_element("gp_reply5");
@@ -44,7 +40,7 @@ function message_of_meanness() {
   visible_element("gp_reply2");
 }
 
-//  function that displays grandPy's response to rudeness
+//~ //  function that displays grandPy's response to rudeness
 function rude_message() {
   invisible_element("gp_reflection");
   invisible_element("gp_reply1");
@@ -82,8 +78,6 @@ function random_grandpy_answer() {
   ];
   var random_choice = Math.floor(Math.random() * list_answers.length);
   invisible_element("gp_reflection");
-  invisible_element("word_of_welcome");
-  invisible_element("comprehension");
   invisible_element("gp_reply1");
   invisible_element("gp_reply2");
   invisible_element("gp_reply3");
@@ -100,7 +94,7 @@ function random_grandpy_answer() {
 
 // function that displays a response from grandPy about not understanding the question
 function incomprehension_message() {
-  invisible_element("gp_reflection");
+  //~ invisible_element("gp_reflection");
   invisible_element("comprehension");
   invisible_element("gp_reply1");
   invisible_element("gp_reply2");

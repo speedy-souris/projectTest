@@ -8,6 +8,7 @@ def user_question_answer_count(chat_session):
      has grandpy. Grandpy answers him with one address of googleMap and a review of the quarter
     on Wikipedia"""
     # if grandpy_status_code == 'response'
+    print(f'number_entries = {chat_session.number_of_user_entries}')
     if chat_session.number_of_user_entries < 10:
         chat_session.number_of_user_entries += 1
         if chat_session.number_of_user_entries >= 10:

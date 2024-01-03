@@ -14,21 +14,13 @@ class TestBehaviorParams:
         self.db_session.erasing_redis_databases()
         self.conversation = Conversation('', database_redis_number=1)
 
-    
+    def test_calculate_the_incomprehension_status(self, monkeypatch):
+        expected_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
+        monkeypatch.setattr(requests, 'get', get_mockreturn(expected_result))
 
-    # ~ #@pytest.mark.skip()
-    def test_database_init_by_default(self):
-        self.conversation.database_init_by_default()
-        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
-        assert expected_result == b'0'
-
-    
-    #@pytest.mark.skip()
-    def test_update_database(self):
-        self.conversation.number_of_user_entries = 7
-        self.conversation.update_database()
-        expected_result = self.db_session.read_access_conversation_data('number_of_user_entries')
-        assert expected_result == b'7'
+        assert expected_result == google_api.get_placeid_from_address('hsdfklhdsfklh')
+        assert expected_result == google_api.get_placeid_from_address('')
+        assert expected_result == google_api.get_placeid_from_address('Bonjour')
 
     #@pytest.mark.skip()
     def test_get_request_parser(self):

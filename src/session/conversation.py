@@ -9,6 +9,7 @@ class Conversation:
         'home': "Bonjour Mon petit, en quoi puis-je t'aider ?",
         'response': "Voici la reponse à t'as questions !",
         'response_limit': 'HEY ! CA SUFFIT mon petit, ma mémoire est saturé ... !',
+        'incomprehension': "Ha, je ne comprends pas, essaye d'être plus précis ... !",
         'exhausted': 'Je suis fatigué reviens me voir demain !'}
     # -------------------------------
     # Data for parser (Words deleted for search)
@@ -95,6 +96,8 @@ class Conversation:
         self.user_entry = user_entry
         self.parsed_user_entry = ''
         self.db_session = RedisDataManagement(database_redis_number=database_redis_number)
+        self.has_user_incomprehension_status = \
+            args.get('has_user_incomprehension_status', False)
         self.number_of_user_entries = args.get('number_of_user_entries', 0)
         self.has_fatigue_quotas_of_grandpy = args.get('has_fatigue_quotas_of_grandpy', False)
         self.previous_has_fatigue_quotas_of_grandpy = self.has_fatigue_quotas_of_grandpy
@@ -102,6 +105,28 @@ class Conversation:
             args.get('grandpy_status_code', self.__class__.grandpy_status_code_value['home'])
         self.previous_grandpy_status_code = self.grandpy_status_code
 
+
+    def calculate_the_incomprehension_status(self) -> dict:
+            """update the attribut has_user_indecency_status since GoogleMap API"""
+            incomprehension_status = True
+            result_api = google_api.search_address_to_gMap(self.parsed_user_entry)
+            if bool(self.parsed_user_entry):
+                print(f'[in conversation_as_incomprehension1] = {result_api}')
+                print (f'[in conversation_as_incomprehension2]  = {self.user_entry}')
+                if type(result_api) is dict and 'result' in result_api:
+                    if bool(result_api['result']):
+                        incomprehension_status = False
+            print(f'incomprehension = {incomprehension_status}')
+            self.has_user_incomprehension_status = incomprehension_status
+            coordinates_googleMap_API = ' '
+            if bool(self.parsed_user_entry):
+                try:
+                    coordinates_googleMap_API = result_api#['result']['geometry']['location']
+                except (KeyError, TypeError):
+                    coordinates_googleMap_API = {}
+                else:
+                    print(f'[calculate_incomprehension] = {coordinates_googleMap_API}')
+                    return coordinates_googleMap_API
 
     #
     # project 7 

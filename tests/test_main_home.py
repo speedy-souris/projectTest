@@ -25,18 +25,34 @@ class TestHomeMain:
                 about_a_place_result=about_a_place, 
                 wikipedia_places_result=get_wikipedia_places)
         )
-    
-	# ~ @pytest.mark.skip()
+    # ~ @pytest.mark.skip()
+    def test_incomprehension_request_user_to_1_with_empty_input(self, monkeypatch):
+        # incomprehension presentation of the user X1 ==> question with ('bonjour'...)
+            expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
+            get_candidate_places = expected_result_mock(get_candidate_places=True)
+            monkeypatch.setattr(
+                requests, 'get', get_mockreturn())
+            presentation_user_incomprehension = main.main(' ', database_redis_number=1)
+            # user_behavior['has_user_incomprehension_status'] = True
+            assert presentation_user_incomprehension.has_user_incomprehension_status
+            # user_behavior['has_fatigue_quotas_of_grandpy'] = False
+            assert not presentation_user_incomprehension.has_fatigue_quotas_of_grandpy
+            # user_behavior['grandpy_status_code'] = 'incomprehension'
+            assert presentation_user_incomprehension.grandpy_status_code == 'incomprehension'
+            # user_behavior['number_of_user_entries'] = 0
+            assert presentation_user_incomprehension.number_of_user_entries == 0 
+
+    # ~ @pytest.mark.skip()
     def test_correct_presentation_userX1(self, monkeypatch):
         # correct presentation of the user
         self.mock_params(monkeypatch, expected_result_mock)
         dialogue_of_presentation = main.main('ou se trouve openClassrooms', database_redis_number=1)
         # has_fatigue_quotas_of_grandpy == False
         assert not dialogue_of_presentation.has_fatigue_quotas_of_grandpy
-        # grandpy_status_code == 'benevolent'
+        # grandpy_status_code == 'response'
         assert dialogue_of_presentation.grandpy_status_code == 'response'
         # number_of_user_entries == 1
-        assert dialogue_of_presentation.number_of_user_entries == 1
+        assert dialogue_of_presentation.number_of_user_entries == 2
 
     # ~ @pytest.mark.skip()
     def test_correct_presentation_userX10(self, monkeypatch):

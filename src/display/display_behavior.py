@@ -24,6 +24,14 @@ def display_grandpy_status_code_to_response_limit(chat_session):
     grandpy_response = chat_session.__class__.grandpy_status_code_value['response_limit']
     display_grandpy_status(chat_session, grandpy_response, following_billing=False)
 
+def display_grandpy_status_code_to_incomprehension(chat_session):
+    """billing of answers of grandpy for status incomprehension"""
+    # grandpy_status_code = 'incomprehension'
+    chat_session.grandpy_status_code = 'incomprehension'
+    grandpy_response = \
+        display_grandpy_status(
+            chat_session, chat_session.__class__.grandpy_status_code_value['incomprehension'])
+
 
 def display_grandpy_status_code_to_exhausted(chat_session):
     """billing of answers of grandpy for status exhausted"""
@@ -46,7 +54,6 @@ def display_behavior_user_request(chat_session, response_grandpy):
     """display of the user's understanding"""
     # if number_of_user_entries == 1 to 9
     number_of_user_entries = chat_session.number_of_user_entries
-   
     if 1 < number_of_user_entries < 9:
         display_correct_user_request_1_to_9(chat_session, response_grandpy)
 
