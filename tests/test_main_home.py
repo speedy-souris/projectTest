@@ -28,11 +28,11 @@ class TestHomeMain:
     # ~ @pytest.mark.skip()
     def test_incomprehension_request_user_to_1_with_empty_input(self, monkeypatch):
         # incomprehension presentation of the user X1 ==> question with ('bonjour'...)
-            expected_mock_result = {'candidates': [], 'status': 'ZERO_RESULTS'}
+            expected_mock_result = {'candidates': [], 'status': 'INVALID_REQUEST'}
             get_candidate_places = expected_result_mock(get_candidate_places=True)
             monkeypatch.setattr(
-                requests, 'get', get_mockreturn())
-            presentation_user_incomprehension = main.main(' ', database_redis_number=1)
+                requests, 'get', get_mockreturn(get_candidate_places))
+            presentation_user_incomprehension = main.main(' sqdsqsqdqs', database_redis_number=1)
             # user_behavior['has_user_incomprehension_status'] = True
             assert presentation_user_incomprehension.has_user_incomprehension_status
             # user_behavior['has_fatigue_quotas_of_grandpy'] = False

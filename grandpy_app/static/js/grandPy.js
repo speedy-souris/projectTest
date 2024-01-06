@@ -20,6 +20,7 @@ function welcome_message() {
 
 // function that displays grandPy thinking
 function reflection_message() {
+  invisible_element("comprehension");
   invisible_element("gp_reply3");
   invisible_element("gp_reply4");
   invisible_element("gp_reply5");
@@ -78,6 +79,7 @@ function random_grandpy_answer() {
   ];
   var random_choice = Math.floor(Math.random() * list_answers.length);
   invisible_element("gp_reflection");
+  invisible_element("comprehension");
   invisible_element("gp_reply1");
   invisible_element("gp_reply2");
   invisible_element("gp_reply3");
@@ -96,6 +98,7 @@ function random_grandpy_answer() {
 function incomprehension_message() {
   //~ invisible_element("gp_reflection");
   invisible_element("comprehension");
+  invisible_element("gp_reflection");
   invisible_element("gp_reply1");
   invisible_element("gp_reply2");
   invisible_element("gp_reply3");
